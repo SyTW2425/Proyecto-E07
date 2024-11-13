@@ -27,7 +27,7 @@ const routes = [
     component: PaginaEnDesarrollo,
   },
   {
-    path: '/especialidades',
+    path: '/departamentos',
     name: 'GestionDepartamentos',
     component: GestionDepartamentos,
   },

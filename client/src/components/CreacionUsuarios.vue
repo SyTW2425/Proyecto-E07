@@ -26,14 +26,13 @@
           </select>
         </label>
 
-
         <!-- Campo de Departamento (solo se muestra si corresponde) -->
-        <label v-if="departamentosDisponibles.length > 0">
-          Departamento:
+        <label v-if="departamentosDisponibles.length > 0"> Departamento:
           <select v-model="nuevoUsuario.departamento" required>
             <option v-for="dep in departamentosDisponibles" :key="dep._id" :value="dep._id">{{ dep.nombre }}</option>
           </select>
         </label>
+
 
         <!-- Campos opcionales -->
         <label>DNI:
@@ -166,11 +165,11 @@ export default {
         genero: '',
         direccion: '',
         telefono: '',
-        email: '',
-        foto: null 
+        email: ''
       },
       fotoPreview: require('@/assets/estados/perfil_defecto.png'),
       departamentosDisponibles: [],
+      todosDepartamentos: [], // Todos los departamentos cargados una vez
       cargando: false, // Estado de carga
       errorServidor: false, // Estado de error
     };
@@ -204,7 +203,9 @@ export default {
   async obtenerDepartamentos() {
     try {
       const response = await apiClient.get('/api/departamentos');
-      this.departamentosDisponibles = response.data;
+      this.todosDepartamentos = response.data; // Guardar todos los departamentos
+      console.log("Departamentos cargados:", this.todosDepartamentos);
+      this.actualizarOpcionesDepartamento(); // Aplicar filtro inicial
     } catch (error) {
       console.error('Error al obtener departamentos:', error);
     }
@@ -225,11 +226,17 @@ export default {
       this.nuevoUsuario.username = `${iniciales}${numeroAleatorio}`;
     }
   },
-  actualizarOpcionesDepartamento() {
+  async actualizarOpcionesDepartamento() {
     if (this.nuevoUsuario.tipo === 'Médico') {
-      this.obtenerDepartamentos(); // Cargar departamentos desde el backend
+      this.departamentosDisponibles = this.todosDepartamentos.filter(
+        dep => dep.tipo === 'Especialidad médica'
+      );
+    } else if (this.nuevoUsuario.tipo === 'Administración') {
+      this.departamentosDisponibles = this.todosDepartamentos.filter(
+        dep => dep.tipo === 'Administración'
+      );
     } else {
-      this.departamentosDisponibles = [];
+      this.departamentosDisponibles = []; // Limpiar si el tipo no es relevante
       this.nuevoUsuario.departamento = '';
     }
   },

@@ -1,13 +1,18 @@
 const mongoose = require('mongoose');
-const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const departamentoSchema = new mongoose.Schema({
-  codigo: { type: Number, unique: true },
-  nombre: { type: String, required: true },
-  operaciones: { type: [String], required: true }
+  nombre: { type: String, required: true, unique: true },
+  tipo: { type: String, required: true, enum: ["Especialidad médica", "Administración"] },
+  operaciones: {
+    type: [String],
+    required: false,
+    validate: {
+      validator: function(ops) {
+        return ops.every(op => ["Consulta", "Intervención"].includes(op));
+      },
+      message: props => `${props.value} no es una operación permitida`
+    }
+  }
 });
-
-// Aplica el plugin de autoincremento al campo `codigo`
-departamentoSchema.plugin(AutoIncrement, { inc_field: 'codigo' });
 
 module.exports = mongoose.model('Departamento', departamentoSchema);

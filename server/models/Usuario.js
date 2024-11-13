@@ -15,10 +15,8 @@ const userSchema = new mongoose.Schema({
   telefono: { type: String },
   email: { type: String },
   fechaUltimoAcceso: { type: Date, default: null },
-  estatus: { type: String, default: 'activo' },
+  estado: { type: String, default: 'activo' },
 });
 
-// Aplica el plugin de autoincremento al esquema de usuario
-userSchema.plugin(AutoIncrement, { inc_field: 'numeroUsuario' });
 
 module.exports = mongoose.model('Usuario', userSchema);

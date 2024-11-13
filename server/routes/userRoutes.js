@@ -27,12 +27,9 @@ router.get('/usuarios', async (req, res) => {
 });
 
 // Ruta para crear un usuario, incluyendo la carga de imagen
-router.post('/usuarios', upload.single('foto'), async (req, res) => {
+router.post('/usuarios', async (req, res) => {
   try {
     const usuarioData = { ...req.body };
-    if (req.file) {
-      usuarioData.foto = `/uploads/${req.file.filename}`;
-    }
     const usuario = new Usuario(usuarioData);
     await usuario.save();
     res.status(201).json(usuario);

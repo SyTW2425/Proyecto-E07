@@ -15,16 +15,15 @@ router.get('/departamentos', async (req, res) => {
 // Ruta para crear un departamento
 router.post('/departamentos', async (req, res) => {
   try {
-    const departamento = new Departmento({
-      nombre: req.body.nombre,
-      operaciones: req.body.operaciones
-    });
+    const departamentoData = { ...req.body };
+    const departamento = new Departmento(departamentoData);
     await departamento.save();
     res.status(201).json(departamento);
   } catch (error) {
     res.status(400).json({ message: 'Error al crear departamento', error });
   }
 });
+
 
 // Ruta para actualizar un departamento
 router.put('/departamentos/:id', async (req, res) => {

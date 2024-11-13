@@ -13,7 +13,7 @@
           </li>
           
           <li class="nav-item">
-            <router-link class="nav-link" to="/especialidades">Especialidades</router-link>
+            <router-link class="nav-link" to="/departamentos">Departamentos</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/agenda-medico">Agenda Médico</router-link> <!-- Enlace para la agenda -->

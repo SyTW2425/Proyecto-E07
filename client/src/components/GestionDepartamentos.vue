@@ -2,7 +2,7 @@
     <div class="contenedor-principal">
       <!-- Columna izquierda: Formulario de creación de departamentos -->
       <div class="columna-formulario">
-        <h2>Gestión de Especialidades médicas</h2>
+        <h2>Gestión de Departamentos</h2>
   
         <!-- Formulario para crear o editar un departamento -->
         <form @submit.prevent="editarDepartamentoId ? actualizarDepartamento() : crearDepartamento()">
@@ -12,24 +12,33 @@
           <label>Nombre:
             <input type="text" v-model="nuevoDepartamento.nombre" required />
           </label>
+
+          <label>Tipo:
+          <select v-model="nuevoDepartamento.tipo" required>
+            <option value="" disabled selected>Seleccione tipo</option>
+            <option value="Especialidad médica">Especialidad médica</option>
+            <option value="Administración">Administración</option>
+          </select>
+        </label>
   
-          <!-- Campo de Operaciones -->
-          <label>Operaciones:
-            <select v-model="operacionTemp">
-                <option disabled value="">Selecciona una operación</option>
-                <option value="Consulta">Consulta</option>
-                <option value="Intervención">Intervención</option>
-            </select>
-            <button @click.prevent="agregarOperacion" class="boton-agregar">Agregar</button>
-            </label>
-  
-          <!-- Lista de Operaciones Añadidas -->
-          <ul>
-            <li v-for="(operacion, index) in nuevoDepartamento.operaciones" :key="index">
-              {{ operacion }}
-              <button @click.prevent="eliminarOperacion(index)" class="boton-eliminar-operacion">Eliminar</button>
-            </li>
-          </ul>
+        <!-- Campo de Operaciones -->
+        <label v-if="nuevoDepartamento.tipo === 'Especialidad médica'">Operaciones:
+          <select v-model="operacionTemp">
+            <option disabled value="">Selecciona una operación</option>
+            <option value="Consulta">Consulta</option>
+            <option value="Intervención">Intervención</option>
+          </select>
+        <button @click.prevent="agregarOperacion" class="boton-agregar">Agregar</button>
+        </label>
+
+        <!-- Lista de Operaciones Añadidas -->
+        <ul v-if="nuevoDepartamento.tipo === 'Especialidad médica'">
+          <li v-for="(operacion, index) in nuevoDepartamento.operaciones" :key="index">
+            {{ operacion }}
+          <button @click.prevent="eliminarOperacion(index)" class="boton-eliminar-operacion">Eliminar</button>
+          </li>
+        </ul>
+
   
           <!-- Botones de acción para crear o actualizar el departamento -->
           <v-btn class="ma-2 boton-crear" type="submit" v-if="!editarDepartamentoId">
@@ -46,7 +55,7 @@
   
       <!-- Columna derecha: Lista de departamentos -->
       <div class="columna-lista">
-        <h3>Lista de Especialidades</h3>
+        <h3>Listado</h3>
   
         <!-- Indicador de error y carga -->
         <v-alert
@@ -73,32 +82,30 @@
         </div>
   
 
-      
-
-
-
-        <!-- Lista de departamentos -->
-        <!-- Tabla de departamentos -->
-  <table class="department-table">
-    <thead>
-      <tr>
-        <th></th>
-        <th>Nombre</th>
-        <th>Operaciones</th>
-      </tr>
-    </thead>
-    <tbody>
+      <!-- Tabla de departamentos -->
+      <table class="department-table"  v-if="departamentos.length !== 0">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Operaciones</th>
+          </tr>
+        </thead>
+      <tbody>
       <tr v-for="departamento in departamentos" :key="departamento._id">
         <td class="department-actions">
           <v-btn class="boton-modificar" @click="cargarDepartamento(departamento)">
             <i class="bi bi-pencil-square"></i>
           </v-btn>
-          <v-btn class="boton-eliminar" @click="confirmarEliminacion(departamento._id, departamento.nombre)">
+          <v-btn class="boton-eliminar" @click="confirmarEliminacion(departamento._id, departamento.tipo, departamento.nombre)">
             <i class="bi bi-trash"></i>
           </v-btn>
         </td>
         <td>{{ departamento.nombre }}</td>
+        <td>{{ departamento.tipo }}</td>
         <td>{{ departamento.operaciones.join(', ') }}</td> <!-- Muestra las operaciones separadas por comas -->
+        
       </tr>
     </tbody>
   </table>
@@ -117,6 +124,7 @@
       departamentos: [],
       nuevoDepartamento: {
         nombre: '',
+        tipo: '',
         operaciones: []
       },
       fotoPreview: require('@/assets/estados/departamento_defecto.png'),
@@ -190,7 +198,7 @@
       resetFormulario() {
         this.nuevoDepartamento = { nombre: '', operaciones: [] };
         this.editarDepartamentoId = null;
-        this.fotoPreview = require('@/assets/estados/departamento_defecto.png');
+        // this.fotoPreview = require('@/assets/estados/departamento_defecto.png');
       },
       
     },
@@ -250,6 +258,16 @@
   
   .boton-agregar {
     background-color: var(--success-color) !important; /* Verde */
+    color: white !important;
+    padding: 5px 10px;
+    margin-left: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+  }
+
+
+  .boton-eliminar-operacion {
+    background-color: var(--error-color) !important; /* Verde */
     color: white !important;
     padding: 5px 10px;
     margin-left: 10px;
