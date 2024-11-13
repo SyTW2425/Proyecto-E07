@@ -268,17 +268,13 @@ export default {
     formData.append('telefono', this.nuevoUsuario.telefono);
     formData.append('email', this.nuevoUsuario.email);
 
-    // Añade la foto solo si el usuario ha seleccionado una
-    if (this.nuevoUsuario.foto) {
-      formData.append('foto', this.nuevoUsuario.foto);
+    // Revisa los valores en formData
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
     }
 
     try {
-      await apiClient.post('/api/usuarios', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      await apiClient.post('/api/usuarios', formData);
       this.obtenerUsuarios();
       this.resetFormulario();
     } catch (error) {
@@ -298,8 +294,7 @@ export default {
       genero: '',
       direccion: '',
       telefono: '',
-      email: '',
-      foto: null
+      email: ''
     };
     this.fotoPreview = require('@/assets/estados/perfil_defecto.png');
     this.editarUsuarioId = null; // Salir del modo de edición
@@ -342,10 +337,6 @@ export default {
     formData.append('telefono', this.nuevoUsuario.telefono);
     formData.append('email', this.nuevoUsuario.email);
 
-    // Agregar la imagen solo si hay una nueva seleccionada
-    if (this.nuevoUsuario.foto && typeof this.nuevoUsuario.foto !== 'string') {
-      formData.append('foto', this.nuevoUsuario.foto);
-    }
 
     try {
       await apiClient.put(`/api/usuarios/${this.editarUsuarioId}`, formData, {

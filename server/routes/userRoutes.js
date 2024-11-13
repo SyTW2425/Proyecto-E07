@@ -29,6 +29,10 @@ router.get('/usuarios', async (req, res) => {
 // Ruta para crear un usuario, incluyendo la carga de imagen
 router.post('/usuarios', async (req, res) => {
   try {
+    // Asignar null a departamento si el valor es una cadena vacía
+    if (req.body.departamento === "") {
+      req.body.departamento = null;
+    }
     const usuarioData = { ...req.body };
     const usuario = new Usuario(usuarioData);
     await usuario.save();

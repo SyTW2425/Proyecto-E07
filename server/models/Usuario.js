@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const userSchema = new mongoose.Schema({
   nombre: { type: String, required: true },
@@ -7,8 +6,8 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   tipo: { type: String, required: true },
-  departamento: { type: mongoose.Schema.Types.ObjectId, ref: 'Departamento' }, // Referencia al Departamento
-  dni: { type: String },
+  departamento: { type: mongoose.Schema.Types.ObjectId, ref: 'Departamento', default: null },
+  dni: { type: String},
   fechaNacimiento: { type: Date },
   genero: { type: String, enum: ['Masculino', 'Femenino'] },
   direccion: { type: String },
