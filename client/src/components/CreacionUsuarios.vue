@@ -211,9 +211,10 @@ export default {
     }
   },
   obtenerNombreDepartamento(departamentoId) {
-    const departamento = this.departamentosDisponibles.find(dep => dep._id === departamentoId);
+    const departamento = this.todosDepartamentos.find(dep => dep._id === departamentoId);
     return departamento ? departamento.nombre : '';
   },
+
 
   filtrarUsuarios() {
     // Este método se llama cuando se cambia el filtro, pero el cálculo se realiza en `usuariosFiltrados`
@@ -228,18 +229,30 @@ export default {
   },
   async actualizarOpcionesDepartamento() {
     if (this.nuevoUsuario.tipo === 'Médico') {
+      // Filtrar solo departamentos de "Especialidad médica" para el tipo "Médico"
       this.departamentosDisponibles = this.todosDepartamentos.filter(
         dep => dep.tipo === 'Especialidad médica'
       );
     } else if (this.nuevoUsuario.tipo === 'Administración') {
+      // Filtrar solo departamentos de "Administración" para el tipo "Administración"
       this.departamentosDisponibles = this.todosDepartamentos.filter(
         dep => dep.tipo === 'Administración'
       );
     } else {
-      this.departamentosDisponibles = []; // Limpiar si el tipo no es relevante
+      // Si el tipo es otro (por ejemplo, "Paciente"), limpiar las opciones
+      this.departamentosDisponibles = [];
+      this.nuevoUsuario.departamento = '';
+    }
+
+    // Mantener el departamento seleccionado si existe en la lista filtrada
+    if (
+      this.nuevoUsuario.departamento &&
+      !this.departamentosDisponibles.find(dep => dep._id === this.nuevoUsuario.departamento)
+    ) {
       this.nuevoUsuario.departamento = '';
     }
   },
+
   async crearUsuario() {
     const formData = new FormData();
     formData.append('nombre', this.nuevoUsuario.nombre);
@@ -295,8 +308,8 @@ export default {
   cargarUsuario(usuario) {
     this.nuevoUsuario = { ...usuario };
     this.editarUsuarioId = usuario._id;
+    this.actualizarOpcionesDepartamento(); 
   },
-
 
   confirmarEliminacion(id, nombre) {
     const confirmacion = window.confirm(`¿Está seguro de que desea eliminar el usuario ${nombre}?`);
