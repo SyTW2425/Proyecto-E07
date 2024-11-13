@@ -56,6 +56,16 @@
       <!-- Columna derecha: Lista de departamentos -->
       <div class="columna-lista">
         <h3>Listado</h3>
+
+        <!-- Filtro por tipo de departamento -->
+      <div class="filtro-tipo-departamento">
+        <label for="filtroTipo">Filtrar por tipo:</label>
+        <select v-model="filtroTipo">
+          <option value="">Todos</option>
+          <option value="Especialidad médica">Especialidad médica</option>
+          <option value="Administración">Administración</option>
+        </select>
+      </div>
   
         <!-- Indicador de error y carga -->
         <v-alert
@@ -83,7 +93,7 @@
   
 
       <!-- Tabla de departamentos -->
-      <table class="department-table"  v-if="departamentos.length !== 0">
+      <table class="department-table" v-if="departamentosFiltrados.length !== 0">
         <thead>
           <tr>
             <th></th>
@@ -93,8 +103,8 @@
           </tr>
         </thead>
       <tbody>
-      <tr v-for="departamento in departamentos" :key="departamento._id">
-        <td class="department-actions">
+      <tr v-for="departamento in departamentosFiltrados" :key="departamento._id">
+          <td class="department-actions">
           <v-btn class="boton-modificar" @click="cargarDepartamento(departamento)">
             <i class="bi bi-pencil-square"></i>
           </v-btn>
@@ -132,7 +142,16 @@
       editarDepartamentoId: null,
       cargando: false,
       errorServidor: false,
+      filtroTipo: '' 
     };
+    },
+    computed: {
+      departamentosFiltrados() {
+        if (this.filtroTipo) {
+          return this.departamentos.filter(departamento => departamento.tipo === this.filtroTipo);
+        }
+        return this.departamentos;
+      }
     },
     methods: {
       async obtenerDepartamentos() {
@@ -206,7 +225,7 @@
         this.obtenerDepartamentos();
         this.intervalId = setInterval(() => {
             this.obtenerDepartamentos();
-        }, 10000); // Cada 10 segundos
+        }, 60000); // Cada 10 segundos
     },
     beforeDestroy() {
         clearInterval(this.intervalId);
@@ -214,7 +233,7 @@
   };
   </script>
   
-  <style scoped>
+<style scoped>
   /* Contenedor principal para organizar formulario y lista en columnas */
   .contenedor-principal {
     display: flex;
