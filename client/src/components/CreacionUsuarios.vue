@@ -9,14 +9,40 @@
         <img v-if="fotoPreview" :src="fotoPreview" alt="Previsualización de Foto de Perfil" class="foto-preview"/>
 
         <label>Nombre:
-          <input type="text" v-model="nuevoUsuario.nombre" @input="generarUsername" required />
+          <input
+            type="text"
+            v-model="nuevoUsuario.nombre"
+            required
+            pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
+            @input="validateNombre"
+            @blur="validateRequired($event, 'El nombre solo puede contener letras.')"
+            @invalid="setCustomMessage($event, 'El nombre solo puede contener letras.')"
+          />
         </label>
         <label>Apellidos:
-          <input type="text" v-model="nuevoUsuario.apellidos" @input="generarUsername" required />
+          <input
+            type="text"
+            v-model="nuevoUsuario.apellidos"
+            required
+            pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
+            @input="validateApellidos"
+            @blur="validateRequired($event, 'Los apellidos solo pueden contener letras.')"
+            @invalid="setCustomMessage($event, 'Los apellidos solo pueden contener letras.')"
+          />
         </label>
+
         <label>Contraseña:
-          <input type="password" v-model="nuevoUsuario.password" required />
+          <input
+            type="password"
+            v-model="nuevoUsuario.password"
+            required
+            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$"
+            @input="validatePassword"
+            @blur="validateRequired($event, 'Debe tener al menos 6 caracteres, incluyendo 1 mayúscula, 1 minúscula y 1 número.')"
+            @invalid="setCustomMessage($event, 'Debe tener al menos 6 caracteres, incluyendo 1 mayúscula, 1 minúscula y 1 número.')"
+          />
         </label>
+
         <label>Tipo:
           <select v-model="nuevoUsuario.tipo" @change="actualizarOpcionesDepartamento" required>
             <option value="" disabled selected>Seleccione tipo</option>
@@ -36,7 +62,14 @@
 
         <!-- Campos opcionales -->
         <label>DNI:
-          <input type="text" v-model="nuevoUsuario.dni" />
+          <input
+            type="text"
+            v-model="nuevoUsuario.dni"
+            pattern="^\d{8}[A-Za-z]$"
+            @input="validateDni"
+            @blur="validateDni"
+            @invalid="setCustomMessage($event, 'El DNI debe tener 8 números seguidos de una letra.')"
+          />
         </label>
         <label>Fecha de Nacimiento:
           <input type="date" v-model="nuevoUsuario.fechaNacimiento" />
@@ -52,7 +85,14 @@
           <input type="text" v-model="nuevoUsuario.direccion" />
         </label>
         <label>Teléfono:
-          <input type="text" v-model="nuevoUsuario.telefono" />
+          <input
+            type="text"
+            v-model="nuevoUsuario.telefono"
+            pattern="^\d{9}$"
+            @input="validateTelefono"
+            @blur="validateRequired($event, 'El teléfono debe contener exactamente 9 dígitos.')"
+            @invalid="setCustomMessage($event, 'El teléfono debe contener exactamente 9 dígitos.')"
+          />
         </label>
         <label>Correo Electrónico:
           <input type="email" v-model="nuevoUsuario.email"/>
@@ -219,14 +259,6 @@ export default {
   filtrarUsuarios() {
     // Este método se llama cuando se cambia el filtro, pero el cálculo se realiza en `usuariosFiltrados`
   },
-  generarUsername() {
-    if (this.nuevoUsuario.nombre && this.nuevoUsuario.apellidos) {
-      const iniciales = this.nuevoUsuario.nombre.charAt(0).toLowerCase() + 
-                        this.nuevoUsuario.apellidos.replace(/\s+/g, '').slice(0, 2).toLowerCase();
-      const numeroAleatorio = Math.floor(1000 + Math.random() * 9000);
-      this.nuevoUsuario.username = `${iniciales}${numeroAleatorio}`;
-    }
-  },
   async actualizarOpcionesDepartamento() {
     if (this.nuevoUsuario.tipo === 'Médico') {
       // Filtrar solo departamentos de "Especialidad médica" para el tipo "Médico"
@@ -330,8 +362,6 @@ export default {
     formData.append('departamento', this.nuevoUsuario.departamento);
     formData.append('dni', this.nuevoUsuario.dni);
 
-    // Asegurar que `fechaNacimiento` sea `null` o un valor adecuado
-
     formData.append('genero', this.nuevoUsuario.genero);
     formData.append('direccion', this.nuevoUsuario.direccion);
     formData.append('telefono', this.nuevoUsuario.telefono);
@@ -353,6 +383,61 @@ export default {
   cancelarEdicion() {
     this.resetFormulario();
   },
+  setCustomMessage(event, message) {
+      if (!event.target.value) {
+        event.target.setCustomValidity('Este campo es obligatorio');
+      } else {
+        event.target.setCustomValidity(message);
+      }
+    },
+    validateRequired(event, message) {
+      event.target.setCustomValidity(''); // Resetea el mensaje personalizado
+      if (!event.target.value) {
+        event.target.setCustomValidity('Este campo es obligatorio');
+      } else if (!event.target.checkValidity()) {
+        event.target.setCustomValidity(message);
+      }
+    },
+    validateNombre(event) {
+      event.target.setCustomValidity('');
+      if (!event.target.value) {
+        event.target.setCustomValidity('Este campo es obligatorio');
+      } else if (!event.target.checkValidity()) {
+        event.target.setCustomValidity('El nombre solo puede contener letras.');
+      }
+    },
+    validateApellidos(event) {
+      event.target.setCustomValidity('');
+      if (!event.target.value) {
+        event.target.setCustomValidity('Este campo es obligatorio');
+      } else if (!event.target.checkValidity()) {
+        event.target.setCustomValidity('Los apellidos solo pueden contener letras.');
+      }
+    },
+    validatePassword(event) {
+      event.target.setCustomValidity('');
+      if (!event.target.value) {
+        event.target.setCustomValidity('Este campo es obligatorio');
+      } else if (!event.target.checkValidity()) {
+        event.target.setCustomValidity('Debe tener al menos 6 caracteres, incluyendo 1 mayúscula, 1 minúscula y 1 número.');
+      }
+    },
+    validateDni(event) {
+      event.target.setCustomValidity('');
+      if (!event.target.value) {
+        event.target.setCustomValidity('Este campo es obligatorio');
+      } else if (!event.target.checkValidity()) {
+        event.target.setCustomValidity('El DNI debe tener 8 números seguidos de una letra.');
+      }
+    },
+    validateTelefono(event) {
+      event.target.setCustomValidity('');
+      if (!event.target.value) {
+        event.target.setCustomValidity('Este campo es obligatorio');
+      } else if (!event.target.checkValidity()) {
+        event.target.setCustomValidity('El teléfono debe contener exactamente 9 dígitos.');
+      }
+    },
   },
   mounted() {
     this.obtenerUsuarios();
@@ -409,7 +494,7 @@ label {
   background-color: var(--primary-color) !important; /* Azul corporativo */
   color: white !important;
   padding: 10px 20px;
-  border-radius: 8px;
+  border-radius: 20px;
   font-weight: bold;
 }
 
@@ -439,7 +524,7 @@ label {
   background-color: var(--success-color) !important; /* Verde */
   color: white !important;
   padding: 10px 20px;
-  border-radius: 8px;
+  border-radius: 20px;
   font-weight: bold;
 }
 
@@ -447,7 +532,7 @@ label {
   background-color: var(--color-gris) !important; /* Gris */
   color: black !important;
   padding: 10px 20px;
-  border-radius: 8px
+  border-radius: 20px;
 }
 
 /* Estilos de la lista de usuarios */
@@ -537,6 +622,7 @@ label {
 /* Estilo para los campos de entrada de texto, email y el selector */
 input[type="text"],
 input[type="email"],
+input[type="password"],
 select {
   background-color: #C6DEFD; /* Color de fondo del campo */
   padding: 8px;
@@ -548,6 +634,7 @@ select {
 /* Cambia el color del borde y añade un efecto cuando el campo está enfocado */
 input[type="text"]:focus,
 input[type="email"]:focus,
+input[type="password"],
 select:focus {
   border-color: var(--color-azul); /* Cambia el color del borde al hacer foco */
   box-shadow: 0 0 5px var(--color-azul); /* Añade sombra al hacer foco */
@@ -618,7 +705,5 @@ select:focus {
 .user-table td {
   vertical-align: middle;
 }
-
-
 
 </style>

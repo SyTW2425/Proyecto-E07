@@ -10,8 +10,16 @@
 
           <!-- Campo de Nombre -->
           <label>Nombre:
-            <input type="text" v-model="nuevoDepartamento.nombre" required />
-          </label>
+            <input
+              type="text"
+              v-model="nuevoDepartamento.nombre"
+              required
+              pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
+              @input="validateNombre"
+              @blur="validateRequired($event, 'El nombre solo puede contener letras.')"
+              @invalid="setCustomMessage($event, 'El nombre solo puede contener letras.')"
+          />
+        </label>
 
           <label>Tipo:
           <select v-model="nuevoDepartamento.tipo" required>
@@ -219,6 +227,31 @@
         this.editarDepartamentoId = null;
         // this.fotoPreview = require('@/assets/estados/departamento_defecto.png');
       },
+    validateNombre(event) {
+      event.target.setCustomValidity('');
+      if (!event.target.value) {
+        event.target.setCustomValidity('Este campo es obligatorio');
+      } else if (!event.target.checkValidity()) {
+        event.target.setCustomValidity('El nombre solo puede contener letras.');
+      }
+    },
+
+    validateRequired(event, message) {
+      event.target.setCustomValidity(''); // Resetea el mensaje personalizado
+      if (!event.target.value) {
+        event.target.setCustomValidity('Este campo es obligatorio');
+      } else if (!event.target.checkValidity()) {
+        event.target.setCustomValidity(message);
+      }
+    },
+
+    setCustomMessage(event, message) {
+      if (!event.target.value) {
+        event.target.setCustomValidity('Este campo es obligatorio');
+      } else {
+        event.target.setCustomValidity(message);
+      }
+    },
       
     },
     mounted() {
