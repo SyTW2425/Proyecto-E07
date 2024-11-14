@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const Departmento = require('../models/Departamento'); // Importa el modelo de departamento
+const Departamento = require('../models/Departamento'); // Corrige el nombre aquí si es necesario
 
 // Ruta para obtener todos los departamentos
 router.get('/departamentos', async (req, res) => {
   try {
-    const departamentos = await Departmento.find();
+    const departamentos = await Departamento.find();
     res.status(200).json(departamentos);
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener departamentos', error });
@@ -16,7 +16,7 @@ router.get('/departamentos', async (req, res) => {
 router.post('/departamentos', async (req, res) => {
   try {
     const departamentoData = { ...req.body };
-    const departamento = new Departmento(departamentoData);
+    const departamento = new Departamento(departamentoData);
     await departamento.save();
     res.status(201).json(departamento);
   } catch (error) {
@@ -24,11 +24,10 @@ router.post('/departamentos', async (req, res) => {
   }
 });
 
-
 // Ruta para actualizar un departamento
 router.put('/departamentos/:id', async (req, res) => {
   try {
-    const departamento = await Departmento.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const departamento = await Departamento.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!departamento) {
       return res.status(404).json({ message: 'Departamento no encontrado' });
     }
@@ -41,7 +40,7 @@ router.put('/departamentos/:id', async (req, res) => {
 // Ruta para eliminar un departamento
 router.delete('/departamentos/:id', async (req, res) => {
   try {
-    const departamento = await Departmento.findByIdAndDelete(req.params.id);
+    const departamento = await Departamento.findByIdAndDelete(req.params.id);
     if (!departamento) {
       return res.status(404).json({ message: 'Departamento no encontrado' });
     }
@@ -50,5 +49,6 @@ router.delete('/departamentos/:id', async (req, res) => {
     res.status(500).json({ message: 'Error al eliminar departamento', error });
   }
 });
+
 
 module.exports = router;

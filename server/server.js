@@ -55,15 +55,16 @@ app.get('/', (req, res) => {
 
 // Rutas de usuarios
 const userRoutes = require('./routes/userRoutes');
-const departamentoRoutes = require('./routes/departamentoRoutes'); // Nueva ruta
+const departamentoRoutes = require('./routes/departamentoRoutes');
 const medicoCitasRoutes = require('./routes/medicoCitas');
 const prestacionRoutes = require('./routes/prestacionRoutes');
+const medicoCitas = require('./routes/medicoCitas')
 
 app.use('/api', userRoutes);         // Rutas para usuarios
 app.use('/api', departamentoRoutes); // Rutas para departamentos
 app.use('/api', medicoCitasRoutes);     // Rutas para citas médicas
 app.use('/api', prestacionRoutes); // Rutas para prestaciones
-
+app.use('/api', medicoCitas)
 
 // Iniciar el servidor
 app.listen(PORT, () => {

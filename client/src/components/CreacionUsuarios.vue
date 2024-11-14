@@ -432,9 +432,7 @@ export default {
     },
     validateTelefono(event) {
       event.target.setCustomValidity('');
-      if (!event.target.value) {
-        event.target.setCustomValidity('Este campo es obligatorio');
-      } else if (!event.target.checkValidity()) {
+      if (!event.target.checkValidity()) {
         event.target.setCustomValidity('El teléfono debe contener exactamente 9 dígitos.');
       }
     },
