@@ -29,21 +29,22 @@
           </select>
         </label>
   
-        <!-- Campo de Operaciones -->
-        <label v-if="nuevoDepartamento.tipo === 'Especialidad médica'">Operaciones:
-          <select v-model="operacionTemp">
-            <option disabled value="">Selecciona una operación</option>
-            <option value="Consulta">Consulta</option>
-            <option value="Intervención">Intervención</option>
+        <!-- Campo de Prestaciones -->
+        <label v-if="nuevoDepartamento.tipo === 'Especialidad médica'">Prestaciones:
+          <select v-model="prestacionTemp">
+            <option disabled value="">Selecciona una prestación</option>
+            <option v-for="prestacion in prestaciones" :key="prestacion._id" :value="prestacion._id">
+              {{ prestacion.nombre }}
+            </option>
           </select>
-        <button @click.prevent="agregarOperacion" class="boton-agregar">Agregar</button>
+          <button @click.prevent="agregarPrestacion" class="boton-agregar">Agregar</button>
         </label>
 
-        <!-- Lista de Operaciones Añadidas -->
+        <!-- Lista de Prestaciones Añadidas -->
         <ul v-if="nuevoDepartamento.tipo === 'Especialidad médica'">
-          <li v-for="(operacion, index) in nuevoDepartamento.operaciones" :key="index">
-            {{ operacion }}
-          <button @click.prevent="eliminarOperacion(index)" class="boton-eliminar-operacion">Eliminar</button>
+          <li v-for="(prestacionId, index) in nuevoDepartamento.prestaciones" :key="index">
+            {{ obtenerNombrePrestacion(prestacionId) }}
+            <button @click.prevent="eliminarPrestacion(index)" class="boton-eliminar-operacion">Eliminar</button>
           </li>
         </ul>
 
@@ -102,31 +103,33 @@
 
       <!-- Tabla de departamentos -->
       <table class="department-table" v-if="departamentosFiltrados.length !== 0">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Nombre</th>
-            <th>Tipo</th>
-            <th>Operaciones</th>
-          </tr>
-        </thead>
-      <tbody>
-      <tr v-for="departamento in departamentosFiltrados" :key="departamento._id">
-          <td class="department-actions">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Nombre</th>
+      <th>Tipo</th>
+      <th>Prestaciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="departamento in departamentosFiltrados" :key="departamento._id">
+      <td class="department-actions">
+        <div class="action-buttons">
           <v-btn class="boton-modificar" @click="cargarDepartamento(departamento)">
             <i class="bi bi-pencil-square"></i>
           </v-btn>
           <v-btn class="boton-eliminar" @click="confirmarEliminacion(departamento._id, departamento.tipo, departamento.nombre)">
             <i class="bi bi-trash"></i>
           </v-btn>
-        </td>
-        <td>{{ departamento.nombre }}</td>
-        <td>{{ departamento.tipo }}</td>
-        <td>{{ departamento.operaciones.join(', ') }}</td> <!-- Muestra las operaciones separadas por comas -->
-        
-      </tr>
-    </tbody>
-  </table>
+        </div>
+      </td>
+      <td>{{ departamento.nombre }}</td>
+      <td>{{ departamento.tipo }}</td>
+      <td>{{ departamento.prestaciones.map(id => obtenerNombrePrestacion(id)).join(', ') }}</td>
+    </tr>
+  </tbody>
+</table>
+
 
       </div>
     </div>
@@ -140,13 +143,14 @@
   data() {
     return {
       departamentos: [],
+      prestaciones: [], // Lista de prestaciones disponibles
       nuevoDepartamento: {
         nombre: '',
         tipo: '',
-        operaciones: []
+        prestaciones: []
       },
       fotoPreview: require('@/assets/estados/departamento_defecto.png'),
-      operacionTemp: '', // Operación temporal
+      prestacionTemp: '', // Prestación temporal
       editarDepartamentoId: null,
       cargando: false,
       errorServidor: false,
@@ -174,14 +178,26 @@
           this.cargando = false;
         }
       },
-      agregarOperacion() {
-        if (this.operacionTemp && !this.nuevoDepartamento.operaciones.includes(this.operacionTemp)) {
-            this.nuevoDepartamento.operaciones.push(this.operacionTemp);
+      async obtenerPrestaciones() {
+        try {
+          const response = await apiClient.get('/api/prestaciones');
+          this.prestaciones = response.data;
+        } catch (error) {
+          console.error('Error al obtener prestaciones:', error);
         }
-        this.operacionTemp = ''; // Limpia el campo después de agregar
       },
-      eliminarOperacion(index) {
-        this.nuevoDepartamento.operaciones.splice(index, 1);
+      agregarPrestacion() {
+        if (this.prestacionTemp && !this.nuevoDepartamento.prestaciones.includes(this.prestacionTemp)) {
+          this.nuevoDepartamento.prestaciones.push(this.prestacionTemp);
+        }
+        this.prestacionTemp = ''; // Limpia el campo después de agregar
+      },
+      eliminarPrestacion(index) {
+        this.nuevoDepartamento.prestaciones.splice(index, 1);
+      },
+      obtenerNombrePrestacion(prestacionId) {
+        const prestacion = this.prestaciones.find(p => p._id === prestacionId);
+        return prestacion ? prestacion.nombre : '';
       },
       async crearDepartamento() {
         try {
@@ -223,7 +239,7 @@
         this.resetFormulario();
       },
       resetFormulario() {
-        this.nuevoDepartamento = { nombre: '', operaciones: [] };
+        this.nuevoDepartamento = { nombre: '', tipo: '', prestaciones: [] };
         this.editarDepartamentoId = null;
         // this.fotoPreview = require('@/assets/estados/departamento_defecto.png');
       },
@@ -256,6 +272,7 @@
     },
     mounted() {
         this.obtenerDepartamentos();
+        this.obtenerPrestaciones(); // Cargar prestaciones al montar el componente
         this.intervalId = setInterval(() => {
             this.obtenerDepartamentos();
         }, 60000); // Cada 10 segundos
@@ -325,26 +342,6 @@
     margin-left: 10px;
     border-radius: 8px;
     font-weight: bold;
-  }
-  
-  .boton-modificar {
-    background-color: var(--warning-color) !important; /* Naranja */
-    color: white !important;
-    width: 40px; /* Hace el botón cuadrado */
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .boton-eliminar {
-    background-color: var(--error-color) !important; /* Rojo */
-    color: white !important;
-    width: 40px; /* Hace el botón cuadrado */
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
   
   .boton-guardar {
@@ -422,6 +419,7 @@ select:focus {
   background-color: #C6DEFD; /* Mantiene el color de fondo al hacer foco */
 }
 
+/* Tabla de departamentos con diseño similar a "Prestaciones" */
 .department-table {
   width: 100%;
   border-collapse: collapse;
@@ -432,12 +430,8 @@ select:focus {
 .department-table td {
   padding: 10px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
-.department-table tr {
-  margin: 0;
-  padding: 0;
+  border: 1px solid #ddd;
+  vertical-align: top; /* Asegura que el contenido se alinee en la parte superior */
 }
 
 .department-table th {
@@ -446,14 +440,43 @@ select:focus {
 }
 
 .department-table td {
-  vertical-align: middle;
+  background-color: white;
+}
+
+/* Contenedor de los botones de acción en la misma línea */
+.action-buttons {
+  display: flex;
+  gap: 10px; /* Espacio entre los botones */
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .department-actions {
+  width: auto; /* Ajusta el ancho según el contenido */
+}
+
+
+/* Botones de acción */
+.boton-modificar {
+  background-color: var(--warning-color) !important;
+  color: white !important;
+  width: 40px;
+  height: 40px;
   display: flex;
-  gap: 5px; /* Espacio entre botones */
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.boton-eliminar {
+  background-color: var(--error-color) !important;
+  color: white !important;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
 }
 
 

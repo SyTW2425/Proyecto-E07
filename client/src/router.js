@@ -7,6 +7,7 @@ import GestionDepartamentos from './components/GestionDepartamentos.vue';
 import PaginaError from './components/PaginaError.vue';
 import PaginaEnDesarrollo from './components/PaginaEnDesarrollo.vue';
 import SaludoUsuario from './components/Saludo.vue';
+import GestionPrestaciones from './components/GestionPrestaciones.vue';
 
 Vue.use(VueRouter);
 
@@ -46,6 +47,11 @@ const routes = [
     path: '/aseguradoras',
     name: 'PaginaEnDesarrollo',
     component: PaginaEnDesarrollo,
+  },
+  {
+    path: '/prestaciones',
+    name: 'GestionPrestaciones',
+    component: GestionPrestaciones,
   },
   {
     path: '*', // Ruta comodín para capturar rutas no existentes
