@@ -293,36 +293,6 @@ button {
   padding-bottom: 100px;
 }
 
-.section-head {
-  position: relative;
-  margin: 0 auto;
-  width: 92%;
-}
-
-.section-text {
-  position: relative;
-  height: 82px;
-  color: var(--primary-color);
-  font-family: Outfit, var(--default-font-family);
-  font-size: 80px;
-  font-weight: 700;
-  text-align: left;
-}
-
-.button-todos {
-  position: relative;
-  width: 302px;
-  height: 62px;
-  float: right;
-  font-family: Outfit, var(--default-font-family);
-  font-size: 40px;
-  font-weight: 500;
-  color: var(--primary-color);
-  background: #c6ddfc;
-  border-radius: 60px;
-  top: 10px;
-}
-
 .big-buttons {
   position: relative;
   display: flex;
@@ -360,6 +330,7 @@ button {
   font-weight: 600;
   line-height: 46px;
   text-align: center;
+  text-transform: capitalize;
 }
 
 .buttons-text-eq-med {
@@ -371,6 +342,7 @@ button {
   font-weight: 600;
   line-height: 46px;
   text-align: center;
+  text-transform: capitalize;
 }
 
 .buttons-text-eq-med-dep {
@@ -381,6 +353,7 @@ button {
   font-size: 1.4rem;
   line-height: 46px;
   text-align: center;
+  text-transform: capitalize;
 }
 
 .big-button-green {

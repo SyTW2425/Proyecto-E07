@@ -117,8 +117,7 @@
 
             <span class="buttons-text-eq-med-dep">Odontología</span>
             <br>
-            <span class="buttons-text-eq-med">Dr. Echedey
-                Domínguez Ramos</span>
+            <span class="buttons-text-eq-med">Dr. Echedey Domínguez Ramos</span>
           </button>
         </div>
       </section>

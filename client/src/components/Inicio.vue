@@ -15,22 +15,22 @@
             </button>
             
             <!-- Menú de navegación -->
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-              <ul class="navbar-nav ms-auto">
+            <div class="collapse navbar-collapse" id="navbarNavDropdown" style="font-size: x-large;">
+              <ul class="navbar-nav">
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+                  <a class="nav-link active" aria-current="page" href="/" style="color: #17195e;">Inicio</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="/especialidades">Especialidades</a>
+                  <a class="nav-link" href="/especialidades" style="color: #17195e;">Especialidades</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Equipo Médico</a>
+                  <a class="nav-link" href="/equipo-medico" style="color: #17195e;">Equipo Médico</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Eventos</a>
+                  <a class="nav-link" href="#" style="color: #17195e;">Eventos</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Contacto</a>
+                  <a class="nav-link" href="#" style="color: #17195e;">Contacto</a>
                 </li>
               </ul>
             </div>
