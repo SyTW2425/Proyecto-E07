@@ -2,41 +2,41 @@
   <div id="inicio">
       <!-- Header (Navegación y Logo) -->
       <header class="header">
-    <nav class="navbar navbar-expand-lg">
-      <div class="container-fluid">
-        <!-- Logotipo -->
-        <a class="navbar-brand" href="#">
-          <img :src="require('@/assets/logo.png')" alt="Logo" class="logo">
-        </a>
-        
-        <!-- Botón para colapsar menú en pantallas pequeñas -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        
-        <!-- Menú de navegación -->
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Inicio</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/especialidades">Especialidades</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Equipo Médico</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Eventos</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Contacto</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-  </header>
+        <nav class="navbar navbar-expand-lg">
+          <div class="container-fluid">
+            <!-- Logotipo -->
+            <a class="navbar-brand" href="#">
+              <img :src="require('@/assets/logo.png')" alt="Logo" class="logo">
+            </a>
+            
+            <!-- Botón para colapsar menú en pantallas pequeñas -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Menú de navegación -->
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+              <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/especialidades">Especialidades</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Equipo Médico</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Eventos</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Contacto</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </header>
   
       <!-- Hero Section (Sección principal) -->
       <section class="hero">

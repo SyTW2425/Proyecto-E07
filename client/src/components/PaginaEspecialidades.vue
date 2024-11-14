@@ -18,13 +18,13 @@
           <div class="collapse navbar-collapse" id="navbarNavDropdown" style="font-size: x-large;">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#" style="color: #17195e;">Inicio</a>
+                <a class="nav-link active" aria-current="page" href="/" style="color: #17195e;">Inicio</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#" style="color: #17195e;">Especialidades</a>
+                <a class="nav-link" href="/especialidades" style="color: #17195e;">Especialidades</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#" style="color: #17195e;">Equipo Médico</a>
+                <a class="nav-link" href="/equipo-medico" style="color: #17195e;">Equipo Médico</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#" style="color: #17195e;">Eventos</a>
@@ -38,86 +38,86 @@
       </nav>
     </header>
 
-    <div class="banner-principal">
-      <span class="letra-especialidades">Especialidades</span>
-    </div>
+    <section class="banner-principal">
+      <span class="letra-banner">Especialidades</span>
+    </section>
     
-    <div class="search-bar">
+    <section class="search-bar">
       <div class="search-icon">
           <img :src="require('@/assets/icons/Search-icon.png')" alt="Search-icon" class="Search-icon">
       </div>
       <div class="buscar">
         <input type="text" v-model="search" placeholder="Buscar..."/>
       </div>
-    </div>
+    </section>
 
 
-    <div class="sections">
+    <section class="sections">
       <div class="section-head">
         <span class="section-text">Servicios</span>
         <button class="button-todos">Ver todos</button>
       </div>
 
-      <div class="buttons-servicios">
+      <div class="big-buttons">
         <button class="big-button-blue">
-          <img src="@/assets/general/consultas_externas.png" alt="" class="img-consultas">
+          <img src="@/assets/general/consultas_externas.png" alt="" class="img-section">
           
-          <span class="buttons-text">Consultas Externas</span>
+          <span class="buttons-text-esp">Consultas Externas</span>
         </button>
         <button class="big-button-green">
-          <img src="@/assets/general/urgencias.png" alt="" class="img-consultas">
+          <img src="@/assets/general/urgencias.png" alt="" class="img-section">
           
-          <span class="buttons-text">Urgencias</span>
+          <span class="buttons-text-esp">Urgencias</span>
         </button>
         <button class="big-button-blue">
-          <img src="@/assets/general/radiologia.png" alt="" class="img-consultas">
+          <img src="@/assets/general/radiologia.png" alt="" class="img-section">
           
-          <span class="buttons-text">Radiología</span>
+          <span class="buttons-text-esp">Radiología</span>
         </button>
         <button class="big-button-green" href="#">
-          <img src="@/assets/general/laboratorio.png" alt="" class="img-consultas">
+          <img src="@/assets/general/laboratorio.png" alt="" class="img-section">
 
-          <span class="buttons-text">Laboratorio</span>
+          <span class="buttons-text-esp">Laboratorio</span>
         </button>
       </div>
-    </div>
+    </section>
 
 
-    <div class="sections">
+    <section class="sections">
       <div class="section-head">
-        <span class="section-text">Servicios</span>
+        <span class="section-text">Departamentos</span>
         <button class="button-todos">Ver todos</button>
       </div>
 
-      <div class="buttons-servicios">
+      <div class="big-buttons">
         <button class="big-button-blue">
-          <img src="@/assets/general/consultas_externas.png" alt="" class="img-consultas">
+          <img src="@/assets/general/medicina_interna.png" alt="" class="img-section">
           
-          <span class="buttons-text">Consultas Externas</span>
+          <span class="buttons-text-esp">Medicina Interna</span>
         </button>
         <button class="big-button-green">
-          <img src="@/assets/general/urgencias.png" alt="" class="img-consultas">
+          <img src="@/assets/general/pediatria.png" alt="" class="img-section">
           
-          <span class="buttons-text">Urgencias</span>
+          <span class="buttons-text-esp">Pediatria</span>
         </button>
         <button class="big-button-blue">
-          <img src="@/assets/general/radiologia.png" alt="" class="img-consultas">
+          <img src="@/assets/general/cirugia_general.png" alt="" class="img-section">
           
-          <span class="buttons-text">Radiología</span>
+          <span class="buttons-text-esp">Cirugia General</span>
         </button>
         <button class="big-button-green" href="#">
-          <img src="@/assets/general/laboratorio.png" alt="" class="img-consultas">
+          <img src="@/assets/general/cardiologia.png" alt="" class="img-section">
 
-          <span class="buttons-text">Laboratorio</span>
+          <span class="buttons-text-esp">Cardiologia</span>
         </button>
       </div>
-    </div>
+    </section>
 
     <!-- Footer (Pie de página) -->
     <footer class="footer">
         <p>Portal del paciente | Intranet | Contacto</p>
         <p>Hospital Rambla - Comprometidos en ofrecer atención sanitaria de primer nivel, con dedicación y calidad humana.</p>
-      </footer>
+    </footer>
 
 
   </div>
@@ -131,35 +131,3 @@ export default {
 };
 </script>
   
-  
-
-<style scoped>
-.image-container {
-  display: flex;             /* Coloca las imágenes en fila */
-  justify-content: center;    /* Centra las imágenes en el contenedor */
-  align-items: center;        /* Alinea verticalmente en el centro si tienen alturas diferentes */
-  gap: 20px;                  /* Espacio entre las imágenes */
-  padding: 20px;              /* Añade un padding opcional para espacio interno en el contenedor */
-  flex-wrap: wrap;            /* Permite que el contenido se ajuste en varias filas si es necesario */
-  width: 100%;                /* Hace que el contenedor ocupe el ancho completo */
-  box-sizing: border-box;     /* Asegura que el padding no aumente el ancho total */
-}
-
-
-.same-width-img {
-  width: 100px;               /* Ajusta el ancho deseado para todas las imágenes */
-  height: auto;               /* Mantiene la proporción de la imagen */
-}
-
-.boton {
-  background-color: var(--primary-color) !important; 
-  color: white !important;
-}
-
-.boton-white {
-  background-color: white !important;
-  color: var(--primary-color) !important;
-}
-
-
-</style>

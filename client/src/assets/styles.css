@@ -37,7 +37,7 @@ body {
   width: 90%;
   height: 7em;
   margin: 0 auto;
-  top: 1%;
+  top: 10px;
 }
 
 
@@ -73,6 +73,10 @@ body {
   color: #fff;
   text-align: center;
   padding: 1rem;
+  box-sizing: border-box;
+  position: relative;
+  bottom: 0;
+  top: 100px;
 }
 
 .logo-container {
@@ -217,11 +221,23 @@ button {
   margin: 0 auto;
   padding: 2%;
   top: 30px;
-  background: #17195e;
+  background: var(--primary-color);
   border-radius: 45px;
 }
 
-.letra-especialidades {
+.letra-chica {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-size: 2rem;
+  top: 1rem;
+  text-transform: uppercase;
+  color: var(--background-color);
+
+}
+
+.letra-banner {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -254,7 +270,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #252b61;
+  background: var(--primary-color);
   border-radius: 100px;
 }
 
@@ -271,7 +287,10 @@ button {
   flex-wrap: wrap;
   top: 100px;
   gap: 45px;
+  height: fit-content;
   margin: 0 auto;
+  padding-top: 50px;
+  padding-bottom: 100px;
 }
 
 .section-head {
@@ -283,7 +302,7 @@ button {
 .section-text {
   position: relative;
   height: 82px;
-  color: #17195e;
+  color: var(--primary-color);
   font-family: Outfit, var(--default-font-family);
   font-size: 80px;
   font-weight: 700;
@@ -298,19 +317,19 @@ button {
   font-family: Outfit, var(--default-font-family);
   font-size: 40px;
   font-weight: 500;
-  color: #17195e;
+  color: var(--primary-color);
   background: #c6ddfc;
   border-radius: 60px;
   top: 10px;
 }
 
-.buttons-servicios {
+.big-buttons {
   position: relative;
   display: flex;
   flex-wrap: wrap;
   gap: 45px;
   margin: 0 auto;
-}
+  }
 
 .big-button-blue {
   position: relative;
@@ -318,9 +337,11 @@ button {
   height: 465px;
   background: #c6ddfc;
   border-radius: 60px;
+  margin: 0 auto;
+
 }
 
-.img-consultas {
+.img-section {
   position: absolute;
   width: 100%;
   top: 0;
@@ -330,7 +351,7 @@ button {
   border-bottom-left-radius: 20px;
 }
 
-.buttons-text {
+.buttons-text-esp {
   position: relative;
   color: #17195e;
   top: 155px;
@@ -341,12 +362,33 @@ button {
   text-align: center;
 }
 
+.buttons-text-eq-med {
+  position: relative;
+  color: #17195e;
+  top: 150px;
+  font-family: Outfit, var(--default-font-family);
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 46px;
+  text-align: center;
+}
+
+.buttons-text-eq-med-dep {
+  position: relative;
+  color: #17195e;
+  top: 160px;
+  font-family: Outfit, var(--default-font-family);
+  font-size: 1.4rem;
+  line-height: 46px;
+  text-align: center;
+}
+
 .big-button-green {
   position: relative;
   width: 320px;
   height: 465px;
   background: #a3dac2;
-  z-index: 107;
-  overflow: hidden;
   border-radius: 60px;
+  margin: 0 auto;
+
 }

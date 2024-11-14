@@ -8,6 +8,7 @@ import PaginaError from './components/PaginaError.vue';
 import PaginaEnDesarrollo from './components/PaginaEnDesarrollo.vue';
 import SaludoUsuario from './components/Saludo.vue';
 import PaginaEspecialidades from './components/PaginaEspecialidades.vue';
+import PaginaEquipoMedico from './components/PaginaEquipoMedico.vue';
 
 Vue.use(VueRouter);
 
@@ -21,6 +22,11 @@ const routes = [
     path: '/especialidades',
     name: 'PaginaEspecialidades',
     component: PaginaEspecialidades,
+  },
+  {
+    path: '/equipo-medico',
+    name: 'PaginaEquipoMedico',
+    component: PaginaEquipoMedico,
   },
   {
     path: '/usuarios',

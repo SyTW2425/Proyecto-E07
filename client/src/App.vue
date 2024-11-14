@@ -12,6 +12,9 @@
             <router-link class="nav-link" to="/especialidades">Especialidades</router-link>
           </li>
           <li class="nav-item">
+            <router-link class="nav-link" to="/equipo-medico">Equipo Medico</router-link>
+          </li>
+          <li class="nav-item">
             <router-link class="nav-link" to="/usuarios">Usuarios</router-link>
           </li>
           
