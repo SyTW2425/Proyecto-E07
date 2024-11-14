@@ -1,8 +1,8 @@
 <template>
-    <div id="inicio">
+  <div id="inicio">
       <!-- Header (Navegación y Logo) -->
       <header class="header">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg">
       <div class="container-fluid">
         <!-- Logotipo -->
         <a class="navbar-brand" href="#">
@@ -21,7 +21,7 @@
               <a class="nav-link active" aria-current="page" href="#">Inicio</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Especialidades</a>
+              <a class="nav-link" href="/especialidades">Especialidades</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Equipo Médico</a>

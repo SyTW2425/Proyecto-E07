@@ -1,12 +1,15 @@
 <template>
   <div id="app" data-app>
     <!-- Barra de navegación -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-dark">
       <a class="navbar-brand" href="#">Funcionalidades:</a>
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
             <router-link class="nav-link" to="/">Inicio</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/especialidades">Especialidades</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/usuarios">Usuarios</router-link>

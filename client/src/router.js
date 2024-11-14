@@ -7,6 +7,7 @@ import GestionDepartamentos from './components/GestionDepartamentos.vue';
 import PaginaError from './components/PaginaError.vue';
 import PaginaEnDesarrollo from './components/PaginaEnDesarrollo.vue';
 import SaludoUsuario from './components/Saludo.vue';
+import PaginaEspecialidades from './components/PaginaEspecialidades.vue';
 
 Vue.use(VueRouter);
 
@@ -15,6 +16,11 @@ const routes = [
     path: '/',
     name: 'Inicio',
     component: PaginaInicio,
+  },
+  {
+    path: '/especialidades',
+    name: 'PaginaEspecialidades',
+    component: PaginaEspecialidades,
   },
   {
     path: '/usuarios',
