@@ -1,0 +1,191 @@
+<template>
+  <div class="login-page">
+    <header class="header">
+      <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
+      <div class="vertical-line"></div>
+      <h1 class="left-align small-text">INTRANET</h1>
+    </header>
+    
+    <main class="content">
+      <section class="welcome-section">
+        <div class="welcome-container">
+          <h2>Intranet <br>Hospitalaria</h2>
+          <p class="welcome-text">Gestión Interna y Herramientas<br> para el Personal Hospitalario</p>
+        </div>
+      </section>
+      
+      <section class="login-form">
+        <h2 class="form-title">Acceso usuarios</h2>
+        <form @submit.prevent="handleLogin">
+          <label for="username">Usuario:</label>
+          <input type="text" id="username" v-model="username" required />
+          
+          <label for="password">Contraseña:</label>
+          <input type="password" id="password" v-model="password" required />
+          
+          <a href="#" class="forgot-password">¿Has olvidado tu contraseña?</a>
+          
+          <button type="submit" class="login-button">Entrar</button>
+        </form>
+        
+        <p class="register-link">
+          ¿No eres usuario? <a href="#">Regístrate</a>
+        </p>
+      </section>
+    </main>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'IntranetLogin',
+  data() {
+    return {
+      username: '',
+      password: ''
+    };
+  },
+  methods: {
+    handleLogin() {
+      console.log("Usuario:", this.username);
+      console.log("Contraseña:", this.password);
+    }
+  }
+};
+</script>
+
+<style scoped>
+.login-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Outfit', sans-serif;
+}
+
+.header {
+  width: calc(100% - 5rem); 
+  background-color: #e1e1e1;
+  padding: 1rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 15px; 
+  margin-left: 1rem; 
+  margin-right: 1rem; 
+}
+
+.header img.logo {
+  width: 200px;
+  height: auto; 
+}
+
+.vertical-line {
+  width: 4px;
+  height: 70px;
+  background-color: #92bdf6; 
+}
+
+.header h1.left-align {
+  text-align: left;
+  margin-left: 10px; 
+}
+
+.header h1.small-text {
+  font-size: 24px; 
+}
+
+.content {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 1200px;
+  padding: 2rem;
+}
+
+.welcome-section {
+  width: 50%;
+}
+
+.welcome-container {
+  max-width: 100%;
+}
+
+.welcome-section h2 {
+  font-size: 45px;
+  color: #17195e;
+}
+
+.welcome-text {
+  margin-top: 1rem;
+  color: #17195e;
+}
+
+.welcome-section ul {
+  margin-top: 1rem;
+  color: #17195e;
+}
+
+.login-form {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+
+.login-form .form-title {
+  text-align: center; 
+  font-size: 25px;
+  font-weight: bold;
+  width: 100%;
+  color: #17195e;
+}
+
+.login-form label {
+  margin-top: 1rem;
+  align-self: flex-start; 
+}
+
+.login-form input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  border-radius: 5px;
+  background-color: #c6defd; 
+  border-radius: 15px; 
+}
+
+.forgot-password {
+  margin-top: 1rem;
+  font-size: 0.7rem;
+  color: #17195e;
+  text-decoration: none; 
+}
+
+.login-button {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #17195e;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  border-radius: 30px; 
+}
+
+.register-link {
+  margin-top: 0.7rem;
+  font-size: 0.9rem;
+}
+
+.register-link a {
+  color: #000000;
+  text-decoration: none;
+  font-weight: bold;
+}
+</style>
