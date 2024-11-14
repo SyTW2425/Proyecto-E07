@@ -16,6 +16,7 @@
             
             <!-- Menú de navegación -->
             <div class="collapse navbar-collapse" id="navbarNavDropdown" style="font-size: x-large;">
+              
               <ul class="navbar-nav">
                 <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="/" style="color: #17195e;">Inicio</a>
@@ -52,58 +53,22 @@
       </section>
   
   
-      <section class="sections">
+      <section class="sections" >
 
-        <div class="big-buttons">
-          <button class="big-button-blue">
-            <img src="@/assets/general/consultas_externas.png" alt="consultas_externas" class="img-section">
-
-            <span class="buttons-text-esp">consultas externas</span>
+        <div class="big-buttons" v-for="departamento in departamentosFiltrados" :key="departamento._id">
+          <button class="big-button-blue" v-if="departamento.index % 2 !== 0">
+            <img src="@/assets/estados/departamento_defecto.png" alt="consultas_externas" class="img-section">
+            <span class="buttons-text-esp" >{{ departamento.nombre }}</span>
           </button>
 
-          <button class="big-button-green">
-            <img src="@/assets/general/urgencias.png" alt="urgencias" class="img-section">
-
-            <span class="buttons-text-esp">urgencias</span>
+          <button class="big-button-green" v-if="departamento.index % 2 === 0">
+            <img src="@/assets/estados/departamento_defecto.png" alt="urgencias" class="img-section">
+            <span class="buttons-text-esp">{{ departamento.nombre }}</span>
           </button>
 
-          <button class="big-button-blue">
-            <img src="@/assets/general/radiologia.png" alt="radiologia" class="img-section">
-
-            <span class="buttons-text-esp">radiologia</span>
-          </button>
-
-          <button class="big-button-green" href="#">
-            <img src="@/assets/general/laboratorio.png" alt="laboratorio" class="img-section">
-
-            <span class="buttons-text-esp">laboratorio</span>
-          </button>
-
-          <button class="big-button-blue">
-            <img src="@/assets/general/medicina_interna.png" alt="medicina_interna" class="img-section">
-
-            <span class="buttons-text-esp">medicina interna</span>
-          </button>
-
-          <button class="big-button-green">
-            <img src="@/assets/general/pediatria.png" alt="pediatria" class="img-section">
-
-            <span class="buttons-text-esp">pediatria</span>
-          </button>
-
-          <button class="big-button-blue">
-            <img src="@/assets/general/cirugia_general.png" alt="cirugia_general" class="img-section">
-
-            <span class="buttons-text-esp">cirugia general</span>
-          </button>
-
-          <button class="big-button-green" href="#">
-            <img src="@/assets/general/cardiologia.png" alt="cardiologia" class="img-section">
-
-            <span class="buttons-text-esp">cardiologia</span>
-          </button>
-      </div>
-    </section>
+          
+        </div>
+      </section>
 
     <!-- Footer (Pie de página) -->
     <footer class="footer">
@@ -118,8 +83,53 @@
 <style src="@/assets/styles.css"></style>
 
 <script>
+import apiClient from '@/apiClient';
 export default {
   name: "PaginaEspecialidades",
+  data() {
+    return {
+      departamentos: [],
+      filtroTipo: "Especialidad médica",
+      index: [],
+    };
+  },
+  computed: {
+    departamentosFiltrados() {
+      if (this.filtroTipo) {
+        return this.departamentos.filter(departamento => departamento.tipo === this.filtroTipo);
+      }
+      return this.departamentos;
+    }
+  },
+
+  methods: {
+    async obtenerDepartamentos() {
+      this.cargando = true;
+      this.errorServidor = false;
+      try {
+        const response = await apiClient.get('/api/departamentos');
+        this.departamentos = response.data;
+      } catch (error) {
+        this.errorServidor = true;
+      } finally {
+        this.cargando = false;
+      }
+    }
+  },
+  watch: {
+    departamentosFiltrados(newDepartamentos) {
+      newDepartamentos.forEach((departamento, index) => {
+        departamento.index = index + 1;
+      });
+    }
+  },
+  
+  mounted() {
+      this.obtenerDepartamentos();
+      this.intervalId = setInterval(() => {
+          this.obtenerDepartamentos();
+      }, 10000); // Cada 10 segundos
+  },
 };
 </script>
   
