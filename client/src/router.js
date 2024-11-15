@@ -9,6 +9,8 @@ import PaginaEnDesarrollo from './components/PaginaEnDesarrollo.vue';
 import SaludoUsuario from './components/Saludo.vue';
 import UserLogin from './components/UserLogin.vue';
 import ContactForm from './components/Contacto.vue';
+import GestionPrestaciones from './components/GestionPrestaciones.vue';
+import AgendaMedico from './components/AgendaMedico.vue';
 
 Vue.use(VueRouter);
 
@@ -25,8 +27,8 @@ const routes = [
   },
   {
     path: '/agenda-medico', 
-    name: 'PaginaEnDesarrollo',
-    component: PaginaEnDesarrollo,
+    name: 'AgendaMedico',
+    component: AgendaMedico,
   },
   {
     path: '/departamentos',
@@ -53,6 +55,11 @@ const routes = [
     path: '/aseguradoras',
     name: 'PaginaEnDesarrollo',
     component: PaginaEnDesarrollo,
+  },
+  {
+    path: '/prestaciones',
+    name: 'GestionPrestaciones',
+    component: GestionPrestaciones,
   },
   {
     path: '*', // Ruta comodín para capturar rutas no existentes
