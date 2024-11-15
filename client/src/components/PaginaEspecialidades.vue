@@ -108,7 +108,7 @@ export default {
         return this.departamentosEspMed;
       }
       return this.departamentosEspMed.filter(departamento => 
-        departamento.nombre.toLowerCase().includes(this.search.toLowerCase())
+        departamento.nombre.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(this.search.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
       );
     }
   },
