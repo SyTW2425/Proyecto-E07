@@ -71,7 +71,7 @@ export default {
 }
 
 .header {
-  width: calc(100% - 5rem); 
+  width: calc(100% - 4rem); 
   background-color: #e1e1e1;
   padding: 1rem;
   text-align: center;
@@ -80,8 +80,8 @@ export default {
   justify-content: center;
   gap: 10px;
   border-radius: 15px; 
-  margin-left: 1rem; 
-  margin-right: 1rem; 
+  margin-left: 2rem; 
+  margin-right: 2rem; 
 }
 
 .header img.logo {
@@ -120,9 +120,10 @@ export default {
   max-width: 100%;
 }
 
-.welcome-section h2 {
+.welcome-container h2 {
   font-size: 45px;
   color: #17195e;
+  font-weight: bold;
 }
 
 .welcome-text {
