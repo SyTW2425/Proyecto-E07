@@ -8,6 +8,7 @@ import PaginaError from './components/PaginaError.vue';
 import PaginaEnDesarrollo from './components/PaginaEnDesarrollo.vue';
 import SaludoUsuario from './components/Saludo.vue';
 import UserLogin from './components/UserLogin.vue';
+import ContactForm from './components/Contacto.vue';
 
 Vue.use(VueRouter);
 
@@ -36,6 +37,11 @@ const routes = [
     path: '/login',
     name: 'UserLogin',
     component: UserLogin,
+  },
+  {
+    path: '/contacto',
+    name: 'Contacto',
+    component: ContactForm,
   },
 
   {

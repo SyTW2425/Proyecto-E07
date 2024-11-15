@@ -42,7 +42,7 @@
                 <a class="nav-link" href="/client/src/components/PaginaEnDesarrollo.vue">Eventos</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/client/src/components/PaginaEnDesarrollo.vue">Contacto</a>
+                <a class="nav-link" href="/contacto">Contacto</a>
               </li>
             </ul>
           </div>
