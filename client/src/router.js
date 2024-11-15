@@ -7,6 +7,8 @@ import GestionDepartamentos from './components/GestionDepartamentos.vue';
 import PaginaError from './components/PaginaError.vue';
 import PaginaEnDesarrollo from './components/PaginaEnDesarrollo.vue';
 import SaludoUsuario from './components/Saludo.vue';
+import PaginaEspecialidades from './components/PaginaEspecialidades.vue';
+import PaginaEquipoMedico from './components/PaginaEquipoMedico.vue';
 import UserLogin from './components/UserLogin.vue';
 import ContactForm from './components/Contacto.vue';
 import GestionPrestaciones from './components/GestionPrestaciones.vue';
@@ -19,6 +21,16 @@ const routes = [
     path: '/',
     name: 'Inicio',
     component: PaginaInicio,
+  },
+  {
+    path: '/especialidades',
+    name: 'PaginaEspecialidades',
+    component: PaginaEspecialidades,
+  },
+  {
+    path: '/equipo-medico',
+    name: 'PaginaEquipoMedico',
+    component: PaginaEquipoMedico,
   },
   {
     path: '/usuarios',

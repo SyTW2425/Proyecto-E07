@@ -131,8 +131,41 @@
 </table>
 
 
+      <div v-if="!cargando && !errorServidor && departamentos.length === 0" class="texto-centrado">
+        <p>La lista está vacía</p>
       </div>
+
+
+    <!-- Tabla de departamentos -->
+    <table class="department-table"  v-if="departamentos.length !== 0">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Nombre</th>
+          <th>Tipo</th>
+          <th>Operaciones</th>
+        </tr>
+      </thead>
+    <tbody>
+    <tr v-for="departamento in departamentos" :key="departamento._id">
+      <td class="department-actions">
+        <v-btn class="boton-modificar" @click="cargarDepartamento(departamento)">
+          <i class="bi bi-pencil-square"></i>
+        </v-btn>
+        <v-btn class="boton-eliminar" @click="confirmarEliminacion(departamento._id, departamento.tipo, departamento.nombre)">
+          <i class="bi bi-trash"></i>
+        </v-btn>
+      </td>
+      <td>{{ departamento.nombre }}</td>
+      <td>{{ departamento.tipo }}</td>
+      <td>{{ departamento.operaciones.join(', ') }}</td> <!-- Muestra las operaciones separadas por comas -->
+      
+    </tr>
+  </tbody>
+</table>
+
     </div>
+
   </template>
   
   <script>
@@ -270,16 +303,22 @@
     },
       
     },
-    mounted() {
+    async actualizarDepartamento() {
+      try {
+        await apiClient.put(`/api/departamentos/${this.editarDepartamentoId}`, this.nuevoDepartamento);
         this.obtenerDepartamentos();
         this.obtenerPrestaciones(); // Cargar prestaciones al montar el componente
         this.intervalId = setInterval(() => {
             this.obtenerDepartamentos();
         }, 60000); // Cada 10 segundos
     },
-    beforeDestroy() {
-        clearInterval(this.intervalId);
+    async confirmarEliminacion(id) {
+      const confirmacion = window.confirm('¿Está seguro de que desea eliminar este departamento?');
+      if (confirmacion) {
+        this.eliminarDepartamento(id);
+      }
     },
+
   };
   </script>
   
@@ -399,31 +438,78 @@
   align-self: center;
 }
 
-  /* Estilo para los campos de entrada de texto, email y el selector */
+.boton-cancelar {
+  background-color: var(--color-gris) !important; /* Gris */
+  color: black !important;
+  padding: 10px 20px;
+  border-radius: 8px;
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 8px;
+  border-radius: 8px;
+  background-color: var(--background-color);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.user-actions {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+
+/* Estilo para la alerta de error */
+.alerta-error {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+.alert-text {
+  margin-left: 20px;
+}
+
+.texto-centrado {
+  text-align: center;
+}
+
+.foto-preview {
+width: 120px;
+height: 120px;
+border-radius: 20%;
+margin-top: 10px;
+object-fit: cover;
+margin-bottom: 30px;
+align-self: center;
+}
+
+/* Estilo para los campos de entrada de texto, email y el selector */
 input[type="text"],
 input[type="email"],
 select {
-  background-color: #C6DEFD; /* Color de fondo del campo */
-  padding: 8px;
-  border-radius: 5px;
-  outline: none;
-  font-family: 'Outfit', sans-serif; /* Asegura que la fuente sea uniforme */
+background-color: #C6DEFD; /* Color de fondo del campo */
+padding: 8px;
+border-radius: 5px;
+outline: none;
+font-family: 'Outfit', sans-serif; /* Asegura que la fuente sea uniforme */
 }
 
 /* Cambia el color del borde y añade un efecto cuando el campo está enfocado */
 input[type="text"]:focus,
 input[type="email"]:focus,
 select:focus {
-  border-color: var(--color-azul); /* Cambia el color del borde al hacer foco */
-  box-shadow: 0 0 5px var(--color-azul); /* Añade sombra al hacer foco */
-  background-color: #C6DEFD; /* Mantiene el color de fondo al hacer foco */
+border-color: var(--color-azul); /* Cambia el color del borde al hacer foco */
+box-shadow: 0 0 5px var(--color-azul); /* Añade sombra al hacer foco */
+background-color: #C6DEFD; /* Mantiene el color de fondo al hacer foco */
 }
 
 /* Tabla de departamentos con diseño similar a "Prestaciones" */
 .department-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+width: 100%;
+border-collapse: collapse;
+margin-top: 20px;
 }
 
 .department-table th,
@@ -435,8 +521,8 @@ select:focus {
 }
 
 .department-table th {
-  background-color: #f4f4f4;
-  font-weight: bold;
+background-color: #f4f4f4;
+font-weight: bold;
 }
 
 .department-table td {
@@ -483,4 +569,3 @@ select:focus {
 
 
 </style>
-  
