@@ -55,69 +55,33 @@
   
       <section class="sections">
 
-        <div class="big-buttons">
-          <button class="big-button-blue">
-            <img src="@/assets/doctors/Dr_Acoran_Garcia_Suarez.png" alt="Dr_Acoran_Garcia_Suarez" class="img-section">
-
-            <span class="buttons-text-eq-med-dep">Dermatología</span>
-            <br>
-            <span class="buttons-text-eq-med">Dr. Acorán García Suárez</span>
+        <div class="big-buttons" v-for="usuario in usuariosFiltro" :key="usuario._id">
+          <button class="big-button-blue" v-if="usuario.index % 2 !== 0">
+            <img src="@/assets/estados/perfil_defecto.png" alt="consultas_externas" class="img-section">
+            <div v-if="usuario.genero === 'Masculino'">
+              <span class="buttons-text-eq-med-dep"> {{ getDepartamentoName(usuario.departamento) }}</span>
+              <br>
+              <span class="buttons-text-eq-med" > Dr. {{ usuario.nombre }} {{ usuario.apellidos }}</span>
+            </div>
+            <div v-if="usuario.genero !== 'Masculino'">
+              <span class="buttons-text-eq-med-dep"> {{ getDepartamentoName(usuario.departamento) }}</span>
+              <br>
+              <span class="buttons-text-eq-med" > Dra. {{ usuario.nombre }} {{ usuario.apellidos }}</span>
+            </div>
           </button>
 
-          <button class="big-button-green">
-            <img src="@/assets/doctors/Dra_Haria_Benitez_Perez.png" alt="Dra_Haria_Benitez_Perez" class="img-section">
-
-            <span class="buttons-text-eq-med-dep">Oncología</span>
-            <br>
-            <span class="buttons-text-eq-med">Dra. Haría Benítez Pérez</span>
-          </button>
-
-          <button class="big-button-blue">
-            <img src="@/assets/doctors/Dr_Nauzet_Morales_Perez.png" alt="Dr_Nauzet_Morales_Perez" class="img-section">
-
-            <span class="buttons-text-eq-med-dep">Ginecología y Obstetricia</span>
-            <br>
-            <span class="buttons-text-eq-med">Dr. Nauzet Morales Perez</span>
-          </button>
-
-          <button class="big-button-green" href="#">
-            <img src="@/assets/doctors/Dra_Guacimara_Suarez_Benitez.png" alt="Dra_Guacimara_Suarez_Benitez" class="img-section">
-
-            <span class="buttons-text-eq-med-dep">Reumatología</span>
-            <br>
-            <span class="buttons-text-eq-med">Dra. Guacimara Suárez Benítez</span>
-          </button>
-
-          <button class="big-button-blue">
-            <img src="@/assets/doctors/Dra_Magali_Medina_Dominguez.png" alt="Dra_Magali_Medina_Dominguez" class="img-section">
-
-            <span class="buttons-text-eq-med-dep">Neumología</span>
-            <br>
-            <span class="buttons-text-eq-med">Dra. Magalí Medina Domínguez</span>
-          </button>
-
-          <button class="big-button-green">
-            <img src="@/assets/doctors/Dr_Ancor_Cabrera_Medina.png" alt="Dr_Ancor_Cabrera_Medina" class="img-section">
-
-            <span class="buttons-text-eq-med-dep">Cirugía General</span>
-            <br>
-            <span class="buttons-text-eq-med">Dr. Ancor Cabrera Medina</span>
-          </button>
-
-          <button class="big-button-blue">
-            <img src="@/assets/doctors/Dra_Yaiza_Quintana_Martin.png" alt="Dra_Yaiza_Quintana_Martin" class="img-section">
-
-            <span class="buttons-text-eq-med-dep">Medicina Interna</span>
-            <br>
-            <span class="buttons-text-eq-med">Dra. Yaiza Quintana Martín</span>
-          </button>
-
-          <button class="big-button-green" href="#">
-            <img src="@/assets/doctors/Dr_Echedey_Dominguez_Ramos.png" alt="Dr_Echedey_Dominguez_Ramos" class="img-section">
-
-            <span class="buttons-text-eq-med-dep">Odontología</span>
-            <br>
-            <span class="buttons-text-eq-med">Dr. Echedey Domínguez Ramos</span>
+          <button class="big-button-green" v-if="usuario.index % 2 === 0">
+            <img src="@/assets/estados/perfil_defecto.png" alt="consultas_externas" class="img-section">
+            <div v-if="usuario.genero === 'Masculino'">
+              <span class="buttons-text-eq-med-dep"> {{ getDepartamentoName(usuario.departamento) }}</span>
+              <br>
+              <span class="buttons-text-eq-med" > Dr. {{ usuario.nombre }} {{ usuario.apellidos }}</span>
+            </div>
+            <div v-if="usuario.genero !== 'Masculino'">
+              <span class="buttons-text-eq-med-dep"> {{ getDepartamentoName(usuario.departamento) }}</span>
+              <br>
+              <span class="buttons-text-eq-med" > Dra. {{ usuario.nombre }} {{ usuario.apellidos }}</span>
+            </div>
           </button>
         </div>
       </section>
@@ -137,8 +101,87 @@
   <style src="@/assets/styles.css"></style>
   
   <script>
+  import apiClient from '@/apiClient';
+
   export default {
     name: "PaginaEquipoMedico",
+    data() {
+      return {
+        search: '',
+        usuarios: [],
+        departamentos: [],
+        index: [],
+        cargando: false,
+        errorServidor: false,
+        filtroTipo: "Médico"
+      };
+    },
+    computed: {
+      usuariosID() {
+        if (this.filtroTipo) {
+          return this.usuarios.filter(usuario => usuario.tipo === this.filtroTipo);
+        }
+        return this.usuarios;
+      },
+      
+      usuariosFiltro() {
+        if (this.search.trim() === '') {
+          return this.usuariosID;
+        }
+        return this.usuariosID.filter(usuario => 
+          usuario.nombre.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(this.search.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
+        );
+      },
+      
+    },
+
+    methods: {
+      async obtenerUsuarios() {
+        this.cargando = true;
+        this.errorServidor = false;
+        try {
+          const response = await apiClient.get('/api/usuarios');
+          this.usuarios = response.data;
+        } catch (error) {
+          this.errorServidor = true;
+        } finally {
+          this.cargando = false;
+        }
+      },
+      async obtenerDepartamentos() {
+        this.cargando = true;
+        this.errorServidor = false;
+        try {
+          const response = await apiClient.get('/api/departamentos');
+          this.departamentos = response.data;
+        } catch (error) {
+          this.errorServidor = true;
+        } finally {
+          this.cargando = false;
+        }
+      },
+      getDepartamentoName(departamentoId) {
+        const departamento = this.departamentos.find(dep => dep._id === departamentoId);
+        return departamento ? departamento.nombre : 'Unknown';
+      }
+    },
+      
+    
+    mounted() {
+        this.obtenerUsuarios();
+        this.obtenerDepartamentos();
+        this.intervalId = setInterval(() => {
+            this.obtenerUsuarios();
+        }, 10000); // Cada 10 segundos
+    },
+
+    watch: {
+      usuariosID(newUsuarios) {
+        newUsuarios.forEach((usuario, index) => {
+          usuario.index = index + 1;
+        });
+      }
+    },
   };
   </script>
     

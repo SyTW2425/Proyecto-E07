@@ -65,9 +65,8 @@
             <img src="@/assets/estados/departamento_defecto.png" alt="urgencias" class="img-section">
             <span class="buttons-text-esp">{{ departamento.nombre }}</span>
           </button>
-
-          
         </div>
+
       </section>
 
     <!-- Footer (Pie de página) -->
@@ -97,7 +96,7 @@ export default {
     };
   },
   computed: {
-    departamentosEspMed() {
+    departamentosID() {
       if (this.filtroTipo) {
         return this.departamentos.filter(departamento => departamento.tipo === this.filtroTipo);
       }
@@ -105,9 +104,9 @@ export default {
     },
     departamentosFiltro() {
       if (this.search.trim() === '') {
-        return this.departamentosEspMed;
+        return this.departamentosID;
       }
-      return this.departamentosEspMed.filter(departamento => 
+      return this.departamentosID.filter(departamento => 
         departamento.nombre.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(this.search.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
       );
     }
@@ -128,7 +127,7 @@ export default {
     }
   },
   watch: {
-    departamentosEspMed(newDepartamentos) {
+    departamentosID(newDepartamentos) {
       newDepartamentos.forEach((departamento, index) => {
         departamento.index = index + 1;
       });
