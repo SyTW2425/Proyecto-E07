@@ -2,18 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const path = require('path');
 
 // Ejecucción: nodemon server.js
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 dotenv.config();
-
-
-// Sirve la carpeta public como estática para que el frontend pueda acceder a las imágenes
-app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
-
 
 
 
@@ -61,15 +55,16 @@ app.get('/', (req, res) => {
 
 // Rutas de usuarios
 const userRoutes = require('./routes/userRoutes');
-const departamentoRoutes = require('./routes/departamentoRoutes'); // Nueva ruta
-
-
-app.use('/api', userRoutes); // Usa las rutas de usuario bajo el prefijo '/api'
-app.use('/api', departamentoRoutes); // Ruta para departamentos
-
-// Rutas de citas médicas
+const departamentoRoutes = require('./routes/departamentoRoutes');
 const medicoCitasRoutes = require('./routes/medicoCitas');
-app.use('/api', medicoCitasRoutes); // Usa las rutas de citas bajo el prefijo '/api'
+const prestacionRoutes = require('./routes/prestacionRoutes');
+const medicoCitas = require('./routes/medicoCitas')
+
+app.use('/api', userRoutes);         // Rutas para usuarios
+app.use('/api', departamentoRoutes); // Rutas para departamentos
+app.use('/api', medicoCitasRoutes);     // Rutas para citas médicas
+app.use('/api', prestacionRoutes); // Rutas para prestaciones
+app.use('/api', medicoCitas)
 
 // Iniciar el servidor
 app.listen(PORT, () => {

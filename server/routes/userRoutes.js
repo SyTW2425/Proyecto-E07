@@ -1,20 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const Usuario = require('../models/Usuario'); // Importa el modelo de usuario
-const multer = require('multer');
-const path = require('path');
 
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/uploads'); // Directorio de destino de las imágenes
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Renombra el archivo
+// Función para generar un username único
+async function generarUsername(nombre, apellidos) {
+  const iniciales = `${nombre.charAt(0).toLowerCase()}${apellidos.replace(/\s+/g, '').slice(0, 2).toLowerCase()}`;
+  const generarNumeros = () => Math.floor(1000 + Math.random() * 9000);
+
+  let username;
+  let usernameExiste = true;
+
+  while (usernameExiste) {
+    const numeros = generarNumeros();
+    username = `${iniciales}${numeros}`;
+
+    const usuarioExistente = await Usuario.findOne({ username });
+    usernameExiste = !!usuarioExistente; // Será `true` si el usuario ya existe, `false` si es único
   }
-});
 
-const upload = multer({ storage });
+  return username;
+}
 
 // Ruta para obtener todos los usuarios
 router.get('/usuarios', async (req, res) => {
@@ -29,6 +35,14 @@ router.get('/usuarios', async (req, res) => {
 // Ruta para crear un usuario, incluyendo la carga de imagen
 router.post('/usuarios', async (req, res) => {
   try {
+    // Asignar null a departamento si el valor es una cadena vacía
+    if (req.body.departamento === "") {
+      req.body.departamento = null;
+    }
+
+    // Genera un `username` único basado en el nombre y apellidos
+    req.body.username = await generarUsername(req.body.nombre, req.body.apellidos);
+
     const usuarioData = { ...req.body };
     const usuario = new Usuario(usuarioData);
     await usuario.save();
@@ -38,7 +52,6 @@ router.post('/usuarios', async (req, res) => {
     res.status(400).json({ message: 'Error al crear usuario', error });
   }
 });
-
 
 
 // Ruta para eliminar un usuario
@@ -55,14 +68,10 @@ router.delete('/usuarios/:id', async (req, res) => {
 });
 
 // Ruta para actualizar un usuario, incluyendo la actualización de la imagen de perfil
-router.put('/usuarios/:id', upload.single('foto'), async (req, res) => {
+router.put('/usuarios/:id', async (req, res) => {
   try {
     const usuarioData = { ...req.body };
 
-    // Si hay una nueva imagen, actualizamos la propiedad `foto` en el usuario
-    if (req.file) {
-      usuarioData.foto = `/uploads/${req.file.filename}`;
-    }
 
     const usuario = await Usuario.findByIdAndUpdate(req.params.id, usuarioData, {
       new: true,
@@ -88,6 +97,28 @@ router.get('/usuarios/medicos', async (req, res) => {
     res.status(200).json(medicos);
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener médicos', error });
+  }
+});
+
+router.get('/usuarios/pacientes', async (req, res) => {
+  try {
+    const pacientes = await Usuario.find({ tipo: 'Paciente' });
+    res.status(200).json(pacientes);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener pacientes', error });
+  }
+});
+
+// Ruta para obtener un usuario por ID
+router.get('/usuarios/:id', async (req, res) => {
+  try {
+    const usuario = await Usuario.findById(req.params.id).populate('departamento');
+    if (!usuario) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+    res.status(200).json(usuario);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener usuario', error });
   }
 });
 

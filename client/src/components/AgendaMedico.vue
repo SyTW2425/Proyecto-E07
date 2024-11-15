@@ -1,408 +1,292 @@
 <template>
-    <div class="contenedor-principal">
-      <div class="columna-formulario agenda-medico">
-        <h2>Punto de vista: Usuario Médico</h2>
-  
-        <!-- Verificación temporal de lista de médicos cargados -->
-        <div>
-          <h3>Lista de médicos cargados (verificación temporal):</h3>
-          <ul>
-            <li v-for="medico in medicos" :key="medico._id">{{ medico.nombreCompleto }}</li>
-          </ul>
-        </div>
-  
+  <div class="contenedor-principal">
+    <!-- Columna izquierda: Formulario de creación de citas médicas -->
+    <div class="columna-formulario">
+      <h2>Crear Cita Médica</h2>
+
+      <!-- Formulario para crear una cita médica -->
+      <form @submit.prevent="crearCita">
         <!-- Selección de Médico -->
-        <label for="medicoSelect">Seleccionar médico</label>
-        <select id="medicoSelect" v-model="selectedMedico" @change="cargarCitasMedico" required>
-          <option value="" disabled selected>Seleccione médico</option>
-          <option v-for="medico in medicos" :key="medico._id" :value="medico._id">
-            {{ medico.nombreCompleto }}
-          </option>
-        </select>
-  
-        <!-- Selector de fecha (solo fechas futuras) -->
-        <label for="fechaSelect">Seleccionar fecha</label>
-        <input type="date" id="fechaSelect" v-model="selectedDate" :min="new Date().toISOString().substr(0, 10)" @change="resetForm" />
-  
-        <!-- Tipo de Cita -->
-        <label for="tipoCitaSelect">Tipo de Cita</label>
-        <select id="tipoCitaSelect" v-model="tipoCita" @change="resetForm" required>
-          <option value="" disabled selected>Seleccione tipo de cita</option>
-          <option value="Consultas">Consultas</option>
-          <option value="Intervención">Intervención</option>
-        </select>
-  
-        <!-- Formulario de Consultas -->
-        <div v-if="tipoCita === 'Consultas'">
-          <label for="horaInicioConsulta">Hora Inicio</label>
-          <input type="time" id="horaInicioConsulta" v-model="horaInicio" required />
-  
-          <label for="horaFinalConsulta">Hora Final</label>
-          <input type="time" id="horaFinalConsulta" v-model="horaFinal" required />
-  
-          <label for="duracionConsulta">Duración de cada consulta (min)</label>
-          <input type="number" id="duracionConsulta" v-model="duracionConsulta" required />
-  
-          <button class="boton-crear" @click="abrirDisponibilidad">Abrir disponibilidad</button>
-        </div>
-  
-        <!-- Formulario de Intervención -->
-        <div v-if="tipoCita === 'Intervención'">
-          <label for="horaInicioIntervencion">Hora Inicio</label>
-          <input type="time" id="horaInicioIntervencion" v-model="horaInicio" required />
-  
-          <label for="duracionIntervencion">Duración estimada (min)</label>
-          <input type="number" id="duracionIntervencion" v-model="duracionIntervencion" required />
-  
-          <label for="descripcionIntervencion">Descripción</label>
-          <input type="text" id="descripcionIntervencion" v-model="descripcion" />
-  
-          <label for="observacionesIntervencion">Observaciones y/o recomendaciones</label>
-          <input type="text" id="observacionesIntervencion" v-model="observaciones" />
-  
-          <label for="pacienteSelect">Seleccionar paciente</label>
-          <select id="pacienteSelect" v-model="selectedPaciente" required>
-            <option value="" disabled selected>Seleccione paciente</option>
-            <option v-for="paciente in pacientes" :key="paciente._id" :value="paciente._id">
-              {{ paciente.nombreCompleto }}
+        <label>Médico:
+          <select v-model="nuevaCita.medicoId" @change="actualizarEspecialidadYPrestaciones" required>
+            <option disabled value="">Seleccione un médico</option>
+            <option v-for="medico in medicos" :key="medico._id" :value="medico._id">
+              {{ medico.nombre }} {{ medico.apellidos }}
             </option>
           </select>
-  
-          <button class="boton-guardar" @click="fijarIntervencion">Fijar intervención</button>
-        </div>
-      </div>
-  
-      <!-- Franjas Programadas -->
-      <div class="columna-lista">
-        <h3>Franjas programadas</h3>
-        <div v-if="citas.length">
-          <div v-for="cita in citas" :key="cita._id" class="franja-programada">
-            <span>{{ formatDate(cita.fecha) }} - {{ cita.tipo }}</span>
-            <span v-if="cita.tipo === 'Consultas'">{{ cita.horaInicio }} - {{ cita.horaFinal }}</span>
-            <span v-else>{{ cita.horaInicio }} ({{ cita.duracion }} min)</span>
-            <button class="boton-modificar" @click="editarCita(cita)">Editar</button>
-            <button class="boton-eliminar" @click="eliminarCita(cita)">Eliminar</button>
-          </div>
-        </div>
-      </div>
+        </label>
+
+        <!-- Especialidad (rellenado automáticamente) -->
+        <label>Especialidad:
+          <input type="text" :value="especialidadSeleccionada?.nombre || ''" readonly />
+        </label>
+
+        <!-- Selección de Prestación -->
+        <label>Prestación:
+          <select v-model="nuevaCita.prestacionId" required>
+            <option disabled value="">Seleccione una prestación</option>
+            <option v-for="prestacion in prestacionesDisponibles" :key="prestacion._id" :value="prestacion._id">
+            {{ prestacion.nombre }}
+            </option>
+          </select>
+        </label>
+
+        <!-- Selección de Fecha -->
+        <label>Fecha:
+          <input type="date" v-model="nuevaCita.fecha" required />
+        </label>
+
+        <!-- Selección de Hora de Inicio -->
+        <label>Hora de Inicio:
+          <input type="time" v-model="nuevaCita.horaInicio" required />
+        </label>
+
+        <!-- Selección de Hora Final -->
+        <label>Hora Final:
+          <input type="time" v-model="nuevaCita.horaFinal" required />
+        </label>
+
+        <!-- Selección de Duración -->
+        <label>Duración (minutos):
+          <input type="number" v-model="nuevaCita.duracion" min="1" required />
+        </label>
+
+        <!-- Selección de Paciente -->
+        <label>Paciente:
+          <select v-model="nuevaCita.pacienteId" required>
+            <option disabled value="">Seleccione un paciente</option>
+            <option v-for="paciente in pacientes" :key="paciente._id" :value="paciente._id">
+              {{ paciente.nombre }} {{ paciente.apellidos }}
+            </option>
+          </select>
+        </label>
+
+        <v-btn class="ma-2 boton-crear" type="submit" :disabled="cargando">
+          Crear Cita
+        </v-btn>
+      </form>
     </div>
-  </template>
-  
-  <script>
-  import apiClient from '@/apiClient';
-  
-  export default {
-    data() {
-      return {
-        medicos: [],
-        selectedMedico: null,
-        selectedDate: null,
-        tipoCita: '',
+
+    <!-- Columna derecha: Listado de citas -->
+    <div class="columna-lista">
+      <h3>Listado de Citas Médicas</h3>
+
+      <!-- Mensaje de error de comunicación -->
+      <v-alert v-if="errorServidor" type="error" class="alerta-error" prominent color="red lighten-3">
+        <span class="alert-text">Fallo de comunicación con el servidor</span>
+      </v-alert>
+
+      <div v-if="cargando && !errorServidor" class="text-center">
+        <v-progress-circular :size="70" :width="7" color="#17195e" indeterminate></v-progress-circular>
+      </div>
+
+      <div v-if="!cargando && !errorServidor && citas.length === 0" class="texto-centrado">
+        <p>La lista está vacía</p>
+      </div>
+
+      <!-- Tabla de citas -->
+      <table class="citas-table" v-if="citas.length !== 0">
+        <thead>
+          <tr>
+            <th>Médico</th>
+            <th>Especialidad</th>
+            <th>Prestación</th>
+            <th>Fecha</th>
+            <th>Hora Inicio</th>
+            <th>Hora Final</th>
+            <th>Paciente</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="cita in citas" :key="cita._id">
+            <td>{{ cita.medicoId.nombre }} {{ cita.medicoId.apellidos }}</td>
+            <td>{{ cita.especialidadId.nombre }}</td>
+            <td>{{ cita.prestacionId.nombre }}</td>
+            <td>{{ cita.fecha | formatDate }}</td>
+            <td>{{ cita.horaInicio }}</td>
+            <td>{{ cita.horaFinal }}</td>
+            <td>{{ cita.pacienteId ? cita.pacienteId.nombre + ' ' + cita.pacienteId.apellidos : 'Sin asignar' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>
+
+<script>
+import apiClient from '@/apiClient';
+
+export default {
+  name: 'AgendaMedico',
+  data() {
+    return {
+      medicos: [], // Lista de médicos
+      pacientes: [], // Lista de pacientes
+      citas: [], // Lista de citas
+      especialidadSeleccionada: {}, // Especialidad seleccionada para el médico actual
+      prestacionesDisponibles: [], // Prestaciones de la especialidad seleccionada
+      nuevaCita: {
+        medicoId: '',
+        especialidadId: '',
+        prestacionId: '',
+        fecha: '',
         horaInicio: '',
         horaFinal: '',
-        duracionConsulta: 15,
-        duracionIntervencion: 60,
-        descripcion: '',
-        observaciones: '',
-        pacientes: [],
-        selectedPaciente: null,
-        citas: []
-      };
-    },
-    methods: {
-      async cargarMedicos() {
-        try {
-          const response = await apiClient.get('/api/usuarios/medicos');
-          this.medicos = response.data.map(medico => ({
-            ...medico,
-            nombreCompleto: `${medico.nombre} ${medico.apellidos}`
-          }));
-          console.log('Médicos cargados:', this.medicos);
-        } catch (error) {
-          console.error('Error al cargar médicos:', error);
-        }
+        duracion: '',
+        pacienteId: ''
       },
-  
-      async cargarPacientes() {
-        try {
-          const response = await apiClient.get('/api/usuarios?tipo=Paciente');
-          this.pacientes = response.data.map(paciente => ({
-            ...paciente,
-            nombreCompleto: `${paciente.nombre} ${paciente.apellidos}`
-          }));
-        } catch (error) {
-          console.error('Error al cargar pacientes:', error);
-        }
-      },
-  
-      async cargarCitasMedico() {
-        if (this.selectedMedico) {
-          try {
-            const response = await apiClient.get(`/api/citas?medico=${this.selectedMedico}`);
-            this.citas = response.data;
-          } catch (error) {
-            console.error('Error al cargar citas del médico:', error);
-          }
-        }
-      },
-  
-      abrirDisponibilidad() {
-        const payload = {
-          medicoId: this.selectedMedico,
-          fecha: this.selectedDate,
-          tipo: 'Consultas',
-          horaInicio: this.horaInicio,
-          horaFinal: this.horaFinal,
-          duracion: this.duracionConsulta
-        };
-        apiClient.post('/api/citas/abrir', payload).then(this.cargarCitasMedico);
-      },
-  
-      fijarIntervencion() {
-        const payload = {
-          medicoId: this.selectedMedico,
-          fecha: this.selectedDate,
-          tipo: 'Intervencion',
-          horaInicio: this.horaInicio,
-          duracion: this.duracionIntervencion,
-          descripcion: this.descripcion,
-          observaciones: this.observaciones,
-          pacienteId: this.selectedPaciente
-        };
-        apiClient.post('/api/citas/fijar', payload).then(this.cargarCitasMedico);
-      },
-  
-      editarCita(cita) {
-        console.log('Editar cita', cita);
-      },
-  
-      eliminarCita(cita) {
-        apiClient.delete(`/api/citas/${cita._id}`).then(this.cargarCitasMedico);
-      },
-  
-      resetForm() {
-        this.tipoCita = '';
-        this.horaInicio = '';
-        this.horaFinal = '';
-        this.duracionConsulta = 15;
-        this.duracionIntervencion = 60;
-        this.descripcion = '';
-        this.observaciones = '';
-        this.selectedPaciente = null;
-      },
-  
-      formatDate(date) {
-        return new Date(date).toLocaleDateString();
+      cargando: false,
+      errorServidor: false
+    };
+  },
+  methods: {
+    async obtenerMedicos() {
+      try {
+        const response = await apiClient.get('/api/usuarios/medicos');
+        this.medicos = response.data;
+      } catch (error) {
+        console.error('Error al obtener médicos:', error);
+        this.errorServidor = true;
       }
     },
-  
-    mounted() {
-      this.cargarMedicos();
-      this.cargarPacientes();
+    async obtenerPacientes() {
+      try {
+        const response = await apiClient.get('/api/usuarios/pacientes');
+        this.pacientes = response.data;
+      } catch (error) {
+        console.error('Error al obtener pacientes:', error);
+        this.errorServidor = true;
+      }
+    },
+    async obtenerCitas() {
+      this.cargando = true;
+      try {
+        const response = await apiClient.get('/api/citas');
+        this.citas = response.data;
+      } catch (error) {
+        console.error('Error al obtener citas:', error);
+        this.errorServidor = true;
+      } finally {
+        this.cargando = false;
+      }
+    },
+    async actualizarEspecialidadYPrestaciones() {
+  if (!this.nuevaCita.medicoId) return;
+  this.cargando = true;
+  try {
+    // Obtener los detalles del médico seleccionado
+    const medicoResponse = await apiClient.get(`/api/usuarios/${this.nuevaCita.medicoId}`);
+    const medico = medicoResponse.data;
+
+    if (medico.departamento) {
+      // Obtener el departamento (especialidad) asociado al médico
+      const departamentoResponse = await apiClient.get(`/api/departamentos/${medico.departamento}`);
+      this.especialidadSeleccionada = departamentoResponse.data;
+      this.prestacionesDisponibles = this.especialidadSeleccionada.prestaciones;
+      this.nuevaCita.especialidadId = this.especialidadSeleccionada._id;
+    } else {
+      this.especialidadSeleccionada = null;
+      this.prestacionesDisponibles = [];
     }
-  };
-  </script>
-  
-  <style scoped>
-  /* Contenedor principal para organizar formulario y lista en columnas */
-  .contenedor-principal {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 20px;
+  } catch (error) {
+    console.error('Error al obtener especialidad y prestaciones:', error);
+  } finally {
+    this.cargando = false;
   }
-  
-  /* Columna para el formulario de creación de usuarios */
-  .columna-formulario {
-    flex: 1;
-    max-width: 40%; /* Controla el ancho de la columna del formulario */
+  },
+
+
+    async crearCita() {
+      try {
+        await apiClient.post('/api/citas', this.nuevaCita);
+        this.obtenerCitas();
+        this.resetFormulario();
+      } catch (error) {
+        if (error.response && error.response.status === 400) {
+          alert('Conflicto de horario: El médico ya tiene una cita en esta franja horaria.');
+        } else {
+        console.error('Error al crear cita:', error);
+        }
+      }
+    },
+
+    resetFormulario() {
+      this.nuevaCita = {
+        medicoId: '',
+        especialidadId: '',
+        prestacionId: '',
+        fecha: '',
+        horaInicio: '',
+        horaFinal: '',
+        duracion: 0,
+        pacienteId: ''
+      };
+      this.especialidadSeleccionada = null;
+      this.prestacionesDisponibles = [];
+    }
+  },
+  mounted() {
+    this.obtenerMedicos();
+    this.obtenerPacientes();
+    this.obtenerCitas();
   }
-  
-  /* Columna para la lista de usuarios */
-  .columna-lista {
-    flex: 2;
-    max-width: 60%; /* Controla el ancho de la columna de la lista */
-  }
-  
-  /* Estilos del formulario y su contenedor */
-  .creacion-usuarios {
-    text-align: center;
-  }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-  }
-  
-  label {
-    margin-bottom: 10px;
-    text-align: left; /* Alinea los labels a la izquierda para mejor legibilidad */
-    font-weight: bold; /* Resalta los labels */
-  }
-  
-  /* Botones estilizados */
-  .boton-crear {
-    background-color: var(--primary-color) !important; /* Azul corporativo */
-    color: white !important;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: bold;
-  }
-  
-  .boton-modificar {
-    background-color: var(--warning-color) !important; /* Naranja */
-    color: white !important;
-    width: 40px; /* Hace el botón cuadrado */
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .boton-eliminar {
-    background-color: var(--error-color) !important; /* Rojo */
-    color: white !important;
-    width: 40px; /* Hace el botón cuadrado */
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .boton-guardar {
-    background-color: var(--success-color) !important; /* Verde */
-    color: white !important;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: bold;
-  }
-  
-  .boton-cancelar {
-    background-color: var(--color-gris) !important; /* Gris */
-    color: black !important;
-    padding: 10px 20px;
-    border-radius: 8px
-  }
-  
-  /* Estilos de la lista de usuarios */
-  .user-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-    padding: 8px;
-    border-radius: 8px;
-    background-color: var(--background-color);
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombras suaves */
-  }
-  
-  .user-actions {
-    display: flex;
-    gap: 10px;
-    margin-right: 15px;
-  }
-  
-  .user-info {
-    display: flex;
-    width: 100%;
-  }
-  
-  .user-column {
-    padding: 0 10px; /* Espacio entre columnas */
-    flex: 1; /* Distribuye el espacio de manera uniforme */
-    text-align: left;
-  }
-  
-  /* Ajusta el ancho específico para cada columna según necesidad */
-  .user-column.nombre {
-    flex: 2; /* Ocupa un poco más de espacio para nombres largos */
-  }
-  
-  .user-column.apellidos {
-    flex: 2;
-  }
-  
-  .user-column.username {
-    flex: 1;
-  }
-  
-  .user-column.tipo {
-    flex: 1;
-  }
-  
-  /* Estilo para la cabecera de la lista de usuarios */
-  .user-list-header {
-    display: flex;
-    padding: 8px 0;
-    font-weight: bold;
-    color: var(--primary-color); /* Azul corporativo */
-    border-bottom: 2px solid var(--color-gris); /* Línea separadora */
-    margin-bottom: 10px;
-  }
-  
-  .user-list-header .user-column {
-    flex: 1;
-    padding: 0 10px;
-    text-align: left;
-  }
-  
-  /* Ajusta el ancho específico para cada columna */
-  .user-list-header .user-column.nombre {
-    flex: 2;
-  }
-  
-  .user-list-header .user-column.apellidos {
-    flex: 2;
-  }
-  
-  .user-list-header .user-column.username {
-    flex: 1;
-  }
-  
-  .user-list-header .user-column.tipo {
-    flex: 1;
-  }
-  
-  
-  
-  
-  
-  /* Estilo para los campos de entrada de texto, email y el selector */
-  input[type="text"],
-  input[type="email"],
-  select {
-    background-color: #C6DEFD; /* Color de fondo del campo */
-    padding: 8px;
-    border-radius: 5px;
-    outline: none;
-    font-family: 'Outfit', sans-serif; /* Asegura que la fuente sea uniforme */
-  }
-  
-  /* Cambia el color del borde y añade un efecto cuando el campo está enfocado */
-  input[type="text"]:focus,
-  input[type="email"]:focus,
-  select:focus {
-    border-color: var(--color-azul); /* Cambia el color del borde al hacer foco */
-    box-shadow: 0 0 5px var(--color-azul); /* Añade sombra al hacer foco */
-    background-color: #C6DEFD; /* Mantiene el color de fondo al hacer foco */
-  }
-  
-  
-  .filtro-tipo-usuario {
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-  }
-  
-  .filtro-tipo-usuario label {
-    margin-right: 10px;
-    font-weight: bold;
-  }
-  
-  .filtro-tipo-usuario select {
-    padding: 5px;
-    border-radius: 5px;
-    border: 1px solid var(--color-gris);
-  }
-  
-  </style>
+};
+</script>
+
+<style scoped>
+/* Estilos similares a los de "Gestión Departamentos" */
+.contenedor-principal {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+}
+
+.columna-formulario {
+  flex: 1;
+  max-width: 40%;
+}
+
+.columna-lista {
+  flex: 2;
+  max-width: 60%;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.citas-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.citas-table th, .citas-table td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.citas-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.boton-crear {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.alerta-error {
+  background-color: #f44336;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+}
+</style>
