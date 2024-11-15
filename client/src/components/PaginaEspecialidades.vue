@@ -55,7 +55,7 @@
   
       <section class="sections" >
 
-        <div class="big-buttons" v-for="departamento in departamentosFiltrados" :key="departamento._id">
+        <div class="big-buttons" v-for="departamento in departamentosFiltro" :key="departamento._id">
           <button class="big-button-blue" v-if="departamento.index % 2 !== 0">
             <img src="@/assets/estados/departamento_defecto.png" alt="consultas_externas" class="img-section">
             <span class="buttons-text-esp" >{{ departamento.nombre }}</span>
@@ -88,17 +88,28 @@ export default {
   name: "PaginaEspecialidades",
   data() {
     return {
+      search: '',
       departamentos: [],
       filtroTipo: "Especialidad médica",
       index: [],
+      cargando: false,
+      errorServidor: false
     };
   },
   computed: {
-    departamentosFiltrados() {
+    departamentosEspMed() {
       if (this.filtroTipo) {
         return this.departamentos.filter(departamento => departamento.tipo === this.filtroTipo);
       }
       return this.departamentos;
+    },
+    departamentosFiltro() {
+      if (this.search.trim() === '') {
+        return this.departamentosEspMed;
+      }
+      return this.departamentosEspMed.filter(departamento => 
+        departamento.nombre.toLowerCase().includes(this.search.toLowerCase())
+      );
     }
   },
 
@@ -117,7 +128,7 @@ export default {
     }
   },
   watch: {
-    departamentosFiltrados(newDepartamentos) {
+    departamentosEspMed(newDepartamentos) {
       newDepartamentos.forEach((departamento, index) => {
         departamento.index = index + 1;
       });
