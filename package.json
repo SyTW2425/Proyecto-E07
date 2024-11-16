@@ -7,5 +7,8 @@
     "bootstrap-icons": "^1.11.3",
     "mongoose": "^8.8.1",
     "vuetify": "^3.7.3"
+  },
+  "devDependencies": {
+    "@vue/cli-service": "^5.0.8"
   }
 }
