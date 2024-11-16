@@ -5,6 +5,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.8",
     "@mdi/font": "^7.4.47",
     "bootstrap-icons": "^1.11.3",
+    "mongoose": "^8.8.1",
     "vuetify": "^3.7.3"
   }
 }
