@@ -13,7 +13,7 @@ dotenv.config();
 
 // Define los orígenes permitidos
 const allowedOrigins = [
-  'https://joyful-sopapillas-cb1211.netlify.app', // Reemplaza con la URL de tu sitio en Netlify
+  'https://hospital-rambla.netlify.app', // Reemplaza con la URL de tu sitio en Netlify
   'http://localhost:8080',                    // Para desarrollo local
   'http://localhost:8081',
   'https://sistema-gestor-hospitalario.onrender.com'   
