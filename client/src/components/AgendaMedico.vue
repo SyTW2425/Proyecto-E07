@@ -55,6 +55,11 @@
           <label>Duración (minutos):
             <input type="number" v-model="nuevaCita.duracion" min="1" />
           </label>
+
+          <!-- Mostrar el número de citas calculadas -->
+          <label>Número de Citas Médicas:
+            <input type="number" :value="numeroCitas" readonly />
+          </label>
         </div>
 
         
@@ -283,6 +288,28 @@ export default {
     );
     // Devuelve verdadero si el nombre de la prestación es "Consulta"
     return prestacion && prestacion.nombre === "Consulta";
+  },
+  numeroCitas() {
+    if (!this.nuevaCita.horaInicio || !this.nuevaCita.horaFinal || !this.nuevaCita.duracion) {
+      return 0; // Si falta algún campo, devolver 0
+    }
+
+    // Convertir horas a minutos totales desde la medianoche
+    const [inicioHoras, inicioMinutos] = this.nuevaCita.horaInicio.split(':').map(Number);
+    const [finalHoras, finalMinutos] = this.nuevaCita.horaFinal.split(':').map(Number);
+
+    const inicioTotalMinutos = inicioHoras * 60 + inicioMinutos;
+    const finalTotalMinutos = finalHoras * 60 + finalMinutos;
+
+    // Calcular la duración total disponible
+    const duracionDisponible = finalTotalMinutos - inicioTotalMinutos;
+
+    if (duracionDisponible <= 0 || this.nuevaCita.duracion <= 0) {
+      return 0; // Si el rango no es válido o la duración es 0, devolver 0
+    }
+
+    // Calcular cuántas citas caben en el rango disponible
+    return Math.floor(duracionDisponible / this.nuevaCita.duracion);
   }
 },
 
