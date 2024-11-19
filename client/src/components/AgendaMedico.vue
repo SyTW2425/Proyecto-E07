@@ -18,48 +18,70 @@
 
         <!-- Especialidad (rellenado automáticamente) -->
         <label>Especialidad:
-          <input type="text" :value="especialidadSeleccionada?.nombre || ''" readonly />
+          <input type="text" :value="departamento.nombre || ''" readonly />
         </label>
 
         <!-- Selección de Prestación -->
         <label>Prestación:
           <select v-model="nuevaCita.prestacionId" required>
             <option disabled value="">Seleccione una prestación</option>
-            <option v-for="prestacion in prestacionesDisponibles" :key="prestacion._id" :value="prestacion._id">
-            {{ prestacion.nombre }}
+            <option v-for="prestacion in prestaciones" :key="prestacion._id || prestacion" :value="prestacion._id || prestacion">
+              {{ prestacion.nombre || prestacion }}
             </option>
           </select>
         </label>
+
 
         <!-- Selección de Fecha -->
         <label>Fecha:
           <input type="date" v-model="nuevaCita.fecha" required />
         </label>
 
-        <!-- Selección de Hora de Inicio -->
-        <label>Hora de Inicio:
-          <input type="time" v-model="nuevaCita.horaInicio" required />
-        </label>
+        
+        <!-- Mostrar solo si la prestación seleccionada es "Consulta" -->
+        <div v-if="esConsulta">
 
-        <!-- Selección de Hora Final -->
-        <label>Hora Final:
-          <input type="time" v-model="nuevaCita.horaFinal" required />
-        </label>
+          <!-- Selección de Hora de Inicio -->
+          <label>Hora de Inicio:
+            <input type="time" v-model="nuevaCita.horaInicio" required />
+          </label>
 
-        <!-- Selección de Duración -->
-        <label>Duración (minutos):
-          <input type="number" v-model="nuevaCita.duracion" min="1" required />
-        </label>
+          <!-- Selección de Hora Final -->
+          <label>Hora Final:
+            <input type="time" v-model="nuevaCita.horaFinal" />
+          </label>
+
+          <!-- Selección de Duración -->
+          <label>Duración (minutos):
+            <input type="number" v-model="nuevaCita.duracion" min="1" />
+          </label>
+        </div>
+
+        
 
         <!-- Selección de Paciente -->
-        <label>Paciente:
-          <select v-model="nuevaCita.pacienteId" required>
-            <option disabled value="">Seleccione un paciente</option>
-            <option v-for="paciente in pacientes" :key="paciente._id" :value="paciente._id">
+        <div v-if="!esConsulta">
+          <!-- Selección de Hora de Inicio -->
+          <label>Hora:
+            <input type="time" v-model="nuevaCita.horaInicio" required />
+          </label> 
+
+          <!-- Selección de Duración -->
+          <label>Duración (minutos):
+            <input type="number" v-model="nuevaCita.duracion" min="1" />
+          </label>
+
+          <!-- Selección de Paciente -->
+          <label>Paciente:
+            <select v-model="nuevaCita.pacienteId" required>
+              <option disabled value="">Seleccione un paciente</option>
+              <option v-for="paciente in pacientes" :key="paciente._id" :value="paciente._id">
               {{ paciente.nombre }} {{ paciente.apellidos }}
-            </option>
-          </select>
-        </label>
+              </option>
+            </select>
+          </label>
+        </div>
+
 
         <v-btn class="ma-2 boton-crear" type="submit" :disabled="cargando">
           Crear Cita
@@ -85,7 +107,7 @@
       </div>
 
       <!-- Tabla de citas -->
-      <table class="citas-table" v-if="citas.length !== 0">
+      <table class="citas-table" v-if="citas && citas.length !== 0">
         <thead>
           <tr>
             <th>Médico</th>
@@ -117,14 +139,15 @@
 import apiClient from '@/apiClient';
 
 export default {
-  name: 'AgendaMedico',
   data() {
     return {
       medicos: [], // Lista de médicos
       pacientes: [], // Lista de pacientes
       citas: [], // Lista de citas
-      especialidadSeleccionada: {}, // Especialidad seleccionada para el médico actual
-      prestacionesDisponibles: [], // Prestaciones de la especialidad seleccionada
+      departamento: {}, // Datos del departamento del médico seleccionado
+      prestaciones: [], // Prestaciones del departamento
+      medico: {}, // Datos del médico seleccionado
+      paciente: {}, // Datos del paciente seleccionado
       nuevaCita: {
         medicoId: '',
         especialidadId: '',
@@ -171,31 +194,52 @@ export default {
       }
     },
     async actualizarEspecialidadYPrestaciones() {
-  if (!this.nuevaCita.medicoId) return;
-  this.cargando = true;
-  try {
-    // Obtener los detalles del médico seleccionado
-    const medicoResponse = await apiClient.get(`/api/usuarios/${this.nuevaCita.medicoId}`);
-    const medico = medicoResponse.data;
+      if (!this.nuevaCita.medicoId) {
+        this.departamento = {};
+        this.prestaciones = [];
+        return;
+      }
 
-    if (medico.departamento) {
-      // Obtener el departamento (especialidad) asociado al médico
-      const departamentoResponse = await apiClient.get(`/api/departamentos/${medico.departamento}`);
-      this.especialidadSeleccionada = departamentoResponse.data;
-      this.prestacionesDisponibles = this.especialidadSeleccionada.prestaciones;
-      this.nuevaCita.especialidadId = this.especialidadSeleccionada._id;
-    } else {
-      this.especialidadSeleccionada = null;
-      this.prestacionesDisponibles = [];
-    }
-  } catch (error) {
-    console.error('Error al obtener especialidad y prestaciones:', error);
-  } finally {
-    this.cargando = false;
-  }
-  },
+      this.cargando = true;
+      try {
+        const medicoResponse = await apiClient.get(`/api/usuarios/${this.nuevaCita.medicoId}`);
+        this.medico = medicoResponse.data; // Guardar datos del médico
+
+        if (this.medico.departamento) {
+          const departamentoResponse = await apiClient.get(`/api/departamentos/${this.medico.departamento}`);
+          this.departamento = departamentoResponse.data;
+
+          // Asegúrate de que las prestaciones existan y sean válidas
+          this.prestaciones = Array.isArray(this.departamento.prestaciones)
+            ? this.departamento.prestaciones
+            : [];
+          this.nuevaCita.especialidadId = this.departamento._id;
+        } else {
+          this.departamento = {};
+          this.prestaciones = [];
+        }
+        console.log('Departamento:', this.departamento);
+        console.log('Prestaciones:', this.prestaciones);
 
 
+      } catch (error) {
+        console.error('Error al obtener especialidad y prestaciones:', error);
+      } finally {
+        this.cargando = false;
+      }
+    },
+    async actualizarPacienteSeleccionado() {
+      if (!this.nuevaCita.pacienteId) {
+        this.paciente = {};
+        return;
+      }
+      try {
+        const pacienteResponse = await apiClient.get(`/api/usuarios/${this.nuevaCita.pacienteId}`);
+        this.paciente = pacienteResponse.data;
+      } catch (error) {
+        console.error('Error al obtener paciente:', error);
+      }
+    },
     async crearCita() {
       try {
         await apiClient.post('/api/citas', this.nuevaCita);
@@ -205,11 +249,10 @@ export default {
         if (error.response && error.response.status === 400) {
           alert('Conflicto de horario: El médico ya tiene una cita en esta franja horaria.');
         } else {
-        console.error('Error al crear cita:', error);
+          console.error('Error al crear cita:', error);
         }
       }
     },
-
     resetFormulario() {
       this.nuevaCita = {
         medicoId: '',
@@ -218,20 +261,34 @@ export default {
         fecha: '',
         horaInicio: '',
         horaFinal: '',
-        duracion: 0,
+        duracion: '',
         pacienteId: ''
       };
-      this.especialidadSeleccionada = null;
-      this.prestacionesDisponibles = [];
+      this.medico = {};
+      this.departamento = {};
+      this.prestaciones = [];
+      this.paciente = {};
     }
   },
   mounted() {
     this.obtenerMedicos();
     this.obtenerPacientes();
     this.obtenerCitas();
+  },
+  computed: {
+  esConsulta() {
+    // Encuentra la prestación seleccionada
+    const prestacion = this.prestaciones.find(
+      (p) => p._id === this.nuevaCita.prestacionId
+    );
+    // Devuelve verdadero si el nombre de la prestación es "Consulta"
+    return prestacion && prestacion.nombre === "Consulta";
   }
+},
+
 };
 </script>
+
 
 <style scoped>
 /* Estilos similares a los de "Gestión Departamentos" */
