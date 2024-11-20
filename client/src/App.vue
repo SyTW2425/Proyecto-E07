@@ -1,7 +1,7 @@
 <template>
   <div id="app" data-app>
     <!-- Barra de navegación -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href="#">Funcionalidades:</a>
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav mr-auto">
@@ -35,6 +35,9 @@
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/prestaciones">Prestaciones</router-link> <!-- Enlace para la agenda -->
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/recetas">Recetas</router-link> <!-- Enlace para la agenda -->
           </li>
         </ul>
       </div>

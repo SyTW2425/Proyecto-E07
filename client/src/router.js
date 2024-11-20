@@ -13,6 +13,7 @@ import UserLogin from './components/UserLogin.vue';
 import ContactForm from './components/Contacto.vue';
 import GestionPrestaciones from './components/GestionPrestaciones.vue';
 import AgendaMedico from './components/AgendaMedico.vue';
+import GestionRecetas from './components/GestionRecetas.vue';
 
 Vue.use(VueRouter);
 
@@ -72,6 +73,11 @@ const routes = [
     path: '/prestaciones',
     name: 'GestionPrestaciones',
     component: GestionPrestaciones,
+  },
+  {
+    path: '/recetas',
+    name: 'GestionRecetas',
+    component: GestionRecetas,
   },
   {
     path: '*', // Ruta comodín para capturar rutas no existentes
