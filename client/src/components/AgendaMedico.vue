@@ -43,12 +43,12 @@
 
           <!-- Selección de Hora de Inicio -->
           <label>Hora de Inicio:
-            <input type="time" v-model="nuevaCita.horaInicio" required />
+            <input type="time" v-model="horaInicio" required />
           </label>
 
           <!-- Selección de Hora Final -->
           <label>Hora Final:
-            <input type="time" v-model="nuevaCita.horaFinal" />
+            <input type="time" v-model="horaFinal" />
           </label>
 
           <!-- Selección de Duración -->
@@ -56,10 +56,18 @@
             <input type="number" v-model="nuevaCita.duracion" min="1" />
           </label>
 
-          <!-- Mostrar el número de citas calculadas -->
-          <label>Número de Citas Médicas:
-            <input type="number" :value="numeroCitas" readonly />
-          </label>
+          <!-- Número de citas calculadas -->
+          <label>Número de Citas Médicas: <strong>{{ calculoCitas.total }}</strong></label>
+          <div>
+            <!-- Lista numerada con los horarios -->
+            <ul>
+              <li v-for="(horario, index) in calculoCitas().horarios" :key="index">
+                {{ horario }}
+              </li>
+            </ul>
+          </div>
+
+
         </div>
 
         
@@ -68,7 +76,7 @@
         <div v-if="!esConsulta">
           <!-- Selección de Hora de Inicio -->
           <label>Hora:
-            <input type="time" v-model="nuevaCita.horaInicio" required />
+            <input type="time" v-model="horaInicio" required />
           </label> 
 
           <!-- Selección de Duración -->
@@ -85,12 +93,14 @@
               </option>
             </select>
           </label>
+
         </div>
 
-
-        <v-btn class="ma-2 boton-crear" type="submit" :disabled="cargando">
-          Crear Cita
+        <v-btn class="ma-2 boton-crear" type="button" @click="procesarCitas" :disabled="cargando">
+        Crear Cita
         </v-btn>
+
+        
       </form>
     </div>
 
@@ -153,13 +163,14 @@ export default {
       prestaciones: [], // Prestaciones del departamento
       medico: {}, // Datos del médico seleccionado
       paciente: {}, // Datos del paciente seleccionado
+      horaFinal: '',
+      horaInicio: '',
       nuevaCita: {
         medicoId: '',
         especialidadId: '',
         prestacionId: '',
         fecha: '',
-        horaInicio: '',
-        horaFinal: '',
+        hora: '',
         duracion: '',
         pacienteId: ''
       },
@@ -245,18 +256,94 @@ export default {
         console.error('Error al obtener paciente:', error);
       }
     },
-    async crearCita() {
+    async procesarCitas() {
       try {
-        await apiClient.post('/api/citas', this.nuevaCita);
-        this.obtenerCitas();
-        this.resetFormulario();
-      } catch (error) {
-        if (error.response && error.response.status === 400) {
-          alert('Conflicto de horario: El médico ya tiene una cita en esta franja horaria.');
-        } else {
-          console.error('Error al crear cita:', error);
+      this.cargando = true;
+
+      if (this.esConsulta) {
+        // Obtener los horarios de inicio calculados previamente
+        const { horarios } = this.calculoCitas();
+
+        // Verificar que tengamos horarios disponibles
+        if (horarios.length === 0) {
+          alert('No hay citas disponibles en el rango de tiempo.');
+          return;
         }
+
+        // Crear múltiples citas con los horarios calculados
+        const citas = horarios.map((horaInicio) => {
+          return {
+            ...this.nuevaCita,  // Desestructuramos nuevaCita
+            hora: horaInicio    // Asignamos hora al campo "hora"
+          };
+        });
+
+
+        // Lanzar todas las peticiones en paralelo
+        await Promise.all(citas.map((cita) => this.crearCita(cita)));
+        alert(`${citas.length} citas creadas con éxito`);
+      } else {
+        // Crear una sola cita
+        await this.crearCita(this.nuevaCita);
+        alert('Cita creada con éxito');
       }
+    } catch (error) {
+      console.error('Error al procesar citas:', error);
+      alert('Ocurrió un error al crear las citas');
+    } finally {
+      this.cargando = false;
+    }
+  },
+    calculoCitas() {
+    if (!this.horaInicio || !this.horaFinal || !this.nuevaCita.duracion) {
+      return { total: 0, horarios: [] }; // Si falta algún campo, devolver 0 y un arreglo vacío
+    }
+
+    // Convertir las horas de inicio y fin a minutos totales desde la medianoche
+    const [inicioHoras, inicioMinutos] = this.horaInicio.split(':').map(Number);
+    const [finalHoras, finalMinutos] = this.horaFinal.split(':').map(Number);
+
+    const inicioTotalMinutos = inicioHoras * 60 + inicioMinutos;
+    const finalTotalMinutos = finalHoras * 60 + finalMinutos;
+
+    // Calcular la duración total disponible
+    const duracionDisponible = finalTotalMinutos - inicioTotalMinutos;
+
+    if (duracionDisponible <= 0 || this.nuevaCita.duracion <= 0) {
+      return { total: 0, horarios: [] }; // Si el rango no es válido o la duración es 0, devolver 0
+    }
+
+    // Calcular cuántas citas caben en el rango disponible
+    const totalCitas = Math.floor(duracionDisponible / this.nuevaCita.duracion);
+
+    // Calcular los horarios de inicio de cada cita
+    const horarios = [];
+    let inicioActual = inicioTotalMinutos;
+    console.log('---------------');
+
+
+    for (let i = 0; i < totalCitas; i++) {
+      // Calcular horas y minutos del horario actual
+      const horas = Math.floor(inicioActual / 60); // Obtener horas
+      const minutos = inicioActual % 60; // Obtener minutos
+      const horarioFormateado = `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`; // Formatear correctamente
+      horarios.push(horarioFormateado);
+
+      // Incrementar el tiempo por la duración de cada cita
+      console.log('inicioActual: ', inicioActual);
+      inicioActual += +this.nuevaCita.duracion;
+    }
+
+    return { total: totalCitas, horarios };
+    },
+    async crearCita(cita) {
+    try {
+      // Realiza la petición para crear la cita
+      await apiClient.post('/api/citas', cita);
+    } catch (error) {
+      console.error('Error al crear cita:', error);
+      throw error; // Re-lanzar el error para manejarlo en procesarCitas
+    }
     },
     resetFormulario() {
       this.nuevaCita = {
@@ -264,8 +351,7 @@ export default {
         especialidadId: '',
         prestacionId: '',
         fecha: '',
-        horaInicio: '',
-        horaFinal: '',
+        hora: '',
         duracion: '',
         pacienteId: ''
       };
@@ -273,6 +359,8 @@ export default {
       this.departamento = {};
       this.prestaciones = [];
       this.paciente = {};
+      this.horaInicio = '';
+      this.horaFinal = '';
     }
   },
   mounted() {
@@ -289,29 +377,8 @@ export default {
     // Devuelve verdadero si el nombre de la prestación es "Consulta"
     return prestacion && prestacion.nombre === "Consulta";
   },
-  numeroCitas() {
-    if (!this.nuevaCita.horaInicio || !this.nuevaCita.horaFinal || !this.nuevaCita.duracion) {
-      return 0; // Si falta algún campo, devolver 0
-    }
-
-    // Convertir horas a minutos totales desde la medianoche
-    const [inicioHoras, inicioMinutos] = this.nuevaCita.horaInicio.split(':').map(Number);
-    const [finalHoras, finalMinutos] = this.nuevaCita.horaFinal.split(':').map(Number);
-
-    const inicioTotalMinutos = inicioHoras * 60 + inicioMinutos;
-    const finalTotalMinutos = finalHoras * 60 + finalMinutos;
-
-    // Calcular la duración total disponible
-    const duracionDisponible = finalTotalMinutos - inicioTotalMinutos;
-
-    if (duracionDisponible <= 0 || this.nuevaCita.duracion <= 0) {
-      return 0; // Si el rango no es válido o la duración es 0, devolver 0
-    }
-
-    // Calcular cuántas citas caben en el rango disponible
-    return Math.floor(duracionDisponible / this.nuevaCita.duracion);
-  }
-},
+  
+  },
 
 };
 </script>

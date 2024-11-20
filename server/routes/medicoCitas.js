@@ -37,6 +37,15 @@ router.get('/citas', async (req, res) => {
 router.post('/citas', async (req, res) => {
   try {
     const { medicoId, especialidadId, prestacionId, fecha, hora, duracion, pacienteId } = req.body;
+    console.log('Recibida petición cita');
+    console.log('ID Médico: ', medicoId);
+    console.log('especialidad: ', especialidadId);
+    console.log('prestacionId: ', prestacionId);
+    console.log('Fecha: ', fecha);
+    console.log('Hora: ', hora);
+    console.log('Duración: ', duracion);
+    console.log('ID Paciente: ', pacienteId);
+
 
     // Convertir hora a un objeto de Date para manejar el rango de tiempo
     const inicioCita = new Date(`${fecha}T${hora}`);
@@ -62,7 +71,9 @@ router.post('/citas', async (req, res) => {
       ]
     });
 
+
     if (conflicto) {
+      console.log('El médico ya tiene una cita en esta franja horaria.');
       return res.status(400).json({ message: 'El médico ya tiene una cita en esta franja horaria.' });
     }
 
@@ -77,11 +88,24 @@ router.post('/citas', async (req, res) => {
       pacienteId
     });
 
+    console.log('Cita creada exitosamente');
     res.status(201).json(nuevaCita);
   } catch (error) {
-    res.status(500).json({ message: 'Error al crear la cita', error });
+    // Verificar si el error es de validación
+    if (error.name === 'ValidationError') {
+      // Manejo de errores de validación
+      const errores = [];
+      for (let field in error.errors) {
+        errores.push(error.errors[field].message);  // Extraer los mensajes de error de validación
+      }
+      res.status(400).json({ error: 'Errores de validación', detalles: errores });
+    } else {
+      console.error('Error al crear la cita:', error);
+      res.status(500).json({ error: 'Ocurrió un error al crear la cita', detalles: error.message });
+    }
   }
 });
+
 
 // Ruta para actualizar una cita existente
 router.put('/citas/:id', async (req, res) => {

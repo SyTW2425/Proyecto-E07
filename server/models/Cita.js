@@ -9,7 +9,7 @@ const citaSchema = new mongoose.Schema({
   especialidadId: { type: mongoose.Schema.Types.ObjectId, ref: 'Especialidad', required: true },
   prestacionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Prestacion', required: true },
   fecha: { type: Date, required: true },
-  hora: { type: String, required: true },
+  hora: { type: Date, required: true },
   duracion: { type: Number, required: true }, // Duración en minutos
   pacienteId: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', default: null }
 });
