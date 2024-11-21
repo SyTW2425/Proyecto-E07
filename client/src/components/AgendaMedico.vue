@@ -96,9 +96,10 @@
 
         </div>
 
-        <v-btn class="ma-2 boton-crear" type="button" @click="procesarCitas" :disabled="cargando">
-        Crear Cita
+        <v-btn class="ma-2 boton-crear" type="button" :disabled="cargando" @click="procesarCitas">
+          Crear Cita
         </v-btn>
+
 
         
       </form>
@@ -107,6 +108,30 @@
     <!-- Columna derecha: Listado de citas -->
     <div class="columna-lista">
       <h3>Listado de Citas Médicas</h3>
+
+      <!-- Filtro para la especialidad -->
+<div class="filtro-especialidad">
+  <label for="filtroEspecialidad">Filtrar por especialidad:</label>
+  <select v-model="filtroEspecialidad">
+    <option value="">Todas las especialidades</option>
+    <option v-for="especialidad in especialidades" :key="especialidad._id" :value="especialidad._id">
+      {{ especialidad.nombre }}
+    </option>
+  </select>
+</div>
+
+<!-- Filtro para el médico -->
+<div class="filtro-medico">
+  <label for="filtroMedico">Filtrar por médico:</label>
+  <select v-model="filtroMedico">
+    <option value="">Todos los médicos</option>
+    <option v-for="medico in medicos" :key="medico._id" :value="medico._id">
+      {{ medico.nombre }} {{ medico.apellidos }}
+    </option>
+  </select>
+</div>
+
+
 
       <!-- Mensaje de error de comunicación -->
       <v-alert v-if="errorServidor" type="error" class="alerta-error" prominent color="red lighten-3">
@@ -122,7 +147,8 @@
       </div>
 
       <!-- Tabla de citas -->
-      <table class="citas-table" v-if="citas && citas.length !== 0">
+      <table v-if="!cargando && !errorServidor && citasFiltradas.length > 0" class="citas-table">
+
         <thead>
           <tr>
             <th></th>
@@ -136,7 +162,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="cita in citas" :key="cita._id">
+          <tr v-for="cita in citasFiltradas" :key="cita._id">
             <td class="user-actions">
             <v-btn class="boton-eliminar" @click="confirmarEliminacion(cita._id)">
               <i class="bi bi-trash"></i>
@@ -163,6 +189,7 @@ export default {
   data() {
     return {
       medicos: [], // Lista de médicos
+      especialidades: [], // especialidades disponibles
       pacientes: [], // Lista de pacientes
       citas: [], // Lista de citas
       departamento: {}, // Datos del departamento del médico seleccionado
@@ -202,6 +229,9 @@ export default {
         this.errorServidor = true;
       }
     },
+    filtrarCitas() {
+      // Este método ya está cubierto por el filtro en `citasFiltradas`
+    },
     async obtenerCitas() {
       this.cargando = true;
       try {
@@ -212,6 +242,14 @@ export default {
         this.errorServidor = true;
       } finally {
         this.cargando = false;
+      }
+    },
+    async obtenerEspecialidades() {
+      try {
+        const response = await apiClient.get('/api/departamentos/especialidades');
+        this.especialidades = response.data;
+      } catch (error) {
+        console.error('Error al obtener departamentos:', error);
       }
     },
     async actualizarEspecialidadYPrestaciones() {
@@ -398,24 +436,84 @@ export default {
         console.error('Error al eliminar cita:', error);
       }
     },
+    async obtenerDatos() {
+      // Obtener todas las citas, especialidades y médicos al montar el componente
+      await Promise.all([this.obtenerCitas(), this.obtenerEspecialidades(), this.obtenerMedicos()]);
+    },
+    validarFechaHora() {
+      const hoy = new Date();
+      const fechaSeleccionada = new Date(this.nuevaCita.fecha);
+      const horaSeleccionada = this.nuevaCita.hora.split(':');
+      fechaSeleccionada.setHours(horaSeleccionada[0], horaSeleccionada[1]);
+
+      if (fechaSeleccionada < hoy) {
+        alert('La fecha y hora seleccionadas ya han pasado.');
+        return false;
+      }
+      return true;
+    },
+    async validarCitaDuplicada() {
+      const citasExistentes = await apiClient.get(`/api/citas?medicoId=${this.nuevaCita.medicoId}&fecha=${this.nuevaCita.fecha}&hora=${this.nuevaCita.hora}`);
+      if (citasExistentes.data.length > 0) {
+        alert('Ya existe una cita para este médico en esa fecha y hora.');
+        return true;
+      }
+      return false;
+    }
+
+  },
+  validarFormulario() {
+    if (!this.nuevaCita.medicoId) {
+      alert('Debe seleccionar un médico.');
+      return false;
+    }
+    if (!this.nuevaCita.fecha) {
+      alert('Debe seleccionar una fecha.');
+      return false;
+    }
+    if (!this.nuevaCita.hora) {
+      alert('Debe seleccionar una hora.');
+      return false;
+    }
+    return true;
   },
   mounted() {
-    this.obtenerMedicos();
+    this.obtenerDatos();
+    this.intervalId = setInterval(() => {
+      this.obtenerCitas();
+    }, 60000); // Actualiza cada 1 minuto
+    //this.obtenerMedicos();
     this.obtenerPacientes();
-    this.obtenerCitas();
+    //this.obtenerCitas();
+  },
+  beforeDestroy() {
+    clearInterval(this.intervalId);
   },
   computed: {
-  citasCalculadas() {
+    citasFiltradas() {
+      let citasFiltradas = this.citas;
+
+      if (this.filtroEspecialidad) {
+        citasFiltradas = citasFiltradas.filter(cita => cita.especialidad._id === this.filtroEspecialidad);
+      }
+
+      if (this.filtroMedico) {
+        citasFiltradas = citasFiltradas.filter(cita => cita.medico._id === this.filtroMedico);
+      }
+
+      return citasFiltradas;
+    },
+    citasCalculadas() {
     return this.calculoCitas();
-  },
-  esConsulta() {
+    },
+    esConsulta() {
     // Encuentra la prestación seleccionada
     const prestacion = this.prestaciones.find(
       (p) => p._id === this.nuevaCita.prestacionId
     );
     // Devuelve verdadero si el nombre de la prestación es "Consulta"
     return prestacion && prestacion.nombre === "Consulta";
-  },
+    },
   
   },
 

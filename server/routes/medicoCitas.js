@@ -5,15 +5,22 @@ const Cita = require('../models/Cita');
 // Ruta para obtener todas las citas, opcionalmente filtradas por médico o paciente
 router.get('/citas', async (req, res) => {
   try {
-    const { medicoId, pacienteId, fecha } = req.query;
+    const { especialidadId, medicoId, pacienteId, fecha } = req.query;
     const filtro = {};
+
+    // Filtrar por especialidad
+    if (especialidadId) {
+      filtro.especialidadId = especialidadId;
+    }
 
     if (medicoId) {
       filtro.medicoId = medicoId;
     }
-    if (pacienteId) {
-      filtro.pacienteId = pacienteId;
-    }
+
+    if (pacienteId) { // Aseguramos que no sea la cadena 'null'
+      filtro.pacienteId = pacienteId === 'null' ? null : pacienteId; // Convertimos 'null' a null
+    } 
+
     if (fecha) {
       filtro.fecha = new Date(fecha);
     }
@@ -116,47 +123,32 @@ router.post('/citas', async (req, res) => {
 
 
 // Ruta para actualizar una cita existente
+// Ruta para actualizar una cita y asignar un paciente
 router.put('/citas/:id', async (req, res) => {
   try {
-    const { medicoId, especialidadId, prestacionId, fecha, hora, duracion, pacienteId } = req.body;
+    const citaId = req.params.id;
+    const { pacienteId } = req.body;
 
-    // Convertir hora a un objeto de Date para manejar el rango de tiempo
-    const inicioCita = new Date(`${fecha}T${hora}`);
-    const finCita = new Date(inicioCita);
-    finCita.setMinutes(inicioCita.getMinutes() + duracion);
+    // Buscar la cita por ID
+    const cita = await Cita.findById(citaId);
 
-    // Buscar citas del mismo médico que se solapen en el mismo día, excluyendo la cita actual
-    const conflicto = await Cita.findOne({
-      _id: { $ne: req.params.id },
-      medicoId,
-      fecha,
-      $or: [
-        { hora: { $lte: inicioCita }, $expr: { $gte: [{ $add: ["$hora", { $multiply: ["$duracion", 60000] }] }, inicioCita] } },
-        { hora: { $lt: finCita }, $expr: { $gte: [{ $add: ["$hora", { $multiply: ["$duracion", 60000] }] }, finCita] } },
-        { hora: { $gte: inicioCita, $lt: finCita } }
-      ]
-    });
-
-    if (conflicto) {
-      return res.status(400).json({ message: 'El médico ya tiene una cita en esta franja horaria.' });
+    if (!cita) {
+      return res.status(404).json({ message: 'Cita no encontrada' });
     }
 
-    // Actualizar la cita
-    const citaActualizada = await Cita.findByIdAndUpdate(req.params.id, {
-      medicoId,
-      especialidadId,
-      prestacionId,
-      fecha,
-      hora,
-      duracion,
-      pacienteId
-    }, { new: true });
+    // Asignar el paciente a la cita
+    cita.pacienteId = pacienteId;
+
+    // Guardar la cita actualizada
+    const citaActualizada = await cita.save();
 
     res.status(200).json(citaActualizada);
   } catch (error) {
-    res.status(500).json({ message: 'Error al actualizar la cita', error });
+    console.error('Error al actualizar la cita:', error);
+    res.status(500).json({ message: 'Error al reservar la cita', detalles: error.message });
   }
 });
+
 
 // Ruta para eliminar una cita por su ID
 router.delete('/citas/:id', async (req, res) => {

@@ -36,6 +36,9 @@
           <li class="nav-item">
             <router-link class="nav-link" to="/prestaciones">Prestaciones</router-link> <!-- Enlace para la agenda -->
           </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/reservarcitas">Reservar Citas</router-link> <!-- Enlace para la agenda -->
+          </li>
         </ul>
       </div>
     </nav>

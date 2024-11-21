@@ -101,15 +101,28 @@ router.put('/usuarios/:id', async (req, res) => {
 
 
 
-// Filtrar los usuarios Médicos
+// Filtrar los usuarios Médicos por departamento (especialidad)
 router.get('/usuarios/medicos', async (req, res) => {
+  const { departamentoId } = req.query;
+
   try {
-    const medicos = await Usuario.find({ tipo: 'Médico' });
+    // Si se proporciona un departamentoId, filtramos los médicos por departamento
+    let query = { tipo: 'Médico' }; // Filtramos solo los médicos
+
+    if (departamentoId) {
+      query.departamento = departamentoId; // Filtramos por el departamentoId si se ha proporcionado
+    }
+
+    // Buscar médicos con el query construido
+    const medicos = await Usuario.find(query).populate('departamento'); // Asegúrate de que el campo departamentoId esté referenciando correctamente al Departamento
+
     res.status(200).json(medicos);
   } catch (error) {
+    console.error('Error al obtener médicos:', error);
     res.status(500).json({ message: 'Error al obtener médicos', error });
   }
 });
+
 
 router.get('/usuarios/pacientes', async (req, res) => {
   try {
