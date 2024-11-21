@@ -14,6 +14,7 @@ import ContactForm from './components/Contacto.vue';
 import GestionPrestaciones from './components/GestionPrestaciones.vue';
 import AgendaMedico from './components/AgendaMedico.vue';
 import GestionRecetas from './components/GestionRecetas.vue';
+import ListaFormContacto from './components/ListaFormContacto.vue';
 
 Vue.use(VueRouter);
 
@@ -78,6 +79,11 @@ const routes = [
     path: '/recetas',
     name: 'GestionRecetas',
     component: GestionRecetas,
+  },
+  {
+    path: '/lista-contacto',
+    name: 'ListaFormContacto',
+    component: ListaFormContacto,
   },
   {
     path: '*', // Ruta comodín para capturar rutas no existentes

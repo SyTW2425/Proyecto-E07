@@ -60,7 +60,7 @@ const medicoCitasRoutes = require('./routes/medicoCitas');
 const prestacionRoutes = require('./routes/prestacionRoutes');
 const medicoCitas = require('./routes/medicoCitas');
 const recetaRoutes = require('./routes/recetaRoutes');
-const FormContacto = require('./models/FormContacto');
+const FormContactoRoutes = require('./routes/formContactoRoutes');
 
 app.use('/api', userRoutes);         // Rutas para usuarios
 app.use('/api', departamentoRoutes); // Rutas para departamentos
@@ -68,7 +68,7 @@ app.use('/api', medicoCitasRoutes);     // Rutas para citas médicas
 app.use('/api', prestacionRoutes); // Rutas para prestaciones
 app.use('/api', medicoCitas); // Rutas para citas médicas
 app.use('/api', recetaRoutes); // Rutas para recetas
-app.use('/api', FormContacto); // Rutas para formularios de contacto
+app.use('/api', FormContactoRoutes); // Rutas para formularios de contacto
 
 // Iniciar el servidor
 app.listen(PORT, () => {
