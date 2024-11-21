@@ -3,7 +3,7 @@
       <!-- Columna izquierda -->
       <div class="columna-formulario">
         <h2>Reservar Cita Médica</h2>
-        
+  
         <!-- Selector de Paciente -->
         <label>Paciente:
           <select v-model="selectedPaciente">
@@ -35,34 +35,53 @@
         </label>
   
         <!-- Mostrar las citas disponibles -->
-<div v-if="citasDisponibles.length > 0">
-  <div v-for="(cita, index) in citasDisponibles" :key="index">
-    <td>Fecha: {{ cita.fecha | formatDate }}. Hora: {{ cita.hora }}. Especialista: {{ cita.medicoId.nombre }} {{ cita.medicoId.apellidos }}</td>
-    
-    <div>
-      <!-- Mostrar el botón de "Reservar cita" solo si hay un paciente y una especialidad seleccionados -->
-      <button v-if="selectedPaciente && selectedEspecialidad"
-              @click="reservarCita(cita._id, selectedPaciente)">
-        Reservar cita
-      </button>
-    </div>
-
-    <div>
-      <button v-for="(horario, horaIndex) in cita.horarios" :key="horaIndex" 
-              @click="reservarCita(cita.medicoId, cita.fecha, horario)">
-        {{ horario }} - {{ cita.medicoId.nombre }} {{ cita.medicoId.apellidos }}
-      </button>
-    </div>
-  </div>
-</div>
-
+        <div v-if="citasDisponibles.length > 0">
+          <div v-for="(cita, index) in citasDisponibles" :key="index">
+            <td>Fecha: {{ cita.fecha | formatDate }}. Hora: {{ cita.hora }}. Especialista: {{ cita.medicoId.nombre }} {{ cita.medicoId.apellidos }}</td>
+            <div>
+              <!-- Mostrar el botón de "Reservar cita" solo si hay un paciente y una especialidad seleccionados -->
+              <button v-if="selectedPaciente && selectedEspecialidad"
+                @click="reservarCita(cita._id, selectedPaciente)">
+                Reservar cita
+              </button>
+            </div>
+  
+            <div>
+              <button v-for="(horario, horaIndex) in cita.horarios" :key="horaIndex"
+                @click="reservarCita(cita.medicoId, cita.fecha, horario)">
+                {{ horario }} - {{ cita.medicoId.nombre }} {{ cita.medicoId.apellidos }}
+              </button>
+            </div>
+          </div>
+        </div>
   
         <div v-else>
           <p>No hay citas disponibles.</p>
         </div>
       </div>
+  
+      <!-- Columna derecha - Listado de citas médicas con paciente asignado -->
+      <div class="columna-citas">
+        <h2>Citas Médicas Consultas</h2>
+        <div v-if="citasConsulta.length > 0">
+          <div v-for="(cita, index) in citasConsulta" :key="index" class="cita-item">
+            <p>Médico: {{ cita.medicoId.nombre }} {{ cita.medicoId.apellidos }}</p>
+            <p>Especialidad: {{ cita.especialidadId.nombre }}</p>
+            <p>Prestación: {{ cita.prestacionId.nombre }}</p>
+            <p>Fecha: {{ cita.fecha | formatDate }} - Hora: {{ cita.hora }}</p>
+            <p>Duración: {{ cita.duracion }} minutos</p>
+            <p>Paciente: {{ cita.pacienteId.nombre }} {{ cita.pacienteId.apellidos }}</p>
+            <!-- Botón para cancelar cita -->
+            <button @click="cancelarCita(cita._id)">Cancelar Cita</button>
+          </div>
+        </div>
+        <div v-else>
+          <p>No hay citas de tipo consulta para pacientes asignados.</p>
+        </div>
+      </div>
     </div>
   </template>
+  
   
 
   <script>
@@ -79,9 +98,21 @@ export default {
       selectedPaciente: '', // Paciente seleccionado
       selectedEspecialidad: '', // Especialidad seleccionada
       selectedMedico: '', // Médico seleccionado
+      citasConsulta: [], // Citas de tipo consulta donde pacienteId no es null
     };
   },
   methods: {
+    async obtenerCitasConsulta() {
+        try {
+            const response = await apiClient.get('/api/citas');
+            this.citasConsulta = response.data;
+            console.log('Citas obtenidas:', response.data);
+            // this.citasConsulta = response.data.filter(cita => cita.pacienteId && cita.pacienteId !== null);
+            // console.log('Citas con paciente asignado:', this.citasConsulta);
+        } catch (error) {
+            console.error('Error al obtener citas de consulta:', error);
+        }
+    },
     async obtenerPacientes() {
       try {
         const response = await apiClient.get('/api/usuarios/pacientes');
@@ -155,7 +186,30 @@ export default {
     }
 
     }
-  },
+    },
+    async cancelarCita(citaId) {
+      try {
+        if (!citaId) {
+          console.error('No se pudo cancelar la cita. Faltan datos.');
+          return;
+        }
+
+        const response = await apiClient.put(`/api/citas/${citaId}`, {
+          pacienteId: null // Cancelamos la cita al establecer pacienteId a null
+        });
+
+        if (response.status === 200) {
+          alert('Cita cancelada con éxito');
+          //this.obtenerCitasConsulta(); // Actualizamos la lista de citas de consulta
+        } else {
+          console.error('Error al cancelar la cita', response);
+          alert('Hubo un error al cancelar la cita');
+        }
+      } catch (error) {
+        console.error('Error en la petición PUT', error);
+        alert('Hubo un error al cancelar la cita');
+      }
+    },
   watch: {
     selectedEspecialidad() {
       this.cargarCitasDisponibles(); // Recargar citas disponibles cuando cambie la especialidad
@@ -168,9 +222,13 @@ export default {
     },
   },
   mounted() {
+    console.log(this.obtenerCitasConsulta); // Verificar si el método está disponible
     this.obtenerPacientes();
     this.obtenerEspecialidades();
-  }
+    this.obtenerCitasConsulta(); // Verificar si esto funciona sin errores
+
+}
+
 };
 </script>
 
