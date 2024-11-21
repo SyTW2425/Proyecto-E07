@@ -13,6 +13,16 @@ Vue.config.productionTip = false;
 
 Vue.use(Vuetify);
 
+// Registrar el filtro global
+Vue.filter('formatDate', function (value) {
+  if (!value) return '';
+  const date = new Date(value);
+  const day = String(date.getDate()).padStart(2, '0'); // Día con 2 dígitos
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Mes con 2 dígitos
+  const year = date.getFullYear(); // Año
+  return `${day}/${month}/${year}`;
+});
+
 new Vue({
   vuetify: new Vuetify({
     icons: {

@@ -8,26 +8,38 @@
         <form @submit.prevent="editarRecetaId ? actualizarReceta() : crearReceta()">
             <img v-if="fotoPreview" :src="fotoPreview" alt="Previsualización de Foto de Perfil" class="foto-preview"/>
 
-          <label> Medico:
-            <select v-model="nuevaReceta.medico" required>
-              <option v-for="med in todosMedicos" :key="med._id" :value="med._id">{{ med.nombre }}</option>
+          <label> Médico:
+            <select v-model="nuevaReceta.medicoId" required>
+              <option disabled value="">Seleccione un médico</option>
+              <option v-for="medico in medicos" :key="medico._id" :value="medico._id"> {{ medico.nombre }} {{ medico.apellidos }}</option>
             </select>
           </label>
 
+          <label> Paciente:
+            <select v-model="nuevaReceta.pacienteId" required>
+              <option disabled value="">Seleccione un paciente</option>
+              <option v-for="paciente in pacientes" :key="paciente._id" :value="paciente._id"> {{ paciente.nombre }} {{ paciente.apellidos }}</option>
+            </select>
+          </label>
+          <!-- Selección de Fecha -->
+          <label>Fecha:
+            <input type="date" v-model="nuevaReceta.fecha" required />
+          </label>
+          <!-- Selección de Hora -->
+          <label>Hora:
+            <input type="time" v-model="nuevaReceta.hora" required />
+          </label>
           <!-- Campo de Indicaciones -->
           <label>Medicamentos:
             <textarea v-model="nuevaReceta.medicamentos" class="textarea-azul"></textarea>
           </label>
-
           <!-- Campo de Observaciones -->
           <label>Observaciones:
             <textarea v-model="nuevaReceta.observaciones" class="textarea-azul"></textarea>
           </label>
-
-  
           <!-- Botones de acción para crear o actualizar la receta -->
           <v-btn class="ma-2 boton-crear" type="submit" v-if="!editarRecetaId">
-            Crear Prestación
+            Crear Receta
           </v-btn>
           <v-btn class="ma-2 boton-guardar" type="button" v-if="editarRecetaId" @click="actualizarReceta">
             Guardar Cambios
@@ -71,12 +83,16 @@
   <thead>
     <tr>
       <th></th>
-      <th>Nombre</th>
-      <th>Descripción</th>
+      <th>Médico</th>
+      <th>Paciente</th>
+      <th>Fecha</th>
+      <th>Hora</th>
+      <th>Medicamentos</th>
+      <th>Observaciones</th>
     </tr>
   </thead>
   <tbody>
-    <tr v-for="receta in recetas" :key="receta._id">
+    <tr v-for="receta in recetas" :key="receta._id" >
       <td class="department-actions">
         <div class="action-buttons">
           <v-btn class="boton-modificar" @click="cargarReceta(receta)">
@@ -87,7 +103,11 @@
           </v-btn>
         </div>
       </td>
-      <td>{{ receta.numero }}</td>
+      <td>{{ receta.medicoId.nombre }} {{ receta.medicoId.apellidos }}</td>
+      <td>{{ receta.pacienteId.nombre }} {{ receta.pacienteId.apellidos }}</td>
+      <td>{{ receta.fecha }}</td>
+      <td>{{ receta.hora }}</td>
+      <td>{{ receta.medicamentos }}</td>
       <td>{{ receta.observaciones }}</td>
     </tr>
   </tbody>
@@ -106,13 +126,15 @@
       return {
         recetas: [],
         nuevaReceta: {
-          medico: '',
+          medicoId: '',
+          pacienteId: '',
           fecha: '',
           hora: '',
           medicamentos: '',
-          observaciones: '',
-          paciente: ''
+          observaciones: ''
         },
+        medicos: [], // Lista de médicos
+        pacientes: [], // Lista de pacientes
         fotoPreview: require('@/assets/estados/especialidad_defecto.png'),
         editarRecetaId: null,
         cargando: false,
@@ -131,7 +153,25 @@
           this.cargando = false;
         }
       },
-      
+    
+      async obtenerMedicos() {
+        try {
+          const response = await apiClient.get('/api/usuarios/medicos');
+          this.medicos = response.data;
+        } catch (error) {
+          console.error('Error al obtener médicos:', error);
+          this.errorServidor = true;
+        }
+      },
+      async obtenerPacientes() {
+        try {
+          const response = await apiClient.get('/api/usuarios/pacientes');
+          this.pacientes = response.data;
+        } catch (error) {
+          console.error('Error al obtener pacientes:', error);
+          this.errorServidor = true;
+        }
+      },
 
       async crearReceta() {
         try {
@@ -142,10 +182,12 @@
           console.error('Error al crear receta:', error);
         }
       },
+
       cargarReceta(receta) {
         this.nuevaReceta = { ...receta };
         this.editarRecetaId = receta._id;
       },
+
       async actualizarReceta() {
         try {
           await apiClient.put(`/api/recetas/${this.editarRecetaId}`, this.nuevaReceta);
@@ -155,9 +197,11 @@
           console.error('Error al actualizar receta:', error);
         }
       },
+      
       cancelarEdicion() {
         this.resetFormulario();
       },
+
       confirmarEliminacion(id, numero) {
         const confirmacion = window.confirm(`¿Está seguro de que desea eliminar la receta ${numero}?`);
         if (confirmacion) {
@@ -173,12 +217,16 @@
         }
       },
       resetFormulario() {
-        this.nuevaReceta = { numero: '', medico: '', fecha: '', hora: '', observaciones: '', medicamentos: '', paciente: '' };
+        this.nuevaReceta = { medicoId: '', pacienteId: '', fecha: '', hora: '', medicamentos: '', observaciones: '' };
         this.editarRecetaId = null;
       }
       
     },
+    
+
     mounted() {
+      this.obtenerMedicos();
+      this.obtenerPacientes();
       this.obtenerRecetas();
     }
   };
