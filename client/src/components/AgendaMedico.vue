@@ -76,7 +76,7 @@
         <div v-if="!esConsulta">
           <!-- Selección de Hora de Inicio -->
           <label>Hora:
-            <input type="time" v-model="horaInicio" required />
+            <input type="time" v-model="nuevaCita.hora" required />
           </label> 
 
           <!-- Selección de Duración -->
@@ -125,6 +125,7 @@
       <table class="citas-table" v-if="citas && citas.length !== 0">
         <thead>
           <tr>
+            <th></th>
             <th>Médico</th>
             <th>Especialidad</th>
             <th>Prestación</th>
@@ -136,6 +137,11 @@
         </thead>
         <tbody>
           <tr v-for="cita in citas" :key="cita._id">
+            <td class="user-actions">
+            <v-btn class="boton-eliminar" @click="confirmarEliminacion(cita._id)">
+              <i class="bi bi-trash"></i>
+            </v-btn>
+          </td>
             <td>{{ cita.medicoId.nombre }} {{ cita.medicoId.apellidos }}</td>
             <td>{{ cita.especialidadId.nombre }}</td>
             <td>{{ cita.prestacionId.nombre }}</td>
@@ -288,8 +294,6 @@ export default {
             console.error(`Error al crear cita ${index}:`, resultado.reason);
           }
         });
-
-        // Lanzar todas las peticiones en paralelo
         
         //await Promise.all(citas.map((cita) => this.crearCita(cita)));
         } else {
@@ -379,7 +383,21 @@ export default {
       this.paciente = {};
       this.horaInicio = '';
       this.horaFinal = '';
-    }
+    },
+    confirmarEliminacion(id) {
+      const confirmacion = window.confirm(`¿Está seguro de que desea eliminar la cita?`);
+      if (confirmacion) {
+        this.eliminarCita(id);
+      }
+    },
+    async eliminarCita(id) {
+      try {
+        await apiClient.delete(`/api/citas/${id}`);
+        this.obtenerCitas();
+      } catch (error) {
+        console.error('Error al eliminar cita:', error);
+      }
+    },
   },
   mounted() {
     this.obtenerMedicos();

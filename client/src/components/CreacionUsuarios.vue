@@ -254,8 +254,6 @@ export default {
     const departamento = this.todosDepartamentos.find(dep => dep._id === departamentoId);
     return departamento ? departamento.nombre : '';
   },
-
-
   filtrarUsuarios() {
     // Este método se llama cuando se cambia el filtro, pero el cálculo se realiza en `usuariosFiltrados`
   },
@@ -284,7 +282,6 @@ export default {
       this.nuevoUsuario.departamento = '';
     }
   },
-
   async crearUsuario() {
     const formData = new FormData();
     formData.append('nombre', this.nuevoUsuario.nombre);
@@ -330,14 +327,12 @@ export default {
     };
     this.fotoPreview = require('@/assets/estados/perfil_defecto.png');
     this.editarUsuarioId = null; // Salir del modo de edición
-  },
-  
+  }, 
   cargarUsuario(usuario) {
     this.nuevoUsuario = { ...usuario };
     this.editarUsuarioId = usuario._id;
     this.actualizarOpcionesDepartamento(); 
   },
-
   confirmarEliminacion(id, nombre) {
     const confirmacion = window.confirm(`¿Está seguro de que desea eliminar el usuario ${nombre}?`);
     if (confirmacion) {
