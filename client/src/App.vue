@@ -1,7 +1,7 @@
 <template>
   <div id="app" data-app>
     <!-- Barra de navegación -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
       <a class="navbar-brand" href="#">Funcionalidades:</a>
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav mr-auto">

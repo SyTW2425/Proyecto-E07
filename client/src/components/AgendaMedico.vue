@@ -57,7 +57,7 @@
           </label>
 
           <!-- Número de citas calculadas -->
-          <label>Número de Citas Médicas: <strong>{{ calculoCitas.total }}</strong></label>
+          <label>Número de Citas Médicas: <strong>{{ citasCalculadas.total }}</strong></label>
           <div>
             <!-- Lista numerada con los horarios -->
             <ul>
@@ -129,8 +129,8 @@
             <th>Especialidad</th>
             <th>Prestación</th>
             <th>Fecha</th>
-            <th>Hora Inicio</th>
-            <th>Hora Final</th>
+            <th>Hora</th>
+            <th>Duración</th>
             <th>Paciente</th>
           </tr>
         </thead>
@@ -140,9 +140,9 @@
             <td>{{ cita.especialidadId.nombre }}</td>
             <td>{{ cita.prestacionId.nombre }}</td>
             <td>{{ cita.fecha | formatDate }}</td>
-            <td>{{ cita.horaInicio }}</td>
-            <td>{{ cita.horaFinal }}</td>
-            <td>{{ cita.pacienteId ? cita.pacienteId.nombre + ' ' + cita.pacienteId.apellidos : 'Sin asignar' }}</td>
+            <td>{{ cita.hora }}</td>
+            <td>{{ cita.duracion }}</td>
+            <td>{{ cita.pacienteId ? cita.pacienteId.nombre + ' ' + cita.pacienteId.apellidos : '-' }}</td>
           </tr>
         </tbody>
       </table>
@@ -171,8 +171,7 @@ export default {
         prestacionId: '',
         fecha: '',
         hora: '',
-        duracion: '',
-        pacienteId: ''
+        duracion: ''
       },
       cargando: false,
       errorServidor: false
@@ -258,17 +257,21 @@ export default {
     },
     async procesarCitas() {
       try {
-      this.cargando = true;
 
-      if (this.esConsulta) {
-        // Obtener los horarios de inicio calculados previamente
-        const { horarios } = this.calculoCitas();
+        this.cargando = true;
 
-        // Verificar que tengamos horarios disponibles
-        if (horarios.length === 0) {
-          alert('No hay citas disponibles en el rango de tiempo.');
-          return;
-        }
+        if (this.esConsulta) {
+          // Obtener los horarios de inicio calculados previamente
+          const { horarios } = this.calculoCitas();
+
+          // Verificar que tengamos horarios disponibles
+          if (horarios.length === 0) {
+            alert('No hay citas disponibles en el rango de tiempo.');
+            return;
+          }
+        
+        // Garantizamos que la duración sea un número entero
+        this.nuevaCita.duracion = parseInt(this.nuevaCita.duracion, 10);
 
         // Crear múltiples citas con los horarios calculados
         const citas = horarios.map((horaInicio) => {
@@ -279,21 +282,47 @@ export default {
         });
 
 
+        const resultados = await Promise.allSettled(citas.map((cita) => this.crearCita(cita)));
+        resultados.forEach((resultado, index) => {
+          if (resultado.status === "rejected") {
+            console.error(`Error al crear cita ${index}:`, resultado.reason);
+          }
+        });
+
         // Lanzar todas las peticiones en paralelo
-        await Promise.all(citas.map((cita) => this.crearCita(cita)));
-        alert(`${citas.length} citas creadas con éxito`);
-      } else {
-        // Crear una sola cita
-        await this.crearCita(this.nuevaCita);
-        alert('Cita creada con éxito');
+        
+        //await Promise.all(citas.map((cita) => this.crearCita(cita)));
+        } else {
+          // Crear una sola cita
+          await this.crearCita(this.nuevaCita);
+        }
+      } catch (error) {
+        console.error('Error al procesar citas:', error);
+        alert('Ocurrió un error al crear las citas');
+      } finally {
+        this.cargando = false;
       }
-    } catch (error) {
-      console.error('Error al procesar citas:', error);
-      alert('Ocurrió un error al crear las citas');
-    } finally {
-      this.cargando = false;
-    }
-  },
+    },
+    validarDatosCita(cita) {
+    if (!cita.medicoId) throw new Error("El ID del médico es obligatorio.");
+    if (!cita.especialidadId) throw new Error("La especialidad es obligatoria.");
+    if (!cita.prestacionId) throw new Error("La prestación es obligatoria.");
+    if (!cita.fecha || isNaN(Date.parse(cita.fecha))) throw new Error("La fecha es inválida.");
+    if (!cita.hora) throw new Error("La hora es obligatoria.");
+    if (!cita.duracion || cita.duracion <= 0) throw new Error("La duración debe ser mayor que 0.");
+    
+    },
+    async crearCita(cita) {
+      try {
+        this.validarDatosCita(cita); // Verificar los datos antes de enviarlos
+        console.log('Datos enviados:', cita);
+        // Realizar la petición para crear la cita
+        await apiClient.post('/api/citas', cita);
+      } catch (error) {
+        console.error('Error al crear cita:', error);
+        throw error; // Relanzar el error para manejarlo en procesarCitas
+      }
+    },
     calculoCitas() {
     if (!this.horaInicio || !this.horaFinal || !this.nuevaCita.duracion) {
       return { total: 0, horarios: [] }; // Si falta algún campo, devolver 0 y un arreglo vacío
@@ -319,7 +348,6 @@ export default {
     // Calcular los horarios de inicio de cada cita
     const horarios = [];
     let inicioActual = inicioTotalMinutos;
-    console.log('---------------');
 
 
     for (let i = 0; i < totalCitas; i++) {
@@ -330,20 +358,10 @@ export default {
       horarios.push(horarioFormateado);
 
       // Incrementar el tiempo por la duración de cada cita
-      console.log('inicioActual: ', inicioActual);
       inicioActual += +this.nuevaCita.duracion;
     }
 
     return { total: totalCitas, horarios };
-    },
-    async crearCita(cita) {
-    try {
-      // Realiza la petición para crear la cita
-      await apiClient.post('/api/citas', cita);
-    } catch (error) {
-      console.error('Error al crear cita:', error);
-      throw error; // Re-lanzar el error para manejarlo en procesarCitas
-    }
     },
     resetFormulario() {
       this.nuevaCita = {
@@ -369,6 +387,9 @@ export default {
     this.obtenerCitas();
   },
   computed: {
+  citasCalculadas() {
+    return this.calculoCitas();
+  },
   esConsulta() {
     // Encuentra la prestación seleccionada
     const prestacion = this.prestaciones.find(
