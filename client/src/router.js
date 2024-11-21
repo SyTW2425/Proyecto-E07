@@ -81,7 +81,7 @@ const routes = [
     component: GestionRecetas,
   },
   {
-    path: '/lista-contacto',
+    path: '/lista_contacto',
     name: 'ListaFormContacto',
     component: ListaFormContacto,
   },

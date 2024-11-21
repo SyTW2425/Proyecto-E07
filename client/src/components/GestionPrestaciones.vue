@@ -118,7 +118,7 @@
           indicaciones: ''
         },
         fotoPreview: require('@/assets/estados/especialidad_defecto.png'),
-        editarPrestacionId: null,
+        editarFormId: null,
         cargando: false,
         errorServidor: false
       };

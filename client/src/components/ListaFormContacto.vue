@@ -27,36 +27,29 @@
           ></v-progress-circular>
         </div>
   
-        <div v-if="!cargando && !errorServidor && prestaciones.length === 0" class="texto-centrado">
+        <div v-if="!cargando && !errorServidor && form_contacto.length === 0" class="texto-centrado">
           <p>La lista está vacía</p>
         </div>
   
-        <!-- Tabla de prestaciones -->
-        <table class="department-table" v-if="prestaciones.length !== 0">
-  <thead>
-    <tr>
-      <th></th>
-      <th>Nombre</th>
-      <th>Descripción</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr v-for="prestacion in prestaciones" :key="prestacion._id">
-      <td class="department-actions">
-        <div class="action-buttons">
-          <v-btn class="boton-modificar" @click="cargarPrestacion(prestacion)">
-            <i class="bi bi-pencil-square"></i>
-          </v-btn>
-          <v-btn class="boton-eliminar" @click="confirmarEliminacion(prestacion._id, prestacion.nombre)">
-            <i class="bi bi-trash"></i>
-          </v-btn>
-        </div>
-      </td>
-      <td>{{ prestacion.nombre }}</td>
-      <td>{{ prestacion.descripcion }}</td>
-    </tr>
-  </tbody>
-</table>
+        <!-- Tabla de formularios -->
+        <table class="department-table" v-if="form_contacto.length !== 0">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Asunto</th>
+              <th>Mensaje</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="form in form_contacto" :key="form.numero">
+              <td>{{ form.nombre }}</td>
+              <td>{{ form.email }}</td>
+              <td>{{ form.asunto }}</td>
+              <td>{{ form.mensaje }}</td>
+            </tr>
+          </tbody>
+        </table>
 
       </div>
     </div>
@@ -69,76 +62,27 @@
     name: 'ListaFormContacto',
     data() {
       return {
-        prestaciones: [],
-        nuevaPrestacion: {
-          nombre: '',
-          descripcion: '',
-          indicaciones: ''
-        },
-        fotoPreview: require('@/assets/estados/especialidad_defecto.png'),
-        editarPrestacionId: null,
+        form_contacto: [],
         cargando: false,
         errorServidor: false
       };
     },
     methods: {
-      async obtenerPrestaciones() {
+      async obtenerForms() {
         this.cargando = true;
         try {
-          const response = await apiClient.get('/api/prestaciones');
-          this.prestaciones = response.data;
+          const response = await apiClient.get('/api/formContacto');
+          this.form_contacto = response.data;
         } catch (error) {
           this.errorServidor = true;
         } finally {
           this.cargando = false;
         }
       },
-      async crearPrestacion() {
-        try {
-          await apiClient.post('/api/prestaciones', this.nuevaPrestacion);
-          this.obtenerPrestaciones();
-          this.resetFormulario();
-        } catch (error) {
-          console.error('Error al crear prestación:', error);
-        }
-      },
-      cargarPrestacion(prestacion) {
-        this.nuevaPrestacion = { ...prestacion };
-        this.editarPrestacionId = prestacion._id;
-      },
-      async actualizarPrestacion() {
-        try {
-          await apiClient.put(`/api/prestaciones/${this.editarPrestacionId}`, this.nuevaPrestacion);
-          this.obtenerPrestaciones();
-          this.resetFormulario();
-        } catch (error) {
-          console.error('Error al actualizar prestación:', error);
-        }
-      },
-      cancelarEdicion() {
-        this.resetFormulario();
-      },
-      confirmarEliminacion(id, nombre) {
-        const confirmacion = window.confirm(`¿Está seguro de que desea eliminar la prestación ${nombre}?`);
-        if (confirmacion) {
-          this.eliminarPrestacion(id);
-        }
-      },
-      async eliminarPrestacion(id) {
-        try {
-          await apiClient.delete(`/api/prestaciones/${id}`);
-          this.obtenerPrestaciones();
-        } catch (error) {
-          console.error('Error al eliminar prestación:', error);
-        }
-      },
-      resetFormulario() {
-        this.nuevaPrestacion = { nombre: '', descripcion: '', indicaciones: '' };
-        this.editarPrestacionId = null;
-      }
+      
     },
     mounted() {
-      this.obtenerPrestaciones();
+      this.obtenerForms();
     }
   };
   </script>

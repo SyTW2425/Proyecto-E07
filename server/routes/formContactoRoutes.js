@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const FormContacto = require('../routes/formContactoRoutes');
+const FormContacto = require('../models/FormContacto');
 
 // Ruta para obtener todas las formContacto
 router.get('/formContacto', async (req, res) => {

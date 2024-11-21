@@ -40,7 +40,7 @@
             <router-link class="nav-link" to="/recetas">Recetas</router-link> <!-- Enlace para la agenda -->
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/lista-contacto">Lista contacto</router-link> <!-- Enlace para la agenda -->
+            <router-link class="nav-link" to="/lista_contacto">Lista contacto</router-link> <!-- Enlace para la agenda -->
           </li>
         </ul>
       </div>
