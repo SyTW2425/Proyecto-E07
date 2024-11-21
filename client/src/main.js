@@ -7,11 +7,14 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import Vuetify from 'vuetify';
 import 'vuetify/dist/vuetify.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-
+//import { createPinia, PiniaVuePlugin } from 'pinia';
 
 Vue.config.productionTip = false;
 
 Vue.use(Vuetify);
+//Vue.use(PiniaVuePlugin);
+
+//const pinia = createPinia();
 
 new Vue({
   vuetify: new Vuetify({
@@ -20,5 +23,6 @@ new Vue({
     },
   }),
   router,
+  //pinia,
   render: h => h(App),
 }).$mount('#app');

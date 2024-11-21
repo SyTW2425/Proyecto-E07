@@ -33,6 +33,8 @@
           <button type="submit" class="login-button">Entrar</button>
         </form>
         
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+        
         <p class="register-link">
           ¿No eres usuario? <a href="#">Regístrate</a>
         </p>
@@ -42,18 +44,62 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'UserLogin',
   data() {
     return {
       username: '',
-      password: ''
+      password: '',
+      csrfToken: '',
+      errorMessage: '' 
     };
   },
+  async created() {
+    try {
+      const response = await axios.get(`${process.env.VUE_APP_BACKEND_URL}/api/csrf-token`, { withCredentials: true });
+      this.csrfToken = response.data.csrfToken;
+    } catch (error) {
+      console.error('Error al obtener el token CSRF:', error);
+    }
+  },
   methods: {
-    handleLogin() {
-      console.log("Usuario:", this.username);
-      console.log("Contraseña:", this.password);
+    async handleLogin() {
+      this.errorMessage = ''; 
+      try {
+        const response = await axios.post(`${process.env.VUE_APP_BACKEND_URL}/api/login`, {
+          username: this.username,
+          password: this.password
+        }, {
+          headers: {
+            'X-CSRF-Token': this.csrfToken
+          },
+          withCredentials: true
+        });
+        const { token, usuario } = response.data;
+        localStorage.setItem('token', token);
+        localStorage.setItem('usuario', usuario.nombre);
+        this.$router.push('/saludo'); 
+      } catch (error) {
+        console.error('Error al iniciar sesión:', error);
+        if (error.response) {
+          // El servidor respondió con un código de estado fuera del rango 2xx
+          if (error.response.status === 401) {
+            this.errorMessage = 'Credenciales incorrectas. Por favor, verifica tu nombre de usuario y contraseña.';
+          } else if (error.response.status === 400) {
+            this.errorMessage = 'Solicitud incorrecta. Por favor, verifica los datos ingresados.';
+          } else {
+            this.errorMessage = 'Error del servidor. Por favor, intenta nuevamente más tarde.';
+          }
+        } else if (error.request) {
+          // La solicitud fue hecha pero no se recibió respuesta
+          this.errorMessage = 'No se pudo conectar con el servidor. Por favor, verifica tu conexión a internet.';
+        } else {
+          // Algo sucedió al configurar la solicitud
+          this.errorMessage = 'Error al configurar la solicitud. Por favor, intenta nuevamente.';
+        }
+      }
     }
   }
 };
@@ -69,7 +115,6 @@ export default {
   box-sizing: border-box;
   font-family: 'Outfit', sans-serif;
 }
-
 .header {
   width: calc(100% - 4rem); 
   background-color: #e1e1e1;
@@ -83,27 +128,22 @@ export default {
   margin-left: 2rem; 
   margin-right: 2rem; 
 }
-
 .header img.logo {
   width: 200px;
   height: auto; 
 }
-
 .vertical-line {
   width: 4px;
   height: 70px;
   background-color: #92bdf6; 
 }
-
 .header h1.left-align {
   text-align: left;
   margin-left: 10px; 
 }
-
 .header h1.small-text {
   font-size: 24px; 
 }
-
 .content {
   display: flex;
   justify-content: space-around;
@@ -111,38 +151,31 @@ export default {
   max-width: 1200px;
   padding: 2rem;
 }
-
 .welcome-section {
   width: 50%;
 }
-
 .welcome-container {
   max-width: 100%;
 }
-
 .welcome-container h2 {
   font-size: 45px;
   color: #17195e;
   font-weight: bold;
 }
-
 .welcome-text {
   margin-top: 1rem;
   color: #17195e;
 }
-
 .welcome-section ul {
   margin-top: 1rem;
   color: #17195e;
 }
-
 .login-form {
   width: 30%;
   display: flex;
   flex-direction: column;
   align-items: center; 
 }
-
 .login-form .form-title {
   text-align: center; 
   font-size: 25px;
@@ -150,12 +183,10 @@ export default {
   width: 100%;
   color: #17195e;
 }
-
 .login-form label {
   margin-top: 1rem;
   align-self: flex-start; 
 }
-
 .login-form input {
   width: 100%;
   padding: 0.5rem;
@@ -164,14 +195,12 @@ export default {
   background-color: #c6defd; 
   border-radius: 15px; 
 }
-
 .forgot-password {
   margin-top: 1rem;
   font-size: 0.7rem;
   color: #17195e;
   text-decoration: none; 
 }
-
 .login-button {
   margin-top: 1rem;
   width: 100%;
@@ -183,15 +212,18 @@ export default {
   cursor: pointer;
   border-radius: 30px; 
 }
-
 .register-link {
   margin-top: 0.7rem;
   font-size: 0.9rem;
 }
-
 .register-link a {
   color: #000000;
   text-decoration: none;
   font-weight: bold;
+}
+/* Estilo para el mensaje de error */
+.error-message {
+  color: red;
+  margin-top: 1rem;
 }
 </style>

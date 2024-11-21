@@ -1,7 +1,46 @@
 const express = require('express');
 const router = express.Router();
-const Usuario = require('../models/Usuario'); // Importa el modelo de usuario
+const Usuario = require('../models/Usuario'); 
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { validationResult } = require('express-validator');
+const authMiddleware = require('../middleware/authMiddleware');
+const { loginLimiter, validateLogin } = require('../middleware/loginMiddlewares');
 
+// Ruta para el login de usuarios
+router.post('/login', [
+  loginLimiter,
+  ...validateLogin
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { username, password } = req.body;
+
+  try {
+    // Buscar el usuario por su username
+    const usuario = await Usuario.findOne({ username });
+    if (!usuario) {
+      return res.status(401).json({ message: 'Credenciales incorrectas' });
+    }
+
+    // Verificar la contraseña
+    const isMatch = await bcrypt.compare(password, usuario.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Credenciales incorrectas' });
+    }
+
+    // Generar un token JWT
+    const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    res.json({ token, usuario });
+  } catch (error) {
+    console.error('Error al iniciar sesión:', error);
+    res.status(500).json({ message: 'Error al iniciar sesión' });
+  }
+});
 
 // Función para generar un username único
 async function generarUsername(nombre, apellidos) {
