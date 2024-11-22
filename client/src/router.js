@@ -85,6 +85,8 @@ const routes = [
     path: '/intranet',
     name: 'Intranet',
     component: IntranetLogin,
+  },
+  { 
     path: '/reservarcitas',
     name: 'ReservarCitas',
     component: ReservarCitas,
