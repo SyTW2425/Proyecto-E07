@@ -71,7 +71,7 @@
       async obtenerForms() {
         this.cargando = true;
         try {
-          const response = await apiClient.get('/api/formContacto');
+          const response = await apiClient.get('/api/contact_forms');
           this.form_contacto = response.data;
         } catch (error) {
           this.errorServidor = true;

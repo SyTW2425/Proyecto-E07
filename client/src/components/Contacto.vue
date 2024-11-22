@@ -67,19 +67,19 @@
         <form @submit.prevent="enviarFormulario" >
           <div class="mb-3">
             <label for="nombre" class="form-label">Nombre</label>
-            <input type="text" class="form-control" id="nombre" v-model="nuevoForm.nombre" required>
+            <input class="form-control" id="nombre" v-model="nuevoForm.nombre" required>
           </div>
           <div class="mb-3">
-            <label for="email" class="form-label">Correo Electrónico</label>
-            <input type="email" class="form-control" id="email" v-model="nuevoForm.email" required>
+            <label for="correo" class="form-label">Correo Electrónico</label>
+            <input class="form-control" v-model="nuevoForm.correo" required>
           </div>
           <div class="mb-3">
             <label for="asunto" class="form-label">Asunto</label>
-            <input type="text" class="form-control" id="asunto" v-model="nuevoForm.asunto" required>
+            <input class="form-control" v-model="nuevoForm.asunto" required>
           </div>
           <div class="mb-3">
             <label for="mensaje" class="form-label">Mensaje</label>
-            <textarea class="form-control" id="mensaje" rows="4" v-model="nuevoForm.mensaje" required></textarea>
+            <textarea class="form-control" rows="4" v-model="nuevoForm.mensaje" required></textarea>
           </div>
           <button type="submit" class="btn btn-primary boton-enviar">Enviar Mensaje</button>
         </form>
@@ -114,7 +114,7 @@ export default {
     return {
       nuevoForm: {
         nombre: '',
-        email: '',
+        correo: '',
         asunto: '',
         mensaje: ''
       },
@@ -123,14 +123,14 @@ export default {
   methods: {
     async enviarFormulario() {
       try {
-        await apiClient.post('/api/formContacto', this.nuevoForm);
+        await apiClient.post('/api/contact_forms', this.nuevoForm);
         this.resetFormulario();
       } catch (error) {
         console.error('Error al crear formulario de contacto:', error);
       }
     },
     resetFormulario() {
-      this.nuevoForm = { nombre: '', email: '', asunto: '', mensaje: ''};
+      this.nuevoForm = { nombre: '', correo: '', asunto: '', mensaje: ''};
     }
   }
 };
