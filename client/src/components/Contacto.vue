@@ -64,22 +64,22 @@
 
       <!-- Contact Form -->
       <div class="contact-form">
-        <form @submit.prevent="enviarFormulario">
+        <form @submit.prevent="enviarFormulario" >
           <div class="mb-3">
             <label for="nombre" class="form-label">Nombre</label>
-            <input type="text" class="form-control" id="nombre" v-model="nombre" required>
+            <input class="form-control" id="nombre" v-model="nuevoForm.nombre" required>
           </div>
           <div class="mb-3">
-            <label for="email" class="form-label">Correo Electrónico</label>
-            <input type="email" class="form-control" id="email" v-model="email" required>
+            <label for="correo" class="form-label">Correo Electrónico</label>
+            <input class="form-control" v-model="nuevoForm.correo" required>
           </div>
           <div class="mb-3">
             <label for="asunto" class="form-label">Asunto</label>
-            <input type="text" class="form-control" id="asunto" v-model="asunto" required>
+            <input class="form-control" v-model="nuevoForm.asunto" required>
           </div>
           <div class="mb-3">
             <label for="mensaje" class="form-label">Mensaje</label>
-            <textarea class="form-control" id="mensaje" rows="4" v-model="mensaje" required></textarea>
+            <textarea class="form-control" rows="4" v-model="nuevoForm.mensaje" required></textarea>
           </div>
           <button type="submit" class="btn btn-primary boton-enviar">Enviar Mensaje</button>
         </form>
@@ -106,23 +106,31 @@
 </template>
 
 <script>
+import apiClient from '@/apiClient';
+
 export default {
   name: "ContactForm",
   data() {
     return {
-      nombre: '',
-      email: '',
-      asunto: '',
-      mensaje: ''
+      nuevoForm: {
+        nombre: '',
+        correo: '',
+        asunto: '',
+        mensaje: ''
+      },
     };
   },
   methods: {
-    enviarFormulario() {
-      alert(`Mensaje enviado:\n\nNombre: ${this.nombre}\nEmail: ${this.email}\nAsunto: ${this.asunto}\nMensaje: ${this.mensaje}`);
-      this.nombre = '';
-      this.email = '';
-      this.asunto = '';
-      this.mensaje = '';
+    async enviarFormulario() {
+      try {
+        await apiClient.post('/api/contact_forms', this.nuevoForm);
+        this.resetFormulario();
+      } catch (error) {
+        console.error('Error al crear formulario de contacto:', error);
+      }
+    },
+    resetFormulario() {
+      this.nuevoForm = { nombre: '', correo: '', asunto: '', mensaje: ''};
     }
   }
 };

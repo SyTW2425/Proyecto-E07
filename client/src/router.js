@@ -15,8 +15,9 @@ import IntranetLogin from './components/IntranetLogin.vue';
 import ContactForm from './components/Contacto.vue';
 import GestionPrestaciones from './components/GestionPrestaciones.vue';
 import AgendaMedico from './components/AgendaMedico.vue';
+import GestionRecetas from './components/GestionRecetas.vue';
+import ListaFormContacto from './components/ListaFormContacto.vue';
 import ReservarCitas from './components/ReservarCitas.vue';
-
 
 Vue.use(VueRouter);
 
@@ -82,6 +83,14 @@ const routes = [
     component: GestionPrestaciones,
   },
   {
+    path: '/recetas',
+    name: 'GestionRecetas',
+    component: GestionRecetas,
+  },
+  {
+    path: '/lista_contacto',
+    name: 'ListaFormContacto',
+    component: ListaFormContacto,
     path: '/intranet',
     name: 'Intranet',
     component: IntranetLogin,
