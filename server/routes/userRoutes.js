@@ -115,7 +115,7 @@ router.delete('/usuarios/:id', async (req, res) => {
   }
 });
 
-// Ruta para actualizar un usuario, incluyendo la actualización de la imagen de perfil
+// Ruta para actualizar un usuario
 router.put('/usuarios/:id', async (req, res) => {
   try {
     const usuarioData = { ...req.body };
@@ -125,32 +125,55 @@ router.put('/usuarios/:id', async (req, res) => {
       const salt = await bcrypt.genSalt(10);
       usuarioData.password = await bcrypt.hash(usuarioData.password, salt);
     }
+    console.log('ID del usuario:', req.params.id);
+    console.log('Datos del usuario recibidos:', req.body);
 
     const usuario = await Usuario.findByIdAndUpdate(req.params.id, usuarioData, {
       new: true,
       runValidators: true
     });
-    
+
     if (!usuario) {
+      console.log('Usuario no encontrado');
       return res.status(404).json({ message: 'Usuario no encontrado' });
     }
+
+    console.log('Usuario actualizado con éxito:', usuario);
 
     res.status(200).json(usuario);
   } catch (error) {
     console.error('Error al actualizar usuario:', error);
+
+    if (error.errors) {
+      console.error('Errores de validación:', error.errors);
+    }
+
     res.status(400).json({ message: 'Error al actualizar usuario', error });
   }
 });
 
 // Filtrar los usuarios Médicos
 router.get('/usuarios/medicos', async (req, res) => {
+  const { departamentoId } = req.query;
+
   try {
-    const medicos = await Usuario.find({ tipo: 'Médico' });
+    // Si se proporciona un departamentoId, filtramos los médicos por departamento
+    let query = { tipo: 'Médico' }; // Filtramos solo los médicos
+
+    if (departamentoId) {
+      query.departamento = departamentoId; // Filtramos por el departamentoId si se ha proporcionado
+    }
+
+    // Buscar médicos con el query construido
+    const medicos = await Usuario.find(query).populate('departamento'); // Asegúrate de que el campo departamentoId esté referenciando correctamente al Departamento
+
     res.status(200).json(medicos);
   } catch (error) {
+    console.error('Error al obtener médicos:', error);
     res.status(500).json({ message: 'Error al obtener médicos', error });
   }
 });
+
 
 router.get('/usuarios/pacientes', async (req, res) => {
   try {
@@ -164,11 +187,11 @@ router.get('/usuarios/pacientes', async (req, res) => {
 // Ruta para obtener un usuario por ID
 router.get('/usuarios/:id', async (req, res) => {
   try {
-    const usuario = await Usuario.findById(req.params.id).populate('departamento');
+    const usuario = await Usuario.findById(req.params.id); // Sin populate
     if (!usuario) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     }
-    res.status(200).json(usuario);
+    res.status(200).json(usuario); // Retorna el usuario con departamento como ID
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener usuario', error });
   }

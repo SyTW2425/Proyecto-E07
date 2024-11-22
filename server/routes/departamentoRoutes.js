@@ -12,6 +12,32 @@ router.get('/departamentos', async (req, res) => {
   }
 });
 
+router.get('/departamentos/especialidades', async (req, res) => {
+  try {
+    // Buscar solo los departamentos donde el tipo sea "Especialidad médica"
+    const especialidades = await Departamento.find({ tipo: "Especialidad médica" });
+    res.status(200).json(especialidades);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener especialidades', error });
+  }
+});
+
+
+// Ruta para obtener un departamento por ID
+router.get('/departamentos/:id', async (req, res) => {
+  try {
+    const departamento = await Departamento.findById(req.params.id).populate('prestaciones');
+    if (!departamento) {
+      return res.status(404).json({ message: 'Departamento no encontrado' });
+    }
+    res.status(200).json(departamento);
+  } catch (error) {
+    console.error('Error al obtener departamento:', error);
+    res.status(500).json({ message: 'Error al obtener departamento', error });
+  }
+});
+
+
 // Ruta para crear un departamento
 router.post('/departamentos', async (req, res) => {
   try {

@@ -15,6 +15,8 @@ import IntranetLogin from './components/IntranetLogin.vue';
 import ContactForm from './components/Contacto.vue';
 import GestionPrestaciones from './components/GestionPrestaciones.vue';
 import AgendaMedico from './components/AgendaMedico.vue';
+import ReservarCitas from './components/ReservarCitas.vue';
+
 
 Vue.use(VueRouter);
 
@@ -83,6 +85,9 @@ const routes = [
     path: '/intranet',
     name: 'Intranet',
     component: IntranetLogin,
+    path: '/reservarcitas',
+    name: 'ReservarCitas',
+    component: ReservarCitas,
   },
   {
     path: '*', // Ruta comodín para capturar rutas no existentes
