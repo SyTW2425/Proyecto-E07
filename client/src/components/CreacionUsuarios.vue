@@ -361,7 +361,6 @@ export default {
     formData.append('tipo', this.nuevoUsuario.tipo);
     formData.append('departamento', this.nuevoUsuario.departamento);
     formData.append('dni', this.nuevoUsuario.dni);
-
     formData.append('genero', this.nuevoUsuario.genero);
     formData.append('direccion', this.nuevoUsuario.direccion);
     formData.append('telefono', this.nuevoUsuario.telefono);

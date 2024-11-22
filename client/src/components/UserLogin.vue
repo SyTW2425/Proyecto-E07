@@ -52,17 +52,8 @@ export default {
     return {
       username: '',
       password: '',
-      csrfToken: '',
       errorMessage: '' 
     };
-  },
-  async created() {
-    try {
-      const response = await axios.get(`${process.env.VUE_APP_BACKEND_URL}/api/csrf-token`, { withCredentials: true });
-      this.csrfToken = response.data.csrfToken;
-    } catch (error) {
-      console.error('Error al obtener el token CSRF:', error);
-    }
   },
   methods: {
     async handleLogin() {
@@ -71,11 +62,6 @@ export default {
         const response = await axios.post(`${process.env.VUE_APP_BACKEND_URL}/api/login`, {
           username: this.username,
           password: this.password
-        }, {
-          headers: {
-            'X-CSRF-Token': this.csrfToken
-          },
-          withCredentials: true
         });
         const { token, usuario } = response.data;
         localStorage.setItem('token', token);
@@ -84,7 +70,6 @@ export default {
       } catch (error) {
         console.error('Error al iniciar sesión:', error);
         if (error.response) {
-          // El servidor respondió con un código de estado fuera del rango 2xx
           if (error.response.status === 401) {
             this.errorMessage = 'Credenciales incorrectas. Por favor, verifica tu nombre de usuario y contraseña.';
           } else if (error.response.status === 400) {
@@ -93,10 +78,8 @@ export default {
             this.errorMessage = 'Error del servidor. Por favor, intenta nuevamente más tarde.';
           }
         } else if (error.request) {
-          // La solicitud fue hecha pero no se recibió respuesta
           this.errorMessage = 'No se pudo conectar con el servidor. Por favor, verifica tu conexión a internet.';
         } else {
-          // Algo sucedió al configurar la solicitud
           this.errorMessage = 'Error al configurar la solicitud. Por favor, intenta nuevamente.';
         }
       }

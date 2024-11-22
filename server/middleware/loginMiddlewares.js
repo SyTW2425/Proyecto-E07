@@ -14,7 +14,16 @@ const validateLogin = [
   check('password').isString().notEmpty().withMessage('La contraseña es obligatoria')
 ];
 
+const validateRegister = [
+  check('nombre').not().isEmpty().withMessage('El nombre es obligatorio'),
+  check('apellidos').not().isEmpty().withMessage('Los apellidos son obligatorios'),
+  check('username').not().isEmpty().withMessage('El nombre de usuario es obligatorio'),
+  check('password').isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres'),
+  check('email').isEmail().withMessage('Debe ser un email válido')
+];
+
 module.exports = {
   loginLimiter,
-  validateLogin
+  validateLogin,
+  validateRegister
 };

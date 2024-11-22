@@ -20,7 +20,7 @@
       </section>
       
       <section class="login-form">
-        <h2 class="form-title">Acceso usuarios</h2>
+        <h2 class="form-title">Registro usuarios</h2>
         <form @submit.prevent="handleRegister">
           <label for="nombre">Nombre:</label>
           <input type="text" id="nombre" v-model="nombre" required />
@@ -34,27 +34,37 @@
           <label for="password">Contraseña:</label>
           <input type="password" id="password" v-model="password" required />
           
-          <label for="tipo">Tipo:</label>
-          <input type="text" id="tipo" v-model="tipo" required />
-          
-          <label for="departamento">Departamento:</label>
-          <input type="text" id="departamento" v-model="departamento" />
-          
-          <label for="dni">DNI:</label>
-          <input type="text" id="dni" v-model="dni" />
-          
           <label for="fechaNacimiento">Fecha de Nacimiento:</label>
           <input type="date" id="fechaNacimiento" v-model="fechaNacimiento" />
           
           <label for="genero">Género:</label>
-          <select id="genero" v-model="genero">
-            <option value="">Seleccione</option>
-            <option value="Masculino">Masculino</option>
-            <option value="Femenino">Femenino</option>
-          </select>
+          <v-menu
+            v-model="menu"
+            :close-on-content-click="false"
+            offset-y
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="genero"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-list>
+              <v-list-item @click="selectGenero('Masculino')">
+                <v-list-item-title>Masculino</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="selectGenero('Femenino')">
+                <v-list-item-title>Femenino</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
           
           <label for="email">Email:</label>
           <input type="email" id="email" v-model="email" />
+
+          <button type="submit" class="login-button">Registrar</button>
         </form>
         
         <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
@@ -65,42 +75,47 @@
 
 <script>
 import axios from 'axios';
+import { VMenu, VTextField, VList, VListItem, VListItemTitle } from 'vuetify/lib';
 
 export default {
   name: 'UserRegister',
+  components: {
+    VMenu,
+    VTextField,
+    VList,
+    VListItem,
+    VListItemTitle
+  },
   data() {
     return {
       nombre: '',
       apellidos: '',
       username: '',
       password: '',
-      tipo: '',
-      departamento: '',
-      dni: '',
+      tipo: 'Paciente', 
       fechaNacimiento: '',
       genero: '',
-      direccion: '',
-      telefono: '',
       email: '',
-      errorMessage: '' // Propiedad para almacenar el mensaje de error
+      errorMessage: '',
+      menu: false,
     };
   },
   methods: {
+    selectGenero(genero) {
+      this.genero = genero;
+      this.menu = false;
+    },
     async handleRegister() {
-      this.errorMessage = ''; // Resetear el mensaje de error antes de intentar el registro
+      this.errorMessage = ''; 
       try {
         await axios.post(`${process.env.VUE_APP_BACKEND_URL}/api/register`, {
           nombre: this.nombre,
           apellidos: this.apellidos,
           username: this.username,
           password: this.password,
-          tipo: this.tipo,
-          departamento: this.departamento,
-          dni: this.dni,
+          tipo: this.tipo, 
           fechaNacimiento: this.fechaNacimiento,
           genero: this.genero,
-          direccion: this.direccion,
-          telefono: this.telefono,
           email: this.email
         });
         this.$router.push('/login'); // Redirigir a la página de login después del registro exitoso
@@ -216,6 +231,14 @@ export default {
   background-color: #c6defd; 
   border-radius: 15px; 
 }
+.login-form .v-text-field {
+  width: 100%;
+  padding: 0.3rem;
+  margin-top: 0.5rem;
+  border-radius: 5px;
+  background-color: #c6defd; 
+  border-radius: 15px; 
+}
 .forgot-password {
   margin-top: 1rem;
   font-size: 0.7rem;
@@ -223,7 +246,7 @@ export default {
   text-decoration: none; 
 }
 .login-button {
-  margin-top: 1rem;
+  margin-top: 2rem;
   width: 100%;
   padding: 0.75rem;
   background-color: #17195e;

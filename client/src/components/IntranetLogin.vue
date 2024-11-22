@@ -28,27 +28,58 @@
           <button type="submit" class="login-button">Entrar</button>
         </form>
         
-        <p class="register-link">
-          ¿No eres usuario? <a href="#">Regístrate</a>
-        </p>
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
       </section>
     </main>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
-  name: 'IntranetLogin',
+  name: 'UserLogin',
   data() {
     return {
       username: '',
-      password: ''
+      password: '',
+      errorMessage: '' 
     };
   },
   methods: {
-    handleLogin() {
-      console.log("Usuario:", this.username);
-      console.log("Contraseña:", this.password);
+    async handleLogin() {
+      this.errorMessage = ''; 
+      try {
+        const response = await axios.post(`${process.env.VUE_APP_BACKEND_URL}/api/login`, {
+          username: this.username,
+          password: this.password
+        });
+
+        if (usuario.tipo !== 'Administrador' && usuario.tipo !== 'Médico') {
+          this.errorMessage = 'Acceso denegado. Solo los administradores y médicos pueden iniciar sesión.';
+          return;
+        }
+
+        const { token, usuario } = response.data;
+        localStorage.setItem('token', token);
+        localStorage.setItem('usuario', usuario.nombre);
+        this.$router.push('/saludo'); 
+      } catch (error) {
+        console.error('Error al iniciar sesión:', error);
+        if (error.response) {
+          if (error.response.status === 401) {
+            this.errorMessage = 'Credenciales incorrectas. Por favor, verifica tu nombre de usuario y contraseña.';
+          } else if (error.response.status === 400) {
+            this.errorMessage = 'Solicitud incorrecta. Por favor, verifica los datos ingresados.';
+          } else {
+            this.errorMessage = 'Error del servidor. Por favor, intenta nuevamente más tarde.';
+          }
+        } else if (error.request) {
+          this.errorMessage = 'No se pudo conectar con el servidor. Por favor, verifica tu conexión a internet.';
+        } else {
+          this.errorMessage = 'Error al configurar la solicitud. Por favor, intenta nuevamente.';
+        }
+      }
     }
   }
 };

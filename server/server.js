@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const csrf = require('csurf');
 const cookieParser = require('cookie-parser');
 
 // Ejecucción: nodemon server.js
@@ -10,8 +9,6 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const PORT = process.env.PORT || 3000;
 dotenv.config();
-
-
 
 // Define los orígenes permitidos
 const allowedOrigins = [
@@ -44,10 +41,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware CSRF
-const csrfProtection = csrf({ cookie: true });
-app.use(csrfProtection);
-
 // Conexión a MongoDB Atlas
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
@@ -59,11 +52,6 @@ mongoose.connect(process.env.MONGODB_URI, {
 // Ruta principal de prueba
 app.get('/', (req, res) => {
   res.send('Bienvenido al backend');
-});
-
-// Ruta para obtener el token CSRF
-app.get('/api/csrf-token', (req, res) => {
-  res.json({ csrfToken: req.csrfToken() });
 });
 
 // Rutas de usuarios
