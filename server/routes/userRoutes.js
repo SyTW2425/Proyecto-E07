@@ -1,7 +1,56 @@
 const express = require('express');
 const router = express.Router();
-const Usuario = require('../models/Usuario'); // Importa el modelo de usuario
+const Usuario = require('../models/Usuario'); 
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { validationResult } = require('express-validator');
+const authMiddleware = require('../middleware/authMiddleware');
+const { loginLimiter, validateLogin, validateRegister } = require('../middleware/loginMiddlewares');
 
+// Ruta para el login de usuarios
+router.post('/login', [
+  loginLimiter,
+  ...validateLogin
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { username, password } = req.body;
+
+  try {
+    const usuario = await Usuario.findOne({ username });
+    if (!usuario) {
+      return res.status(401).json({ message: 'Credenciales incorrectas' });
+    }
+
+    const isMatch = await bcrypt.compare(password, usuario.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Credenciales incorrectas' });
+    }
+
+    const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    res.json({ token, usuario });
+  } catch (error) {
+    console.error('Error al iniciar sesión:', error);
+    res.status(500).json({ message: 'Error al iniciar sesión' });
+  }
+});
+
+// Ruta para registrar un nuevo usuario
+router.post('/register', validateRegister, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const usuarioData = { ...req.body };
+  const usuario = new Usuario(usuarioData);
+  await usuario.save();
+  res.status(201).json(usuario);
+});
 
 // Función para generar un username único
 async function generarUsername(nombre, apellidos) {
@@ -16,7 +65,7 @@ async function generarUsername(nombre, apellidos) {
     username = `${iniciales}${numeros}`;
 
     const usuarioExistente = await Usuario.findOne({ username });
-    usernameExiste = !!usuarioExistente; // Será `true` si el usuario ya existe, `false` si es único
+    usernameExiste = !!usuarioExistente; 
   }
 
   return username;
@@ -53,7 +102,6 @@ router.post('/usuarios', async (req, res) => {
   }
 });
 
-
 // Ruta para eliminar un usuario
 router.delete('/usuarios/:id', async (req, res) => {
   try {
@@ -72,6 +120,11 @@ router.put('/usuarios/:id', async (req, res) => {
   try {
     const usuarioData = { ...req.body };
 
+    // Si se está actualizando la contraseña, encriptarla antes de guardarla
+    if (usuarioData.password) {
+      const salt = await bcrypt.genSalt(10);
+      usuarioData.password = await bcrypt.hash(usuarioData.password, salt);
+    }
     console.log('ID del usuario:', req.params.id);
     console.log('Datos del usuario recibidos:', req.body);
 
@@ -99,9 +152,7 @@ router.put('/usuarios/:id', async (req, res) => {
   }
 });
 
-
-
-// Filtrar los usuarios Médicos por departamento (especialidad)
+// Filtrar los usuarios Médicos
 router.get('/usuarios/medicos', async (req, res) => {
   const { departamentoId } = req.query;
 
@@ -145,9 +196,6 @@ router.get('/usuarios/:id', async (req, res) => {
     res.status(500).json({ message: 'Error al obtener usuario', error });
   }
 });
-
-
-
 
 
 module.exports = router;

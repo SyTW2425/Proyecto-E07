@@ -18,7 +18,8 @@
 
         <!-- Especialidad (rellenado automáticamente) -->
         <label>Especialidad:
-          <input type="text" :value="departamento.nombre || ''" readonly />
+          <input type="text" :value="especialidadSeleccionada ? especialidadSeleccionada.nombre : ''" readonly />
+          // <input type="text" :value="departamento.nombre || ''" readonly />
         </label>
 
         <!-- Selección de Prestación -->

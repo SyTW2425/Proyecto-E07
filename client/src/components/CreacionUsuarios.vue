@@ -348,6 +348,19 @@ export default {
     }
   },
   async actualizarUsuario() {
+    const formData = new FormData();
+    formData.append('nombre', this.nuevoUsuario.nombre);
+    formData.append('apellidos', this.nuevoUsuario.apellidos);
+    formData.append('username', this.nuevoUsuario.username);
+    formData.append('password', this.nuevoUsuario.password);
+    formData.append('tipo', this.nuevoUsuario.tipo);
+    formData.append('departamento', this.nuevoUsuario.departamento);
+    formData.append('dni', this.nuevoUsuario.dni);
+    formData.append('genero', this.nuevoUsuario.genero);
+    formData.append('direccion', this.nuevoUsuario.direccion);
+    formData.append('telefono', this.nuevoUsuario.telefono);
+    formData.append('email', this.nuevoUsuario.email);
+
     try {
       // Enviar los datos directamente como JSON, no como FormData
       await apiClient.put(`/api/usuarios/${this.editarUsuarioId}`, this.nuevoUsuario, {

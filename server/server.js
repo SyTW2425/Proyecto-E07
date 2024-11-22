@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 // Ejecucción: nodemon server.js
 
@@ -9,11 +10,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 dotenv.config();
 
-
-
 // Define los orígenes permitidos
 const allowedOrigins = [
-  'https://hospital-rambla.netlify.app', // Reemplaza con la URL del sitio en Netlify
+  'https://hospital-rambla.netlify.app', // URL del sitio en Netlify
   'http://localhost:8080',                    // Para desarrollo local
   'http://localhost:8081',
   'https://sistema-gestor-hospitalario.onrender.com'   
@@ -27,12 +26,14 @@ app.use(cors({
     } else {
       callback(new Error(`Origen no permitido por CORS: ${origin}`));
     }
-  }
+  },
+  credentials: true
 }));
 
 
 // Middleware para procesar JSON en el cuerpo de las solicitudes
 app.use(express.json());
+app.use(cookieParser());
 
 // Middleware para loggear todas las solicitudes
 app.use((req, res, next) => {
