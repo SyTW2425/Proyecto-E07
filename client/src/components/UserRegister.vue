@@ -21,23 +21,43 @@
       
       <section class="login-form">
         <h2 class="form-title">Acceso usuarios</h2>
-        <form @submit.prevent="handleLogin">
+        <form @submit.prevent="handleRegister">
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" v-model="nombre" required />
+          
+          <label for="apellidos">Apellidos:</label>
+          <input type="text" id="apellidos" v-model="apellidos" required />
+          
           <label for="username">Usuario:</label>
-          <input type="text" id="username" v-model="username" required />
+          <input type="text" id="username" v-model="username" />
           
           <label for="password">Contraseña:</label>
           <input type="password" id="password" v-model="password" required />
           
-          <a href="#" class="forgot-password">¿Has olvidado tu contraseña?</a>
+          <label for="tipo">Tipo:</label>
+          <input type="text" id="tipo" v-model="tipo" required />
           
-          <button type="submit" class="login-button">Entrar</button>
+          <label for="departamento">Departamento:</label>
+          <input type="text" id="departamento" v-model="departamento" />
+          
+          <label for="dni">DNI:</label>
+          <input type="text" id="dni" v-model="dni" />
+          
+          <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+          <input type="date" id="fechaNacimiento" v-model="fechaNacimiento" />
+          
+          <label for="genero">Género:</label>
+          <select id="genero" v-model="genero">
+            <option value="">Seleccione</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
+          </select>
+          
+          <label for="email">Email:</label>
+          <input type="email" id="email" v-model="email" />
         </form>
         
         <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
-        
-        <p class="register-link">
-          ¿No eres usuario? <a href="/register">Regístrate</a>
-        </p>
       </section>
     </main>
   </div>
@@ -47,47 +67,48 @@
 import axios from 'axios';
 
 export default {
-  name: 'UserLogin',
+  name: 'UserRegister',
   data() {
     return {
+      nombre: '',
+      apellidos: '',
       username: '',
       password: '',
-      csrfToken: '',
-      errorMessage: '' 
+      tipo: '',
+      departamento: '',
+      dni: '',
+      fechaNacimiento: '',
+      genero: '',
+      direccion: '',
+      telefono: '',
+      email: '',
+      errorMessage: '' // Propiedad para almacenar el mensaje de error
     };
   },
-  async created() {
-    try {
-      const response = await axios.get(`${process.env.VUE_APP_BACKEND_URL}/api/csrf-token`, { withCredentials: true });
-      this.csrfToken = response.data.csrfToken;
-    } catch (error) {
-      console.error('Error al obtener el token CSRF:', error);
-    }
-  },
   methods: {
-    async handleLogin() {
-      this.errorMessage = ''; 
+    async handleRegister() {
+      this.errorMessage = ''; // Resetear el mensaje de error antes de intentar el registro
       try {
-        const response = await axios.post(`${process.env.VUE_APP_BACKEND_URL}/api/login`, {
+        await axios.post(`${process.env.VUE_APP_BACKEND_URL}/api/register`, {
+          nombre: this.nombre,
+          apellidos: this.apellidos,
           username: this.username,
-          password: this.password
-        }, {
-          headers: {
-            'X-CSRF-Token': this.csrfToken
-          },
-          withCredentials: true
+          password: this.password,
+          tipo: this.tipo,
+          departamento: this.departamento,
+          dni: this.dni,
+          fechaNacimiento: this.fechaNacimiento,
+          genero: this.genero,
+          direccion: this.direccion,
+          telefono: this.telefono,
+          email: this.email
         });
-        const { token, usuario } = response.data;
-        localStorage.setItem('token', token);
-        localStorage.setItem('usuario', usuario.nombre);
-        this.$router.push('/saludo'); 
+        this.$router.push('/login'); // Redirigir a la página de login después del registro exitoso
       } catch (error) {
-        console.error('Error al iniciar sesión:', error);
+        console.error('Error al registrar usuario:', error);
         if (error.response) {
           // El servidor respondió con un código de estado fuera del rango 2xx
-          if (error.response.status === 401) {
-            this.errorMessage = 'Credenciales incorrectas. Por favor, verifica tu nombre de usuario y contraseña.';
-          } else if (error.response.status === 400) {
+          if (error.response.status === 400) {
             this.errorMessage = 'Solicitud incorrecta. Por favor, verifica los datos ingresados.';
           } else {
             this.errorMessage = 'Error del servidor. Por favor, intenta nuevamente más tarde.';

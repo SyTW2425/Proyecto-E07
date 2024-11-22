@@ -10,6 +10,7 @@ import SaludoUsuario from './components/Saludo.vue';
 import PaginaEspecialidades from './components/PaginaEspecialidades.vue';
 import PaginaEquipoMedico from './components/PaginaEquipoMedico.vue';
 import UserLogin from './components/UserLogin.vue';
+import UserRegister from './components/UserRegister.vue';
 import IntranetLogin from './components/IntranetLogin.vue';
 import ContactForm from './components/Contacto.vue';
 import GestionPrestaciones from './components/GestionPrestaciones.vue';
@@ -52,6 +53,11 @@ const routes = [
     path: '/login',
     name: 'UserLogin',
     component: UserLogin,
+  },
+  {
+    path: '/register',
+    name: 'UserRegister',
+    component: UserRegister,
   },
   {
     path: '/contacto',
