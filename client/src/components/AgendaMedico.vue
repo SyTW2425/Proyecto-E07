@@ -18,8 +18,7 @@
 
         <!-- Especialidad (rellenado automáticamente) -->
         <label>Especialidad:
-          <input type="text" :value="especialidadSeleccionada ? especialidadSeleccionada.nombre : ''" readonly />
-          // <input type="text" :value="departamento.nombre || ''" readonly />
+          <input type="text" :value="departamento.nombre || ''" readonly />
         </label>
 
         <!-- Selección de Prestación -->
@@ -320,6 +319,7 @@ export default {
 
         // Crear múltiples citas con los horarios calculados
         const citas = horarios.map((horaInicio) => {
+          console.log(`Creando cita para ${horaInicio}, datos:`, this.nuevaCita);
           return {
             ...this.nuevaCita,  // Desestructuramos nuevaCita
             hora: horaInicio    // Asignamos hora al campo "hora"
@@ -483,9 +483,9 @@ export default {
     this.intervalId = setInterval(() => {
       this.obtenerCitas();
     }, 60000); // Actualiza cada 1 minuto
-    //this.obtenerMedicos();
+    this.obtenerMedicos();
     this.obtenerPacientes();
-    //this.obtenerCitas();
+    this.obtenerCitas();
   },
   beforeDestroy() {
     clearInterval(this.intervalId);
