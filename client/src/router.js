@@ -91,6 +91,8 @@ const routes = [
     path: '/lista_contacto',
     name: 'ListaFormContacto',
     component: ListaFormContacto,
+  },
+  {
     path: '/intranet',
     name: 'Intranet',
     component: IntranetLogin,
