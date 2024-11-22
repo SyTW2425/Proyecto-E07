@@ -1,16 +1,17 @@
-const Counter = require('./counterModel'); // Un modelo adicional para contar
+const mongoose = require('mongoose');
 
-const autoIncrementModelID = function (modelName, doc, next) {
-  Counter.findOneAndUpdate(
-    { model: modelName },
-    { $inc: { count: 1 } },
-    { new: true, upsert: true },
-    function (error, counter) {
-      if (error) return next(error);
-      doc.numero = counter.count;
-      next();
-    }
-  );
-};
+async function autoIncrementModelID(modelName, doc, next) {
+  try {
+    // Encuentra el documento con el número más alto y lo incrementa
+    const maxNumberDoc = await mongoose.model(modelName)
+      .findOne()
+      .sort({ numero: -1 }); // Ordena por el campo `numero` en orden descendente
+
+    doc.numero = maxNumberDoc ? maxNumberDoc.numero + 1 : 1; // Incrementa o inicializa a 1
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
 
 module.exports = autoIncrementModelID;

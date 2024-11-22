@@ -24,6 +24,7 @@ mongoose.connect(MONGODB_URI, {
 async function eliminarColeccionUsuarios() {
   try {
     await mongoose.connection.db.collection('contact_form').drop();
+    await mongoose.connection.db.collection('citas').drop();
     console.log('Colección "usuarios" eliminada exitosamente');
   } catch (error) {
     if (error.code === 26) {

@@ -20,24 +20,54 @@
       </section>
       
       <section class="login-form">
-        <h2 class="form-title">Acceso usuarios</h2>
-        <form @submit.prevent="handleLogin">
+        <h2 class="form-title">Registro usuarios</h2>
+        <form @submit.prevent="handleRegister">
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" v-model="nombre" required />
+          
+          <label for="apellidos">Apellidos:</label>
+          <input type="text" id="apellidos" v-model="apellidos" required />
+          
           <label for="username">Usuario:</label>
-          <input type="text" id="username" v-model="username" required />
+          <input type="text" id="username" v-model="username" />
           
           <label for="password">Contraseña:</label>
           <input type="password" id="password" v-model="password" required />
           
-          <a href="#" class="forgot-password">¿Has olvidado tu contraseña?</a>
+          <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+          <input type="date" id="fechaNacimiento" v-model="fechaNacimiento" />
           
-          <button type="submit" class="login-button">Entrar</button>
+          <label for="genero">Género:</label>
+          <v-menu
+            v-model="menu"
+            :close-on-content-click="false"
+            offset-y
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="genero"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-list>
+              <v-list-item @click="selectGenero('Masculino')">
+                <v-list-item-title>Masculino</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="selectGenero('Femenino')">
+                <v-list-item-title>Femenino</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+          
+          <label for="email">Email:</label>
+          <input type="email" id="email" v-model="email" />
+
+          <button type="submit" class="login-button">Registrar</button>
         </form>
         
         <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
-        
-        <p class="register-link">
-          ¿No eres usuario? <a href="/register">Regístrate</a>
-        </p>
       </section>
     </main>
   </div>
@@ -45,41 +75,64 @@
 
 <script>
 import axios from 'axios';
+import { VMenu, VTextField, VList, VListItem, VListItemTitle } from 'vuetify/lib';
 
 export default {
-  name: 'UserLogin',
+  name: 'UserRegister',
+  components: {
+    VMenu,
+    VTextField,
+    VList,
+    VListItem,
+    VListItemTitle
+  },
   data() {
     return {
+      nombre: '',
+      apellidos: '',
       username: '',
       password: '',
-      errorMessage: '' 
+      tipo: 'Paciente', 
+      fechaNacimiento: '',
+      genero: '',
+      email: '',
+      errorMessage: '',
+      menu: false,
     };
   },
   methods: {
-    async handleLogin() {
+    selectGenero(genero) {
+      this.genero = genero;
+      this.menu = false;
+    },
+    async handleRegister() {
       this.errorMessage = ''; 
       try {
-        const response = await axios.post(`${process.env.VUE_APP_BACKEND_URL}/api/login`, {
+        await axios.post(`${process.env.VUE_APP_BACKEND_URL}/api/register`, {
+          nombre: this.nombre,
+          apellidos: this.apellidos,
           username: this.username,
-          password: this.password
+          password: this.password,
+          tipo: this.tipo, 
+          fechaNacimiento: this.fechaNacimiento,
+          genero: this.genero,
+          email: this.email
         });
-        const { token, usuario } = response.data;
-        localStorage.setItem('token', token);
-        localStorage.setItem('usuario', usuario.nombre);
-        this.$router.push('/saludo'); 
+        this.$router.push('/login'); // Redirigir a la página de login después del registro exitoso
       } catch (error) {
-        console.error('Error al iniciar sesión:', error);
+        console.error('Error al registrar usuario:', error);
         if (error.response) {
-          if (error.response.status === 401) {
-            this.errorMessage = 'Credenciales incorrectas. Por favor, verifica tu nombre de usuario y contraseña.';
-          } else if (error.response.status === 400) {
+          // El servidor respondió con un código de estado fuera del rango 2xx
+          if (error.response.status === 400) {
             this.errorMessage = 'Solicitud incorrecta. Por favor, verifica los datos ingresados.';
           } else {
             this.errorMessage = 'Error del servidor. Por favor, intenta nuevamente más tarde.';
           }
         } else if (error.request) {
+          // La solicitud fue hecha pero no se recibió respuesta
           this.errorMessage = 'No se pudo conectar con el servidor. Por favor, verifica tu conexión a internet.';
         } else {
+          // Algo sucedió al configurar la solicitud
           this.errorMessage = 'Error al configurar la solicitud. Por favor, intenta nuevamente.';
         }
       }
@@ -178,6 +231,14 @@ export default {
   background-color: #c6defd; 
   border-radius: 15px; 
 }
+.login-form .v-text-field {
+  width: 100%;
+  padding: 0.3rem;
+  margin-top: 0.5rem;
+  border-radius: 5px;
+  background-color: #c6defd; 
+  border-radius: 15px; 
+}
 .forgot-password {
   margin-top: 1rem;
   font-size: 0.7rem;
@@ -185,7 +246,7 @@ export default {
   text-decoration: none; 
 }
 .login-button {
-  margin-top: 1rem;
+  margin-top: 2rem;
   width: 100%;
   padding: 0.75rem;
   background-color: #17195e;

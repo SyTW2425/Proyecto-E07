@@ -10,11 +10,14 @@ import SaludoUsuario from './components/Saludo.vue';
 import PaginaEspecialidades from './components/PaginaEspecialidades.vue';
 import PaginaEquipoMedico from './components/PaginaEquipoMedico.vue';
 import UserLogin from './components/UserLogin.vue';
+import UserRegister from './components/UserRegister.vue';
+import IntranetLogin from './components/IntranetLogin.vue';
 import ContactForm from './components/Contacto.vue';
 import GestionPrestaciones from './components/GestionPrestaciones.vue';
 import AgendaMedico from './components/AgendaMedico.vue';
 import GestionRecetas from './components/GestionRecetas.vue';
 import ListaFormContacto from './components/ListaFormContacto.vue';
+import ReservarCitas from './components/ReservarCitas.vue';
 
 Vue.use(VueRouter);
 
@@ -55,11 +58,15 @@ const routes = [
     component: UserLogin,
   },
   {
+    path: '/register',
+    name: 'UserRegister',
+    component: UserRegister,
+  },
+  {
     path: '/contacto',
     name: 'Contacto',
     component: ContactForm,
   },
-
   {
     path: '/saludo',
     name: 'SaludoUsuario',
@@ -84,6 +91,14 @@ const routes = [
     path: '/lista_contacto',
     name: 'ListaFormContacto',
     component: ListaFormContacto,
+    path: '/intranet',
+    name: 'Intranet',
+    component: IntranetLogin,
+  },
+  { 
+    path: '/reservarcitas',
+    name: 'ReservarCitas',
+    component: ReservarCitas,
   },
   {
     path: '*', // Ruta comodín para capturar rutas no existentes
@@ -95,6 +110,15 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token');
+  if (to.matched.some(record => record.meta.requiresAuth) && !token) {
+    next('/login');
+  } else {
+    next();
+  }
 });
 
 export default router;
