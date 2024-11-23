@@ -46,9 +46,6 @@ router.post('/citas', async (req, res) => {
   try {
     const { medicoId, especialidadId, prestacionId, fecha, hora, duracion, pacienteId } = req.body;
     console.log('Recibida petición cita');
-    console.log('Fecha: ', fecha);
-    console.log('Hora: ', hora);
-    console.log('Duración: ', duracion);
 
     // Validar que `fecha` y `hora` sean válidos
     if (!fecha || !hora) {
@@ -74,7 +71,7 @@ router.post('/citas', async (req, res) => {
     // Buscar citas del mismo médico que se solapen en el mismo día
     const citas = await Cita.find({
       medicoId,
-      fecha // Solo consideramos citas del mismo día
+      fecha
     });
 
     // Verificar solapamientos
@@ -82,7 +79,6 @@ router.post('/citas', async (req, res) => {
       const citaInicio = new Date(`${cita.fecha.toISOString().split('T')[0]}T${cita.hora}`); // Convertir hora a Date
       const citaFin = new Date(citaInicio);
       citaFin.setMinutes(citaInicio.getMinutes() + cita.duracion);
-
       // Verificar si las citas se solapan
       return (
         (citaInicio < finCita && citaFin > inicioCita) // Rango de tiempo se solapa
@@ -121,9 +117,9 @@ router.post('/citas', async (req, res) => {
 });
 
 
-
 // Ruta para actualizar una cita existente
 // Ruta para actualizar una cita y asignar un paciente
+// Solo se permite la actualización del médico, paciente, día y hora
 router.put('/citas/:id', async (req, res) => {
   try {
     const citaId = req.params.id;
