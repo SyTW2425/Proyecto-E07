@@ -8,7 +8,7 @@
       <form @submit.prevent="crearUsuario">
         <img v-if="fotoPreview" :src="fotoPreview" alt="Previsualización de Foto de Perfil" class="foto-preview"/>
 
-        <label>Nombre:
+        <label>Nombre*:
           <input
             type="text"
             v-model="nuevoUsuario.nombre"
@@ -19,7 +19,7 @@
             @invalid="setCustomMessage($event, 'El nombre solo puede contener letras.')"
           />
         </label>
-        <label>Apellidos:
+        <label>Apellidos*:
           <input
             type="text"
             v-model="nuevoUsuario.apellidos"
@@ -31,7 +31,7 @@
           />
         </label>
 
-        <label>Contraseña:
+        <label>Contraseña*:
           <input
             type="password"
             v-model="nuevoUsuario.password"
@@ -43,7 +43,7 @@
           />
         </label>
 
-        <label>Tipo:
+        <label>Tipo*:
           <select v-model="nuevoUsuario.tipo" @change="actualizarOpcionesDepartamento" required>
             <option value="" disabled selected>Seleccione tipo</option>
             <option value="Administración">Administración</option>
@@ -74,7 +74,7 @@
         <label>Fecha de Nacimiento:
           <input type="date" v-model="nuevoUsuario.fechaNacimiento" />
         </label>
-        <label>Género:
+        <label>Género*:
           <select v-model="nuevoUsuario.genero" required>
             <option value="" disabled selected>Seleccione género</option>
             <option value="Masculino">Masculino</option>
