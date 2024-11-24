@@ -46,14 +46,15 @@ router.post('/citas', async (req, res) => {
   try {
     const { medicoId, especialidadId, prestacionId, fecha, hora, duracion, pacienteId } = req.body;
     console.log('Recibida petición cita');
-    console.log('Fecha: ', fecha);
-    console.log('Hora: ', hora);
-    console.log('Duración: ', duracion);
 
-    // Validar que `fecha` y `hora` sean válidos
-    if (!fecha || !hora) {
-      console.log('Fecha u hora no proporcionadas o inválidas');
-      return res.status(400).json({ error: 'Debe proporcionar una fecha y una hora válidas' });
+    if (!fecha) {
+      console.log('Fecha no proporcionada');
+      return res.status(400).json({ error: 'Debe proporcionar una fecha' });
+    }
+
+    if (!hora) {
+      console.log('Hora no proporcionada');
+      return res.status(400).json({ error: 'Debe proporcionar una hora' });
     }
 
     // Validar formato de `fecha`
@@ -74,7 +75,7 @@ router.post('/citas', async (req, res) => {
     // Buscar citas del mismo médico que se solapen en el mismo día
     const citas = await Cita.find({
       medicoId,
-      fecha // Solo consideramos citas del mismo día
+      fecha
     });
 
     // Verificar solapamientos
@@ -82,7 +83,6 @@ router.post('/citas', async (req, res) => {
       const citaInicio = new Date(`${cita.fecha.toISOString().split('T')[0]}T${cita.hora}`); // Convertir hora a Date
       const citaFin = new Date(citaInicio);
       citaFin.setMinutes(citaInicio.getMinutes() + cita.duracion);
-
       // Verificar si las citas se solapan
       return (
         (citaInicio < finCita && citaFin > inicioCita) // Rango de tiempo se solapa
@@ -121,13 +121,12 @@ router.post('/citas', async (req, res) => {
 });
 
 
-
 // Ruta para actualizar una cita existente
-// Ruta para actualizar una cita y asignar un paciente
+// Solo se permite la actualización del paciente, día y hora
 router.put('/citas/:id', async (req, res) => {
   try {
     const citaId = req.params.id;
-    const { pacienteId } = req.body;
+    const { pacienteId, fecha, hora, duracion } = req.body;
 
     // Buscar la cita por ID
     const cita = await Cita.findById(citaId);
@@ -136,8 +135,54 @@ router.put('/citas/:id', async (req, res) => {
       return res.status(404).json({ message: 'Cita no encontrada' });
     }
 
-    // Asignar el paciente a la cita
-    cita.pacienteId = pacienteId;
+    // Solo permitir la modificación de fecha, hora y pacienteId
+    let inicioCita;
+    let finCita;
+    if (fecha || hora) {
+      const nuevaFecha = fecha ? fecha : cita.fecha.toISOString().split('T')[0];
+      const nuevaHora = hora ? hora : cita.hora;
+      inicioCita = new Date(`${nuevaFecha}T${nuevaHora}`);
+      if (isNaN(inicioCita.getTime())) {
+        return res.status(400).json({ message: 'Fecha u hora no válidas' });
+      }
+      finCita = new Date(inicioCita);
+      finCita.setMinutes(inicioCita.getMinutes() + (duracion || cita.duracion));
+
+      // Buscar citas del mismo médico que se solapen en el mismo día
+      const citas = await Cita.find({
+        medicoId: cita.medicoId,
+        fecha: inicioCita.toISOString().split('T')[0]
+      });
+
+      // Verificar solapamientos
+      const conflicto = citas.some((otraCita) => {
+        if (otraCita._id.toString() === citaId) return false; // Ignorar la misma cita que estamos actualizando
+        const citaInicio = new Date(`${otraCita.fecha.toISOString().split('T')[0]}T${otraCita.hora}`); // Convertir hora a Date
+        const citaFin = new Date(citaInicio);
+        citaFin.setMinutes(citaInicio.getMinutes() + otraCita.duracion);
+        // Verificar si las citas se solapan
+        return (
+          (citaInicio < finCita && citaFin > inicioCita) // Rango de tiempo se solapa
+        );
+      });
+
+      if (conflicto) {
+        console.log('El médico ya tiene una cita en esta franja horaria.');
+        return res.status(400).json({ message: 'El médico ya tiene una cita en esta franja horaria.' });
+      }
+    }
+
+    if (fecha) {
+      cita.fecha = new Date(fecha);
+    }
+
+    if (hora) {
+      cita.hora = hora;
+    }
+
+    if (pacienteId) {
+      cita.pacienteId = pacienteId;
+    }
 
     // Guardar la cita actualizada
     const citaActualizada = await cita.save();
@@ -148,6 +193,7 @@ router.put('/citas/:id', async (req, res) => {
     res.status(500).json({ message: 'Error al reservar la cita', detalles: error.message });
   }
 });
+
 
 
 // Ruta para eliminar una cita por su ID
