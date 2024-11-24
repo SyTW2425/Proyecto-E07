@@ -45,6 +45,10 @@
           <li>     
           <router-link class="nav-link" to="/reservarcitas">Reservar Citas</router-link> <!-- Enlace para la agenda -->
           </li>
+          <li>     
+          <router-link class="nav-link" to="/iniciogerencia">Gerencia (Inicio)</router-link> <!-- Enlace para la agenda -->
+          </li>
+          
         </ul>
       </div>
     </nav>
