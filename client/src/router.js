@@ -18,6 +18,7 @@ import AgendaMedico from './components/AgendaMedico.vue';
 import GestionRecetas from './components/GestionRecetas.vue';
 import ListaFormContacto from './components/ListaFormContacto.vue';
 import ReservarCitas from './components/ReservarCitas.vue';
+import InicioGerencia from './components/InicioGerencia.vue';
 
 Vue.use(VueRouter);
 
@@ -101,6 +102,11 @@ const routes = [
     path: '/reservarcitas',
     name: 'ReservarCitas',
     component: ReservarCitas,
+  },
+  { 
+    path: '/iniciogerencia',
+    name: 'InicioGerencia',
+    component: InicioGerencia,
   },
   {
     path: '*', // Ruta comodín para capturar rutas no existentes
