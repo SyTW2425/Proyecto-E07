@@ -1,13 +1,4 @@
-// src/router/routes.js
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import PaginaInicio from './components/Inicio.vue';
-import CreacionUsuarios from './components/CreacionUsuarios.vue';
-import GestionDepartamentos from './components/GestionDepartamentos.vue'; 
-import PaginaError from './components/PaginaError.vue';
-import PaginaEnDesarrollo from './components/PaginaEnDesarrollo.vue';
-import SaludoUsuario from './components/Saludo.vue';
-import PaginaEspecialidades from './components/PaginaEspecialidades.vue';
+import { createRouter, createWebHistory } from 'vue-router';
 import PaginaEquipoMedico from './components/PaginaEquipoMedico.vue';
 import UserLogin from './components/UserLogin.vue';
 import UserRegister from './components/UserRegister.vue';
@@ -19,104 +10,35 @@ import GestionRecetas from './components/GestionRecetas.vue';
 import ListaFormContacto from './components/ListaFormContacto.vue';
 import ReservarCitas from './components/ReservarCitas.vue';
 import InicioGerencia from './components/InicioGerencia.vue';
-
-Vue.use(VueRouter);
+import PaginaError from './components/PaginaError.vue';
+import PaginaInicio from './components/Inicio.vue';
+import PaginaEspecialidades from './components/PaginaEspecialidades.vue';
+import CreacionUsuarios from './components/CreacionUsuarios.vue';
+import GestionDepartamentos from './components/GestionDepartamentos.vue';
+import SaludoUsuario from './components/Saludo.vue';
 
 const routes = [
-  {
-    path: '/',
-    name: 'Inicio',
-    component: PaginaInicio,
-  },
-  {
-    path: '/especialidades',
-    name: 'PaginaEspecialidades',
-    component: PaginaEspecialidades,
-  },
-  {
-    path: '/equipo-medico',
-    name: 'PaginaEquipoMedico',
-    component: PaginaEquipoMedico,
-  },
-  {
-    path: '/usuarios',
-    name: 'Usuarios',
-    component: CreacionUsuarios,
-  },
-  {
-    path: '/agenda-medico', 
-    name: 'AgendaMedico',
-    component: AgendaMedico,
-  },
-  {
-    path: '/departamentos',
-    name: 'GestionDepartamentos',
-    component: GestionDepartamentos,
-  },
-  {
-    path: '/login',
-    name: 'UserLogin',
-    component: UserLogin,
-  },
-  {
-    path: '/register',
-    name: 'UserRegister',
-    component: UserRegister,
-  },
-  {
-    path: '/contacto',
-    name: 'Contacto',
-    component: ContactForm,
-  },
-  {
-    path: '/saludo',
-    name: 'SaludoUsuario',
-    component: SaludoUsuario,
-  },
-  {
-    path: '/aseguradoras',
-    name: 'PaginaEnDesarrollo',
-    component: PaginaEnDesarrollo,
-  },
-  {
-    path: '/prestaciones',
-    name: 'GestionPrestaciones',
-    component: GestionPrestaciones,
-  },
-  {
-    path: '/recetas',
-    name: 'GestionRecetas',
-    component: GestionRecetas,
-  },
-  {
-    path: '/lista_contacto',
-    name: 'ListaFormContacto',
-    component: ListaFormContacto,
-  },
-  {
-    path: '/intranet',
-    name: 'Intranet',
-    component: IntranetLogin,
-  },
-  { 
-    path: '/reservarcitas',
-    name: 'ReservarCitas',
-    component: ReservarCitas,
-  },
-  { 
-    path: '/iniciogerencia',
-    name: 'InicioGerencia',
-    component: InicioGerencia,
-  },
-  {
-    path: '*', // Ruta comodín para capturar rutas no existentes
-    name: 'PaginaError',
-    component: PaginaError,
-  },
+  { path: '/', component: PaginaInicio },
+  { path: '/usuarios', component: CreacionUsuarios },
+  { path: '/saludo', component: SaludoUsuario },
+  { path: '/departamentos', component: GestionDepartamentos },
+  { path: '/equipo-medico', component: PaginaEquipoMedico },
+  { path: '/login', component: UserLogin },
+  { path: '/especialidades', component: PaginaEspecialidades },
+  { path: '/register', component: UserRegister },
+  { path: '/intranet-login', component: IntranetLogin },
+  { path: '/contacto', component: ContactForm },
+  { path: '/prestaciones', component: GestionPrestaciones },
+  { path: '/agenda-medico', component: AgendaMedico },
+  { path: '/recetas', component: GestionRecetas },
+  { path: '/lista_contacto', component: ListaFormContacto },
+  { path: '/reservarcitas', component: ReservarCitas },
+  { path: '/iniciogerencia', component: InicioGerencia },
+  { path: '/:pathMatch(.*)*', component: PaginaError }, // Updated catch-all route
 ];
 
-const router = new VueRouter({
-  mode: 'history',
+const router = createRouter({
+  history: createWebHistory(),
   routes,
 });
 

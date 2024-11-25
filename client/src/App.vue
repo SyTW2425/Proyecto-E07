@@ -17,38 +17,36 @@
           <li class="nav-item">
             <router-link class="nav-link" to="/usuarios">Usuarios</router-link>
           </li>
-          
           <li class="nav-item">
             <router-link class="nav-link" to="/departamentos">Departamentos</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/agenda-medico">Agenda Médico</router-link> <!-- Enlace para la agenda -->
+            <router-link class="nav-link" to="/agenda-medico">Agenda Médico</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/login">Login</router-link> <!-- Enlace para la agenda -->
+            <router-link class="nav-link" to="/login">Login</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/aseguradoras">Aseguradoras</router-link> <!-- Enlace para la agenda -->
+            <router-link class="nav-link" to="/aseguradoras">Aseguradoras</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/saludo">Saludo</router-link> <!-- Enlace para la agenda -->
+            <router-link class="nav-link" to="/saludo">Saludo</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/prestaciones">Prestaciones</router-link> <!-- Enlace para la agenda -->
+            <router-link class="nav-link" to="/prestaciones">Prestaciones</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/recetas">Recetas</router-link> <!-- Enlace para la agenda -->
+            <router-link class="nav-link" to="/recetas">Recetas</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/lista_contacto">Lista contacto</router-link> <!-- Enlace para la agenda -->
-          </li>       
-          <li>     
-          <router-link class="nav-link" to="/reservarcitas">Reservar Citas</router-link> <!-- Enlace para la agenda -->
+            <router-link class="nav-link" to="/lista_contacto">Lista contacto</router-link>
           </li>
-          <li>     
-          <router-link class="nav-link" to="/iniciogerencia">Gerencia (Inicio)</router-link> <!-- Enlace para la agenda -->
+          <li class="nav-item">
+            <router-link class="nav-link" to="/reservarcitas">Reservar Citas</router-link>
           </li>
-          
+          <li class="nav-item">
+            <router-link class="nav-link" to="/iniciogerencia">Gerencia (Inicio)</router-link>
+          </li>
         </ul>
       </div>
     </nav>
@@ -59,8 +57,10 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue';
 import "@/assets/styles.css";
-export default {
+
+export default defineComponent({
   name: 'App',
-};
+});
 </script>

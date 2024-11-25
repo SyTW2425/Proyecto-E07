@@ -127,7 +127,7 @@
   
 <script>
 export default {
-  name: "PaginaInicio",
+  name: 'PaginaInicio',
   data() {
     return {
       search: ''
