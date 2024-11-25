@@ -4,72 +4,121 @@
       <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
       <div class="vertical-line"></div>
       <h1 class="left-align small-text">Intranet</h1>
+
+      <div class="reloj">
+      <span>{{ horaActual }}</span>
+    </div>
     </header>
     <br>
 
+    
+
+    <div class="saludo">
+      <img :src="icono" alt="Saludo Icono" class="saludo-icono" />
+      <span class="saludo-texto">{{ saludo }}, <strong>{{ nombreUsuario }}</strong></span>
+    <svg
+       width="48"
+        height="48"
+        viewBox="0 0 48 48"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class="icon icono-azul reloj"
+      >
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M34 16C34 21.5228 29.5228 26 24 26C18.4772 26 14 21.5228 14 16C14 10.4772 18.4772 6 24 6C29.5228 6 34 10.4772 34 16ZM32 16C32 20.4183 28.4183 24 24 24C19.5817 24 16 20.4183 16 16C16 11.5817 19.5817 8 24 8C28.4183 8 32 11.5817 32 16Z" fill="currentColor"/>
+    <path d="M30.5 28C30.2884 27.9484 30.0619 28.0523 29.9591 28.2615L26 39.5716V36L25.4255 31.9786C25.7941 31.901 26.0952 31.6194 26.1894 31.2425L26.6894 29.2425C26.8472 28.6114 26.3698 28 25.7192 28H22.2808C21.6302 28 21.1528 28.6114 21.3106 29.2425L21.8106 31.2425C21.9048 31.6194 22.2059 31.901 22.5745 31.9786L22 36V38.6963L18.0409 28.2615C17.9381 28.0523 17.7116 27.9484 17.5 28C17.1413 28.0875 16.7551 28.1779 16.3521 28.2722C14.09 28.8015 11.2944 29.4557 9.808 30.4317C8.04534 31.5891 7 32.9535 7 34.5V41H41V34.5C41 32.9535 39.9547 31.5891 38.192 30.4317C36.7056 29.4557 33.9099 28.8015 31.6478 28.2721C31.2448 28.1778 30.8587 28.0875 30.5 28Z" fill="currentColor"/>
+    </svg>
+    
+    </div>
+
+  <br>
+
+
     <div class="stats-container">
-    <div class="stat-card" style="background-color: #162d57; color: white;">
+    <div class="stat-card" style="background-color:var(--primary-color); color: white">
       <div class="text-content">
       <p>Número de total de usuarios</p>
       <h2>3,256</h2></div>
-      
-      <img src="@/assets/icons/icono-usuario.svg" alt="Icono usuarios" class="icon" />
-    </div>
-    <div class="stat-card" style="background-color: #162d57; color: white;">
+      <svg
+       width="48"
+        height="48"
+        viewBox="0 0 48 48"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class="icon icono-blanco"
+      >
+      <path d="M17 24C20.8675 24 24 20.8675 24 17C24 13.1325 20.8675 10 17 10C13.1325 10 10 13.1325 10 17C10 20.8675 13.1325 24 17 24Z" fill="currentColor"/>
+      <path d="M39 20.5C39 23.5387 36.5387 26 33.5 26C30.4613 26 28 23.5387 28 20.5C28 17.4612 30.4613 15 33.5 15C36.5387 15 39 17.4612 39 20.5Z" fill="currentColor"/>
+      <path d="M17 26C19.7336 26 24.183 26.8511 27.1011 28.5452C28.293 29.7585 29 31.0814 29 32.4V38H4V32.4C4 28.144 12.6612 26 17 26Z" fill="currentColor"/>
+      <path d="M44 38H31V32.4C31 30.9837 30.4886 29.6801 29.6764 28.5166C31.2173 28.1725 32.7343 28 33.8927 28C37.6211 28 44 29.7867 44 33.3333V38Z" fill="currentColor"/>
 
+    </svg>
+
+    </div>
+    <div class="stat-card" style="background-color: var(--color-azul); color: var(--primary-color);">
       <div class="text-content">
-      <p>Número de total de usuarios</p>
+      <p>Número de pacientes</p>
       <h2>3,256</h2></div>
-      <img src="@/assets/icons/icono-usuario.svg" alt="Icono usuarios" class="icon" />
+      <svg
+       width="48"
+        height="48"
+        viewBox="0 0 48 48"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class="icon icono-azul"
+      >
+      <path d="M6 36C6 31.0347 17.9925 28 24 28C30.0075 28 42 31.0347 42 36V42H6V36Z" fill="currentColor"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M24 26C29.5228 26 34 21.5228 34 16C34 10.4772 29.5228 6 24 6C18.4772 6 14 10.4772 14 16C14 21.5228 18.4772 26 24 26Z" fill="currentColor"/>
+    </svg>
     </div> 
-    <div class="stat-card" style="background-color: #162d57; color: white;">
+    <div class="stat-card" style="background-color: var(--color-verde); color: var(--primary-color);">
 
       <div class="text-content">
-      <p>Número de total de usuarios</p>
+      <p>Número de médicos</p>
       <h2>3,256</h2>
       </div>
-      <img src="@/assets/icons/icono-usuario.svg" alt="Icono usuarios" class="icon" />
+      <svg
+       width="48"
+        height="48"
+        viewBox="0 0 48 48"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class="icon icono-azul"
+      >
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M33.8336 13.8108C33.8336 17.2715 32.9737 21.7851 31.6512 21.0998C30.6493 24.3745 27.6028 26.7561 24 26.7561C19.8532 26.7561 16.4434 23.601 16.0399 19.5605C14.7272 17.2629 13.0049 12.6603 17.4321 9.07166C17.5111 9.04556 17.56 8.8302 17.6324 8.51185C17.9057 7.30885 18.5132 4.63511 22.3418 5.14555C25.295 5.53929 33.8337 7.06355 33.8336 13.8108ZM30.0281 15.992C30.0281 15.992 29.5764 17.3137 29.9999 18.7874C29.9831 22.0867 27.3033 24.7561 24 24.7561C20.7627 24.7561 18.1241 22.1922 18.0043 18.9841C18.1494 18.4342 18.1488 17.5027 18.1481 16.4682C18.1469 14.6012 18.1455 12.3989 19.0002 11.5C24.9889 15.4885 30.0281 15.992 30.0281 15.992Z"
+        fill="currentColor"
+      />
+      <path
+        d="M13 36C13 34.9177 13.5732 33.9692 14.4326 33.4416C14.4008 33.3213 14.3701 33.1958 14.3406 33.0669C14.2029 32.4653 14.0779 31.7335 13.9862 30.9988C13.9013 30.3182 13.8424 29.6146 13.831 28.993C9.60993 30.6499 6 33.5376 6 36.5699V42H42V36.5699C42 33.6661 38.6895 30.8949 34.7019 29.2101L34.7027 29.2376C34.7198 29.8478 34.6856 30.5473 34.6203 31.2213C34.56 31.8448 34.4711 32.4673 34.3643 33H35C35.3788 33 35.725 33.214 35.8944 33.5528L36.8944 35.5528C36.9639 35.6916 37 35.8448 37 36V38C37 38.5523 36.5523 39 36 39H34V37H35V36.2361L34.382 35H31.618L31 36.2361V37H32V39H30C29.4477 39 29 38.5523 29 38V36C29 35.8448 29.0361 35.6916 29.1056 35.5528L30.1056 33.5528C30.275 33.214 30.6212 33 31 33H32.3152C32.3369 32.9141 32.359 32.8188 32.3811 32.7144C32.4811 32.2429 32.5699 31.6456 32.6297 31.0287C32.6894 30.411 32.7177 29.798 32.7035 29.2937C32.6964 29.0411 32.6791 28.8313 32.6542 28.6699C32.6324 28.5281 32.6104 28.4627 32.6057 28.4487C32.6057 28.4486 32.6057 28.4488 32.6057 28.4487C32.6048 28.4459 32.6045 28.4451 32.6053 28.4466C32.6052 28.4464 32.6054 28.4468 32.6053 28.4466L32.6089 28.4456C32.0745 28.2798 31.5363 28.1348 31 28.0126C30.4972 27.8981 29.9775 28.5902 29.7493 29.0237H25.6851C24.7949 29.0239 24.342 29.0238 23.8968 29.0237H23.8813C23.4264 29.0236 22.9738 29.0235 22.0639 29.0237H18C17.9721 28.9707 17.9436 28.9139 17.9141 28.8551C17.7025 28.4331 17.4413 27.9121 17 28.0126C16.6151 28.1003 16.2293 28.1997 15.8446 28.3101C15.8334 28.4582 15.8279 28.6348 15.8292 28.8375C15.8327 29.3904 15.8856 30.0679 15.9709 30.7512C16.056 31.4332 16.1703 32.0972 16.2901 32.6206C16.3249 32.7725 16.3591 32.9079 16.3919 33.0254C17.8636 33.2174 19 34.476 19 36C19 37.6569 17.6569 39 16 39C14.3431 39 13 37.6569 13 36Z"
+        fill="currentColor"
+      />
+    </svg>
     </div>  
-    <div class="stat-card" style="background-color: #162d57; color: white;">
+    <div class="stat-card" style="background-color: var(--color-rojo); color: var(--primary-color);">
 
       <div class="text-content">
-      <p>Número de total de usuarios</p>
+      <p>Número de administrativos</p>
       <h2>3,256</h2>
       </div>
-      <img src="@/assets/icons/icono-usuario.svg" alt="Icono usuarios" class="icon" />
+      <svg
+       width="48"
+        height="48"
+        viewBox="0 0 48 48"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class="icon icono-azul"
+      >
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M21.407 15.0924C23.9122 15.5612 25.8082 17.7592 25.8082 20.4C25.8082 21.5193 25.4675 22.5591 24.8843 23.4214L38.7179 34.1598C39.0277 33.999 39.3796 33.9082 39.7528 33.9082C40.9954 33.9082 42.0028 34.9156 42.0028 36.1582C42.0028 37.4008 40.9954 38.4082 39.7528 38.4082C38.5102 38.4082 37.5028 37.4008 37.5028 36.1582C37.5028 36.0272 37.514 35.8988 37.5355 35.7739L23.4652 24.8516C22.5957 25.4498 21.5423 25.8 20.407 25.8C17.424 25.8 15.0059 23.3823 15.0059 20.4C15.0059 17.7593 16.9018 15.5613 19.407 15.0924L19.407 6H21.407L21.407 15.0924ZM22.2058 20.4C22.2058 21.3941 21.3999 22.2 20.4058 22.2C19.4117 22.2 18.6058 21.3941 18.6058 20.4C18.6058 19.4059 19.4117 18.6 20.4058 18.6C21.3999 18.6 22.2058 19.4059 22.2058 20.4Z" fill="currentColor"/>
+      <path d="M27.6302 20.3838C27.6302 17.4693 25.8982 14.9593 23.407 13.8265L23.407 6.10596C27.6959 6.48295 29.9242 7.83422 31.9185 9.68342C32.0193 9.77691 32.1181 9.86765 32.2147 9.95633L32.2157 9.95727C33.0654 10.7376 33.7414 11.3583 34.0904 12.288C35.3931 15.7583 37.2059 20.5837 38.3244 23.5604C38.8157 24.8682 37.8481 26.2613 36.4511 26.2613H34.8187V28.5989L27.2439 22.7165C27.4943 21.9849 27.6302 21.2002 27.6302 20.3838Z" fill="currentColor"/>
+      <path d="M17.407 13.8463L17.407 6.24136C8.41785 7.59417 6.00386 14.3005 6.00391 17.9747C6.00398 23.7418 9.68703 28.2157 11.4133 30.008V41.9996H28.5258V35.4877H32.8187C33.1213 35.4877 33.4083 35.4205 33.6654 35.3001L23.0804 27.08C22.2597 27.4051 21.3651 27.5838 20.4287 27.5838C16.4514 27.5838 13.2271 24.3602 13.2271 20.3838C13.2271 17.4862 14.9392 14.9884 17.407 13.8463Z" fill="currentColor"/>
+
+    </svg>
     </div>
     </div>
 
 
-
-
-
-
-      <section class="info-principal">
-        <div class="info-card">
-          <p>Número de usuarios</p>
-          <h2>3,256</h2>
-        </div>
-        <div class="info-card">
-          <p>Número de pacientes</p>
-          <h2>3,006</h2>
-        </div>
-        <div class="info-card">
-          <p>Número de médicos</p>
-          <h2>185</h2>
-        </div>
-        <div class="info-card">
-          <p>Número de administrativos</p>
-          <h2>65</h2>
-        </div>
-      </section>
-  
-      <section class="opciones">
-        <div class="opcion-card">Usuarios</div>
-        <div class="opcion-card">Finanzas</div>
-        <div class="opcion-card">Aseguradoras</div>
-        <div class="opcion-card">Encuestas</div>
-      </section>
   
       <section class="departamentos">
         <h2>Departamentos</h2>
@@ -95,10 +144,48 @@
     </div>
   </template>
   
-  <script>
-  export default {
-    name: "InicioGerencia",
-  };
+<script>
+export default {
+  name: "InicioGerencia",
+  data() {
+    return {
+      saludo: '',
+      icono: '',
+      horaActual: '',
+      nombreUsuario: localStorage.getItem('usuario') || 'Usuario' // Leer el nombre del usuario desde localStorage
+    };
+  },
+  methods: {
+    actualizarSaludo() {
+      const ahora = new Date();
+      const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
+      const hora = horaCanarias.getHours();
+
+      if (hora >= 6 && hora < 12) {
+        this.saludo = "Buenos días";
+        this.icono = require('@/assets/icons/buenos_dias.png');
+      } else if (hora >= 13 && hora < 20) {
+        this.saludo = "Buenas tardes";
+        this.icono = require('@/assets/icons/buenas_tardes.png');
+      } else {
+        this.saludo = "Buenas noches";
+        this.icono = require('@/assets/icons/buenas_noches.png');
+      }
+    },
+    actualizarHora() {
+      const ahora = new Date();
+      const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
+      this.horaActual = horaCanarias.toLocaleTimeString('es-ES', { hour12: false });
+    }
+  },
+  mounted() {
+    this.actualizarSaludo();
+    this.actualizarHora();
+    setInterval(() => {
+      this.actualizarHora();
+    }, 1000); // Actualiza la hora cada segundo
+  }
+};
   </script>
   
   <style scoped>
@@ -108,7 +195,7 @@
   }
   
   .header span {
-    color: #007bff;
+    color: var(--primary-color);
   }
   
   .info-principal {
@@ -230,27 +317,31 @@
   border-radius: 8px;
 }
 
-.icon {
-  fill: #ffffff; /* Cambia el color al deseado */
-  width: 40px;
-  height: 40px;
+
+.icono-blanco {
+  color: #ffffff; 
+}
+
+.icono-azul {
+  color: var(--primary-color);
 }
 
 
-
-.stat-card p,
 .stat-card h2 {
   margin: 0;
+  font-weight: 800; /* Aplica el estilo extrabold */
 }
 
+.stat-card p,
 .stat-card .text-content {
   flex: 1; /* Ocupa el espacio restante */
+  font-weight: 300; /* Aplica el estilo extrabold */
 }
 
 .stat-card .icon {
   margin-left: 10px; /* Separar el ícono del texto */
-  width: 40px;
-  height: 40px;
+  width: 80px;
+  height: 80px;
 }
 
 
@@ -259,5 +350,38 @@
   font-size: 12px;
   margin-top: 5px;
 }
+
+
+.saludo-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  font-family: 'Outfit', sans-serif;
+  color: #17195e; /* Azul oscuro */
+}
+
+.saludo {
+  display: flex;
+  align-items: center;
+}
+
+.saludo-icono {
+  width: 100px;
+  height: 100px;
+  margin-right: 10px;
+}
+
+.saludo-texto {
+  font-size: 54px;
+  color: var(--primary-color);
+}
+
+.reloj {
+  font-size: 24px;
+  font-weight: bold;
+  margin-left: auto;
+}
+
 </style>
   
