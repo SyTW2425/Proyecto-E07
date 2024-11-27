@@ -75,17 +75,9 @@
 
 <script>
 import axios from 'axios';
-import { VMenu, VTextField, VList, VListItem, VListItemTitle } from 'vuetify/lib';
 
 export default {
   name: 'UserRegister',
-  components: {
-    VMenu,
-    VTextField,
-    VList,
-    VListItem,
-    VListItemTitle
-  },
   data() {
     return {
       nombre: '',
@@ -118,27 +110,25 @@ export default {
           genero: this.genero,
           email: this.email
         });
-        this.$router.push('/login'); // Redirigir a la página de login después del registro exitoso
+        this.$router.push('/login');
       } catch (error) {
         console.error('Error al registrar usuario:', error);
         if (error.response) {
-          // El servidor respondió con un código de estado fuera del rango 2xx
           if (error.response.status === 400) {
             this.errorMessage = 'Solicitud incorrecta. Por favor, verifica los datos ingresados.';
           } else {
             this.errorMessage = 'Error del servidor. Por favor, intenta nuevamente más tarde.';
           }
         } else if (error.request) {
-          // La solicitud fue hecha pero no se recibió respuesta
           this.errorMessage = 'No se pudo conectar con el servidor. Por favor, verifica tu conexión a internet.';
         } else {
-          // Algo sucedió al configurar la solicitud
           this.errorMessage = 'Error al configurar la solicitud. Por favor, intenta nuevamente.';
         }
       }
     }
   }
 };
+
 </script>
 
 <style scoped>

@@ -84,7 +84,7 @@
 <script>
 import apiClient from '@/apiClient';
 export default {
-  name: "PaginaEspecialidades",
+  name: 'PaginaEspecialidades',
   data() {
     return {
       search: '',
