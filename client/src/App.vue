@@ -53,6 +53,9 @@
           <li class="nav-item">
             <router-link class="nav-link" to="/iniciomedico">Médico (Inicio)</router-link>
           </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/encuestas">Encuestas</router-link>
+          </li>
         </ul>
       </div>
     </nav>
