@@ -2,13 +2,33 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import { createPinia } from 'pinia';
-import Vuetify from 'vuetify';
-import 'vuetify/dist/vuetify.min.css';
 
+// Importar Vuetify
+import { createVuetify } from 'vuetify';
+import 'vuetify/styles'; // Importar estilos de Vuetify
+import * as components from 'vuetify/components'; // Importar componentes de Vuetify
+import * as directives from 'vuetify/directives'; // Importar directivas de Vuetify
+
+// Importar Bootstrap y sus estilos
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
+
+// Importar BootstrapVueNext
+import BootstrapVueNext from 'bootstrap-vue-next';
+
+// Crear instancia de Vuetify
+const vuetify = createVuetify({
+  components, // Registrar componentes de Vuetify
+  directives,
+});
+
+
+
+// Crear la aplicación Vue
 const app = createApp(App);
 
-// Configuración de Vuetify
-app.use(Vuetify);
+// Usar BootstrapVueNext
+app.use(BootstrapVueNext);
 
 // Configuración de Pinia
 const pinia = createPinia();
@@ -26,4 +46,8 @@ app.config.globalProperties.$filters = {
   }
 };
 
+// Usar Vuetify
+app.use(vuetify);
+
+// Usar Router y montar la app
 app.use(router).mount('#app');
