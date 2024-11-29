@@ -307,7 +307,7 @@ export default {
   }
   
   button:hover {
-    background: #0056b3;
+    background: var(--color-azul);
   }
 
 .header {
