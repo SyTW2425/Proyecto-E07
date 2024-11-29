@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha ./tests --recursive"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +16,12 @@
     "mongoose": "^8.8.0",
     "mongoose-sequence": "^6.0.1",
     "multer": "^1.4.5-lts.1",
-    "validator": "^13.11.0"
+    "validator": "^13.12.0"
+  },
+  "devDependencies": {
+    "chai": "^5.1.2",
+    "chai-http": "^5.1.1",
+    "mocha": "^10.8.2",
+    "supertest": "^7.0.0"
   }
 }

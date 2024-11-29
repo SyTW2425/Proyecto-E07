@@ -26,7 +26,7 @@ const routes = [
   { path: '/login', component: UserLogin },
   { path: '/especialidades', component: PaginaEspecialidades },
   { path: '/register', component: UserRegister },
-  { path: '/intranet-login', component: IntranetLogin },
+  { path: '/intranet', component: IntranetLogin },
   { path: '/contacto', component: ContactForm },
   { path: '/prestaciones', component: GestionPrestaciones },
   { path: '/agenda-medico', component: AgendaMedico },
@@ -34,7 +34,7 @@ const routes = [
   { path: '/lista_contacto', component: ListaFormContacto },
   { path: '/reservarcitas', component: ReservarCitas },
   { path: '/iniciogerencia', component: InicioGerencia },
-  { path: '/:pathMatch(.*)*', component: PaginaError }, // Updated catch-all route
+  { path: '/:pathMatch(.*)*', component: PaginaError }, 
 ];
 
 const router = createRouter({

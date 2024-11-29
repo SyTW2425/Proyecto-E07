@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const http = require('http');
 
 // Ejecucción: nodemon server.js
 
@@ -42,12 +43,10 @@ app.use((req, res, next) => {
 });
 
 // Conexión a MongoDB Atlas
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('Conectado a MongoDB Atlas'))
-.catch((error) => console.error('Error al conectar a MongoDB Atlas:', error));
+const dbUri = process.env.NODE_ENV === 'test' ? process.env.MONGODB_URI_TEST : process.env.MONGODB_URI;
+mongoose.connect(dbUri)
+  .then(() => console.log('Conectado a MongoDB Atlas'))
+  .catch((error) => console.error('Error al conectar a MongoDB Atlas:', error));
 
 // Ruta principal de prueba
 app.get('/', (req, res) => {
@@ -71,7 +70,13 @@ app.use('/api', medicoCitas); // Rutas para citas médicas
 app.use('/api', recetaRoutes); // Rutas para recetas
 app.use('/api', contactFormsRoutes); // Rutas para contact_forms
 
+// Crear el servidor HTTP
+const server = http.createServer(app);
+
 // Iniciar el servidor
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
 });
+
+// Exportar la instancia del servidor
+module.exports = server;

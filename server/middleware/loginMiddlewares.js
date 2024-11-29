@@ -3,8 +3,8 @@ const { check } = require('express-validator');
 
 // Configura el middleware de limitación de tasa
 const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 5, // Limita cada IP a 5 solicitudes por ventana de 15 minutos
+  windowMs: 15 * 60 * 1000, 
+  max: 5, 
   message: 'Demasiados intentos de inicio de sesión, por favor intente de nuevo más tarde.'
 });
 

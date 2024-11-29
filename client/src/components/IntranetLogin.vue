@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { useAuthStore } from '../../store/auth';
 
 export default {
   name: 'UserLogin',
@@ -49,21 +49,9 @@ export default {
   methods: {
     async handleLogin() {
       this.errorMessage = ''; 
+      const authStore = useAuthStore();
       try {
-        const response = await axios.post(`${process.env.VUE_APP_BACKEND_URL}/api/login`, {
-          username: this.username,
-          password: this.password
-        });
-
-        if (usuario.tipo !== 'Administrador' && usuario.tipo !== 'Médico') {
-          this.errorMessage = 'Acceso denegado. Solo los administradores y médicos pueden iniciar sesión.';
-          return;
-        }
-
-        const { token, usuario } = response.data;
-        localStorage.setItem('token', token);
-        localStorage.setItem('usuario', usuario.nombre);
-        this.$router.push('/saludo'); 
+        await authStore.loginIntranet(this.username, this.password);
       } catch (error) {
         console.error('Error al iniciar sesión:', error);
         if (error.response) {
@@ -71,6 +59,8 @@ export default {
             this.errorMessage = 'Credenciales incorrectas. Por favor, verifica tu nombre de usuario y contraseña.';
           } else if (error.response.status === 400) {
             this.errorMessage = 'Solicitud incorrecta. Por favor, verifica los datos ingresados.';
+          } else if (error.response.status === 403) {
+            this.errorMessage = 'Acceso denegado. Solo los médicos o administradores pueden iniciar sesión.';
           } else {
             this.errorMessage = 'Error del servidor. Por favor, intenta nuevamente más tarde.';
           }
@@ -219,5 +209,10 @@ export default {
   color: #000000;
   text-decoration: none;
   font-weight: bold;
+}
+
+.error-message {
+  color: red;
+  margin-top: 1rem;
 }
 </style>
