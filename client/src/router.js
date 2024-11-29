@@ -31,7 +31,7 @@ const routes = [
   { path: '/login', component: UserLogin },
   { path: '/especialidades', component: PaginaEspecialidades },
   { path: '/register', component: UserRegister },
-  { path: '/intranet-login', component: IntranetLogin },
+  { path: '/intranet', component: IntranetLogin },
   { path: '/contacto', component: ContactForm },
   { path: '/prestaciones', component: GestionPrestaciones },
   { path: '/agenda-medico', component: AgendaMedico },

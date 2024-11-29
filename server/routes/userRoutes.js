@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const Usuario = require('../models/Usuario'); 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
-const authMiddleware = require('../middleware/authMiddleware');
 const { loginLimiter, validateLogin, validateRegister } = require('../middleware/loginMiddlewares');
 
 // Ruta para el login de usuarios
 router.post('/login', [
-  loginLimiter,
+  //loginLimiter,
   ...validateLogin
 ], async (req, res) => {
   const errors = validationResult(req);
@@ -32,11 +32,52 @@ router.post('/login', [
 
     const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', 
+      maxAge: 3600000 
+    });
+
     res.json({ token, usuario });
   } catch (error) {
     console.error('Error al iniciar sesión:', error);
     res.status(500).json({ message: 'Error al iniciar sesión' });
   }
+});
+
+router.get('/check-auth', async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({ message: 'No autenticado' });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (!mongoose.Types.ObjectId.isValid(decoded.id)) {
+      return res.status(401).json({ message: 'Token inválido o expirado' });
+    }
+    
+    const usuario = await Usuario.findById(decoded.id);
+
+    if (!usuario) {
+      return res.status(401).json({ message: 'No autenticado' });
+    }
+
+    res.json({ user: usuario });
+  } catch (error) {
+    if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: 'Token inválido o expirado' });
+    }
+    console.error('Error al verificar autenticación:', error);
+    res.status(500).json({ message: 'Error al verificar autenticación' });
+  }
+});
+
+// Ruta para cerrar sesión
+router.post('/logout', (req, res) => {
+  res.cookie('token', '', { maxAge: 0 });
+  res.status(200).json({ message: 'Sesión cerrada correctamente' });
 });
 
 // Ruta para registrar un nuevo usuario
@@ -74,6 +115,18 @@ async function generarUsername(nombre, apellidos) {
 // Ruta para obtener todos los usuarios
 router.get('/usuarios', async (req, res) => {
   try {
+    /*
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({ message: 'No autenticado' });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (decoded.role !== 'Administración') {
+      return res.status(403).json({ message: 'Acceso denegado' });
+    }
+    */
+
     const usuarios = await Usuario.find();
     res.status(200).json(usuarios);
   } catch (error) {
