@@ -1,11 +1,28 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const departamentoSchema = new mongoose.Schema({
-  nombre: { type: String, required: true, unique: true },
-  tipo: { type: String, required: true, enum: ["Especialidad médica", "Administración"] },
+  nombre: { 
+    type: String, 
+    required: true, 
+    unique: true,
+    trim: true,
+    minlength: 2,
+    maxlength: 100,
+    validate(value) {
+      if (!validator.isLength(value, { min: 2, max: 100 })) {
+        throw new Error('Nombre inválido. Debe tener entre 2 y 100 caracteres.');
+      }
+    }
+  },
+  tipo: { 
+    type: String, 
+    required: true, 
+    enum: ["Especialidad médica", "Administración"] 
+  },
   prestaciones: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Prestacion', // Referencia a la colección Prestacion
+    ref: 'Prestacion', 
     required: false
   }]
 });
