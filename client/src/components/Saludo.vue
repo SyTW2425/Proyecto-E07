@@ -7,10 +7,15 @@
     <div class="reloj">
       <span>{{ horaActual }}</span>
     </div>
+    <div class="button-container">
+      <button type="button" class="logout-button" @click="handleLogout">Cerrar sesión</button>
+    </div>
   </div>
 </template>
 
 <script>
+import { useAuthStore } from '../../store/auth';
+
 export default {
   name: 'SaludoUsuario',
   data() {
@@ -18,8 +23,13 @@ export default {
       saludo: '',
       icono: '',
       horaActual: '',
-      nombreUsuario: localStorage.getItem('usuario') || 'Usuario' // Leer el nombre del usuario desde localStorage
     };
+  },
+  computed: {
+    nombreUsuario() {
+      const authStore = useAuthStore();
+      return authStore.getUser ? authStore.getUser.nombre : 'Usuario';
+    }
   },
   methods: {
     actualizarSaludo() {
@@ -42,6 +52,10 @@ export default {
       const ahora = new Date();
       const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
       this.horaActual = horaCanarias.toLocaleTimeString('es-ES', { hour12: false });
+    },
+    handleLogout() {
+      const authStore = useAuthStore();
+      authStore.logout();
     }
   },
   mounted() {

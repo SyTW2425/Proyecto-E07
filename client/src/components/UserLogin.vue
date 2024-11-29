@@ -28,7 +28,7 @@
           <label for="password">Contraseña:</label>
           <input type="password" id="password" v-model="password" required />
           
-          <a href="#" class="forgot-password">¿Has olvidado tu contraseña?</a>
+          <a href="/contacto" class="forgot-password">¿Has olvidado tu contraseña?</a>
           
           <button type="submit" class="login-button">Entrar</button>
         </form>
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { useAuthStore } from '../../store/auth';
 
 export default {
   name: 'UserLogin',
@@ -58,15 +58,9 @@ export default {
   methods: {
     async handleLogin() {
       this.errorMessage = ''; 
+      const authStore = useAuthStore();
       try {
-        const response = await axios.post(`${process.env.VUE_APP_BACKEND_URL}/api/login`, {
-          username: this.username,
-          password: this.password
-        });
-        const { token, usuario } = response.data;
-        localStorage.setItem('token', token);
-        localStorage.setItem('usuario', usuario.nombre);
-        this.$router.push('/saludo'); 
+        await authStore.loginPaciente(this.username, this.password);
       } catch (error) {
         console.error('Error al iniciar sesión:', error);
         if (error.response) {
@@ -74,6 +68,8 @@ export default {
             this.errorMessage = 'Credenciales incorrectas. Por favor, verifica tu nombre de usuario y contraseña.';
           } else if (error.response.status === 400) {
             this.errorMessage = 'Solicitud incorrecta. Por favor, verifica los datos ingresados.';
+          } else if (error.response.status === 403) {
+            this.errorMessage = 'Acceso denegado. Solo los pacientes pueden iniciar sesión.';
           } else {
             this.errorMessage = 'Error del servidor. Por favor, intenta nuevamente más tarde.';
           }
