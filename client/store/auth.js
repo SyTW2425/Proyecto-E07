@@ -19,7 +19,7 @@ export const useAuthStore = defineStore('auth', {
         this.user = usuario;
 
         if (usuario.tipo === 'Paciente') {
-          router.push('/saludo');
+          router.push('/inicioPaciente');
         } else {
           this.logout();
           const error = new Error('Acceso denegado. Solo los pacientes pueden iniciar sesión.');
@@ -43,10 +43,12 @@ export const useAuthStore = defineStore('auth', {
         this.user = usuario;
 
         if (usuario.tipo === 'Médico') {
-          router.push('/saludo');
+          router.push('/inicioMedico');
         } else if (usuario.tipo === 'Administración') {
+          router.push('/inicioadministracion');
+        } else if (usuario.tipo === 'Gerencia') {
           router.push('/iniciogerencia');
-        } else {
+        } else {      
           this.logout();
           const error = new Error('Acceso denegado. Solo los médicos o administradores pueden iniciar sesión.');
           error.response = { status: 403 };
