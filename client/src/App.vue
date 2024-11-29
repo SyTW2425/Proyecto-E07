@@ -30,9 +30,6 @@
             <router-link class="nav-link" to="/login">Login</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/aseguradoras">Aseguradoras</router-link>
-          </li>
-          <li class="nav-item">
             <router-link class="nav-link" to="/saludo">Saludo</router-link>
           </li>
           <li class="nav-item">
@@ -55,6 +52,9 @@
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/encuestas">Encuestas</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/iniciopaciente">Paciente (Inicio)</router-link>
           </li>
         </ul>
       </div>

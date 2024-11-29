@@ -1,56 +1,49 @@
 <template>
     <div class="contenedor-principal">
-      <!-- Columna izquierda: Formulario de creación de recetas -->
+      <!-- Columna izquierda: Formulario de creación de encuestas -->
       <div class="columna-formulario">
         <h2>Gestión de Encuestas</h2>
   
-        <!-- Formulario para crear o editar una receta -->
-        <form @submit.prevent="editarRecetaId ? actualizarReceta() : crearReceta()">
+        <!-- Formulario para crear o editar una encuesta -->
+        <form @submit.prevent="editarEncuestaId ? actualizarEncuesta() : crearEncuesta()">
             <img v-if="fotoPreview" :src="fotoPreview" alt="Previsualización de Foto de Perfil" class="foto-preview"/>
 
-          <label> Médico:
-            <select v-model="nuevaReceta.medicoId" required>
-              <option disabled value="">Seleccione un médico</option>
-              <option v-for="medico in medicos" :key="medico._id" :value="medico._id"> {{ medico.nombre }} {{ medico.apellidos }}</option>
+          
+          <!-- Campo de Titulo -->
+          <label>Titulo:
+            <textarea v-model="nuevaEncuesta.titulo" class="textarea-azul"></textarea>
+          </label>
+          <!-- Campo de Departamento -->
+          <label> Departamento:
+            <select v-model="nuevaEncuesta.departamento" required>
+              <option disabled value="">Seleccione un departamento</option>
+              <option v-for="departamento in departamentos" :key="departamento._id" :value="departamento._id"> {{ departamento.nombre }}</option>
             </select>
           </label>
 
-          <label> Paciente:
-            <select v-model="nuevaReceta.pacienteId" required>
-              <option disabled value="">Seleccione un paciente</option>
-              <option v-for="paciente in pacientes" :key="paciente._id" :value="paciente._id"> {{ paciente.nombre }} {{ paciente.apellidos }}</option>
-            </select>
-          </label>
-          <!-- Selección de Fecha -->
-          <label>Fecha:
-            <input type="date" v-model="nuevaReceta.fecha" required />
-          </label>
-          <!-- Selección de Hora -->
-          <label>Hora:
-            <input type="time" v-model="nuevaReceta.hora" required />
-          </label>
-          <!-- Campo de Indicaciones -->
-          <label>Medicamentos:
-            <textarea v-model="nuevaReceta.medicamentos" class="textarea-azul"></textarea>
-          </label>
-          <!-- Campo de Observaciones -->
-          <label>Observaciones:
-            <textarea v-model="nuevaReceta.observaciones" class="textarea-azul"></textarea>
-          </label>
-          <!-- Botones de acción para crear o actualizar la receta -->
-          <v-btn class="ma-2 boton-crear" type="submit" v-if="!editarRecetaId">
-            Crear Receta
+          <!-- Campo de Pregunta -->
+          <label>Preguntas:</label>
+          <div v-for="(pregunta, index) in nuevaEncuesta.preguntas" :key="index">
+            <input v-model="nuevaEncuesta.preguntas[index]" class="textarea-azul" />
+            <button @click="eliminarPregunta(index)" class="boton-crear">Eliminar</button>
+          </div>
+          <button @click="agregarPregunta" class="boton-crear">Agregar Pregunta</button>
+          
+          
+          <!-- Botones de acción para crear o actualizar la encuesta -->
+          <v-btn class="ma-2 boton-crear" type="submit" v-if="!editarEncuestaId">
+            Crear Encuesta
           </v-btn>
-          <v-btn class="ma-2 boton-guardar" type="button" v-if="editarRecetaId" @click="actualizarReceta">
+          <v-btn class="ma-2 boton-guardar" type="button" v-if="editarEncuestaId" @click="actualizarEncuesta">
             Guardar Cambios
           </v-btn>
-          <v-btn class="ma-2 boton-cancelar" type="button" v-if="editarRecetaId" @click="cancelarEdicion">
+          <v-btn class="ma-2 boton-cancelar" type="button" v-if="editarEncuestaId" @click="cancelarEdicion">
             Cancelar
           </v-btn>
         </form>
       </div>
   
-      <!-- Columna derecha: Lista de recetas -->
+      <!-- Columna derecha: Lista de encuestas -->
       <div class="columna-lista">
         <h3>Listado de Encuestas</h3>
   
@@ -74,41 +67,35 @@
           ></v-progress-circular>
         </div>
   
-        <div v-if="!cargando && !errorServidor && recetas.length === 0" class="texto-centrado">
+        <div v-if="!cargando && !errorServidor && encuestas.length === 0" class="texto-centrado">
           <p>La lista está vacía</p>
         </div>
   
-        <!-- Tabla de recetas -->
-        <table class="department-table" v-if="recetas.length !== 0">
+        <!-- Tabla de encuestas -->
+        <table class="department-table" v-if="encuestas.length !== 0">
   <thead>
     <tr>
       <th></th>
-      <th>Médico</th>
-      <th>Paciente</th>
-      <th>Fecha</th>
-      <th>Hora</th>
-      <th>Medicamentos</th>
-      <th>Observaciones</th>
+      <th>Titulo</th>
+      <th>Departamento</th>
+      <th>Preguntas</th>
     </tr>
   </thead>
   <tbody>
-    <tr v-for="receta in recetas" :key="receta._id" >
+    <tr v-for="encuesta in encuestas" :key="encuesta._id" >
       <td class="department-actions">
         <div class="action-buttons">
-          <v-btn class="boton-modificar" @click="cargarReceta(receta)">
+          <v-btn class="boton-modificar" @click="cargarEncuesta(encuesta)">
             <i class="bi bi-pencil-square"></i>
           </v-btn>
-          <v-btn class="boton-eliminar" @click="confirmarEliminacion(receta._id, receta.numero)">
+          <v-btn class="boton-eliminar" @click="confirmarEliminacion(encuesta._id, encuesta.numero)">
             <i class="bi bi-trash"></i>
           </v-btn>
         </div>
       </td>
-      <td>{{ receta.medicoId.nombre }} {{ receta.medicoId.apellidos }}</td>
-      <td>{{ receta.pacienteId.nombre }} {{ receta.pacienteId.apellidos }}</td>
-      <td>{{ receta.fecha }}</td>
-      <td>{{ receta.hora }}</td>
-      <td>{{ receta.medicamentos }}</td>
-      <td>{{ receta.observaciones }}</td>
+      <td>{{ encuesta.titulo }}</td>
+      <td>{{ obtenerNombreDepartamento(encuesta.departamento) }}</td>
+      <td>{{ encuesta.preguntas }}</td>
     </tr>
   </tbody>
 </table>
@@ -124,29 +111,26 @@
     name: 'GestionEncuestas',
     data() {
       return {
-        recetas: [],
-        nuevaReceta: {
-          medicoId: '',
-          pacienteId: '',
-          fecha: '',
-          hora: '',
-          medicamentos: '',
-          observaciones: ''
+        encuestas: [],
+        nuevaEncuesta: {
+          titulo: '',
+          departamento: '',
+          preguntas: [],
         },
-        medicos: [], // Lista de médicos
-        pacientes: [], // Lista de pacientes
+        departamentos: [],
         fotoPreview: require('@/assets/estados/especialidad_defecto.png'),
-        editarRecetaId: null,
+        editarEncuestaId: null,
         cargando: false,
         errorServidor: false
       };
     },
+
     methods: {
       async obtenerEncuestas() {
         this.cargando = true;
         try {
-          const response = await apiClient.get('/api/recetas');
-          this.recetas = response.data;
+          const response = await apiClient.get('/api/encuestas');
+          this.encuestas = response.data;
         } catch (error) {
           this.errorServidor = true;
         } finally {
@@ -154,47 +138,43 @@
         }
       },
     
-      async obtenerMedicos() {
+      async obtenerDepartamentos() {
         try {
-          const response = await apiClient.get('/api/usuarios/medicos');
-          this.medicos = response.data;
+          const response = await apiClient.get('/api/departamentos/');
+          this.departamentos = response.data;
         } catch (error) {
-          console.error('Error al obtener médicos:', error);
-          this.errorServidor = true;
-        }
-      },
-      async obtenerPacientes() {
-        try {
-          const response = await apiClient.get('/api/usuarios/pacientes');
-          this.pacientes = response.data;
-        } catch (error) {
-          console.error('Error al obtener pacientes:', error);
+          console.error('Error al obtener departamentos:', error);
           this.errorServidor = true;
         }
       },
 
-      async crearReceta() {
+      obtenerNombreDepartamento(departamentoId) {
+        const departamento = this.departamentos.find(dep => dep._id === departamentoId);
+        return departamento ? departamento.nombre : '';
+      },
+  
+      async crearEncuesta() {
         try {
-          await apiClient.post('/api/recetas', this.nuevaReceta);
+          await apiClient.post('/api/encuestas', this.nuevaEncuesta);
           this.obtenerEncuestas();
           this.resetFormulario();
         } catch (error) {
-          console.error('Error al crear receta:', error);
+          console.error('Error al crear encuesta:', error);
         }
       },
 
-      cargarReceta(receta) {
-        this.nuevaReceta = { ...receta };
-        this.editarRecetaId = receta._id;
+      cargarEncuesta(encuesta) {
+        this.nuevaEncuesta = { ...encuesta };
+        this.editarEncuestaId = encuesta._id;
       },
 
-      async actualizarReceta() {
+      async actualizarEncuesta() {
         try {
-          await apiClient.put(`/api/recetas/${this.editarRecetaId}`, this.nuevaReceta);
+          await apiClient.put(`/api/encuestas/${this.editarEncuestaId}`, this.nuevaEncuesta);
           this.obtenerEncuestas();
           this.resetFormulario();
         } catch (error) {
-          console.error('Error al actualizar receta:', error);
+          console.error('Error al actualizar encuesta:', error);
         }
       },
       
@@ -203,30 +183,34 @@
       },
 
       confirmarEliminacion(id, numero) {
-        const confirmacion = window.confirm(`¿Está seguro de que desea eliminar la receta ${numero}?`);
+        const confirmacion = window.confirm(`¿Está seguro de que desea eliminar la encuesta ${numero}?`);
         if (confirmacion) {
-          this.eliminarReceta(id);
+          this.eliminarEncuesta(id);
         }
       },
-      async eliminarReceta(id) {
+      async eliminarEncuesta(id) {
         try {
-          await apiClient.delete(`/api/recetas/${id}`);
+          await apiClient.delete(`/api/encuestas/${id}`);
           this.obtenerEncuestas();
         } catch (error) {
-          console.error('Error al eliminar receta:', error);
+          console.error('Error al eliminar encuesta:', error);
         }
       },
       resetFormulario() {
-        this.nuevaReceta = { medicoId: '', pacienteId: '', fecha: '', hora: '', medicamentos: '', observaciones: '' };
-        this.editarRecetaId = null;
+        this.nuevaEncuesta = { titulo: '', departamento: '', preguntas: [] };
+        this.editarEncuestaId = null;
+      },
+      agregarPregunta() {
+      this.nuevaEncuesta.preguntas.push('');
+      },
+      eliminarPregunta(index) {
+        this.nuevaEncuesta.preguntas.splice(index, 1);
       }
-      
     },
     
 
     mounted() {
-      this.obtenerMedicos();
-      this.obtenerPacientes();
+      this.obtenerDepartamentos();
       this.obtenerEncuestas();
     }
   };
