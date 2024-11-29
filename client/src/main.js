@@ -16,6 +16,7 @@ import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
 // Importar BootstrapVueNext
 import BootstrapVueNext from 'bootstrap-vue-next';
 
+
 // Crear instancia de Vuetify
 const vuetify = createVuetify({
   components, // Registrar componentes de Vuetify
@@ -29,6 +30,8 @@ const app = createApp(App);
 
 // Usar BootstrapVueNext
 app.use(BootstrapVueNext);
+
+
 
 // Configuración de Pinia
 const pinia = createPinia();
