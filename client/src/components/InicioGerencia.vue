@@ -3,7 +3,7 @@
     <header class="header">
       <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
       <div class="vertical-line"></div>
-      <h1 class="left-align small-text">Intranet</h1>
+      <h1 class="left-align small-text">INTRANET</h1>
 
       <div class="reloj">
       <span>{{ horaActual }}</span>
@@ -25,16 +25,17 @@
       <div class="icon-container">
 
       <div class="circle">
+
       <svg
-        width="70"
-        height="70"
-        viewBox="0 0 48 48"
-        fill="none"
+        width="50"
+        height="50"
+        fill="currentColor"
+        viewBox="0 0 16 16"
         xmlns="http://www.w3.org/2000/svg"
         class="icon icono-blanco"
       >
-      <path fill-rule="evenodd" clip-rule="evenodd" d="M34 16C34 21.5228 29.5228 26 24 26C18.4772 26 14 21.5228 14 16C14 10.4772 18.4772 6 24 6C29.5228 6 34 10.4772 34 16ZM32 16C32 20.4183 28.4183 24 24 24C19.5817 24 16 20.4183 16 16C16 11.5817 19.5817 8 24 8C28.4183 8 32 11.5817 32 16Z" fill="currentColor"/>
-      <path d="M30.5 28C30.2884 27.9484 30.0619 28.0523 29.9591 28.2615L26 39.5716V36L25.4255 31.9786C25.7941 31.901 26.0952 31.6194 26.1894 31.2425L26.6894 29.2425C26.8472 28.6114 26.3698 28 25.7192 28H22.2808C21.6302 28 21.1528 28.6114 21.3106 29.2425L21.8106 31.2425C21.9048 31.6194 22.2059 31.901 22.5745 31.9786L22 36V38.6963L18.0409 28.2615C17.9381 28.0523 17.7116 27.9484 17.5 28C17.1413 28.0875 16.7551 28.1779 16.3521 28.2722C14.09 28.8015 11.2944 29.4557 9.808 30.4317C8.04534 31.5891 7 32.9535 7 34.5V41H41V34.5C41 32.9535 39.9547 31.5891 38.192 30.4317C36.7056 29.4557 33.9099 28.8015 31.6478 28.2721C31.2448 28.1778 30.8587 28.0875 30.5 28Z" fill="currentColor"/>
+      <path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v1.384l7.614 2.03a1.5 1.5 0 0 0 .772 0L16 5.884V4.5A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5"/>
+      <path d="M0 12.5A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5V6.85L8.129 8.947a.5.5 0 0 1-.258 0L0 6.85z"/>
     </svg>
       </div>
       <span class="icon-text">Gerencia</span>
@@ -50,28 +51,27 @@
     <div class="stats-container">
     <div class="stat-card" style="background-color:var(--primary-color); color: white">
       <div class="text-content">
-      <p>Número de total de usuarios</p>
-      <h2>3,256</h2></div>
+        <p>Número de total de usuarios</p>
+        <h2>{{ numeroUsuarios }}</h2></div>
       <svg
-       width="48"
+        width="48"
         height="48"
         viewBox="0 0 48 48"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         class="icon icono-blanco"
       >
-      <path d="M17 24C20.8675 24 24 20.8675 24 17C24 13.1325 20.8675 10 17 10C13.1325 10 10 13.1325 10 17C10 20.8675 13.1325 24 17 24Z" fill="currentColor"/>
-      <path d="M39 20.5C39 23.5387 36.5387 26 33.5 26C30.4613 26 28 23.5387 28 20.5C28 17.4612 30.4613 15 33.5 15C36.5387 15 39 17.4612 39 20.5Z" fill="currentColor"/>
-      <path d="M17 26C19.7336 26 24.183 26.8511 27.1011 28.5452C28.293 29.7585 29 31.0814 29 32.4V38H4V32.4C4 28.144 12.6612 26 17 26Z" fill="currentColor"/>
-      <path d="M44 38H31V32.4C31 30.9837 30.4886 29.6801 29.6764 28.5166C31.2173 28.1725 32.7343 28 33.8927 28C37.6211 28 44 29.7867 44 33.3333V38Z" fill="currentColor"/>
-
-    </svg>
-
+        <path d="M17 24C20.8675 24 24 20.8675 24 17C24 13.1325 20.8675 10 17 10C13.1325 10 10 13.1325 10 17C10 20.8675 13.1325 24 17 24Z" fill="currentColor"/>
+        <path d="M39 20.5C39 23.5387 36.5387 26 33.5 26C30.4613 26 28 23.5387 28 20.5C28 17.4612 30.4613 15 33.5 15C36.5387 15 39 17.4612 39 20.5Z" fill="currentColor"/>
+        <path d="M17 26C19.7336 26 24.183 26.8511 27.1011 28.5452C28.293 29.7585 29 31.0814 29 32.4V38H4V32.4C4 28.144 12.6612 26 17 26Z" fill="currentColor"/>
+        <path d="M44 38H31V32.4C31 30.9837 30.4886 29.6801 29.6764 28.5166C31.2173 28.1725 32.7343 28 33.8927 28C37.6211 28 44 29.7867 44 33.3333V38Z" fill="currentColor"/>
+      </svg>
     </div>
+
     <div class="stat-card" style="background-color: var(--color-azul); color: var(--primary-color);">
       <div class="text-content">
       <p>Número de pacientes</p>
-      <h2>3,256</h2></div>
+      <h2>{{ numeroPacientes }}</h2></div>
       <svg
        width="48"
         height="48"
@@ -84,12 +84,12 @@
       <path fill-rule="evenodd" clip-rule="evenodd" d="M24 26C29.5228 26 34 21.5228 34 16C34 10.4772 29.5228 6 24 6C18.4772 6 14 10.4772 14 16C14 21.5228 18.4772 26 24 26Z" fill="currentColor"/>
     </svg>
     </div> 
+
     <div class="stat-card" style="background-color: var(--color-verde); color: var(--primary-color);">
 
       <div class="text-content">
       <p>Número de médicos</p>
-      <h2>3,256</h2>
-      </div>
+      <h2>{{ numeroMedicos }}</h2></div>
       <svg
        width="48"
         height="48"
@@ -114,8 +114,7 @@
 
       <div class="text-content">
       <p>Número de administrativos</p>
-      <h2>3,256</h2>
-      </div>
+      <h2>{{ numeroAdministrativos }}</h2></div>
       <svg
        width="48"
         height="48"
@@ -179,18 +178,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
   
       <section class="departamentos">
         <h2>Departamentos</h2>
@@ -243,15 +230,13 @@
   </div>
 </div>
 
-
-
-
-
-
-    </div>
+  </div>
   </template>
   
 <script>
+import apiClient from '@/apiClient';
+
+
 export default {
   name: "InicioGerencia",
   data() {
@@ -259,7 +244,12 @@ export default {
       saludo: '',
       icono: '',
       horaActual: '',
-      nombreUsuario: localStorage.getItem('usuario') || 'Usuario' // Leer el nombre del usuario desde localStorage
+      nombreUsuario: localStorage.getItem('usuario') || 'Usuario', // Leer el nombre del usuario desde localStorage
+      usuarios: [],
+      numeroUsuarios: 'NaN',
+      numeroPacientes: 'NaN',
+      numeroMedicos: 'NaN',
+      numeroAdministrativos: 'NaN',
     };
   },
   methods: {
@@ -283,11 +273,30 @@ export default {
       const ahora = new Date();
       const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
       this.horaActual = horaCanarias.toLocaleTimeString('es-ES', { hour12: false });
+    },
+    async obtenerDatosUsuarios() {
+      try {
+        const response = await apiClient.get('/api/usuarios'); // Ajusta la URL según tu API
+        const usuarios = response.data;
+        console.log('Usuarios:', usuarios);
+        console.log('Número de usuarios:', usuarios.length);
+        this.numeroUsuarios = usuarios.length;
+        this.numeroPacientes = usuarios.filter(usuario => usuario.tipo === 'Paciente').length;
+        this.numeroMedicos = usuarios.filter(usuario => usuario.tipo === 'Médico').length;
+        this.numeroAdministrativos = usuarios.filter(usuario => usuario.tipo === 'Administración').length;
+      } catch (error) {
+        console.error('Error al obtener los datos de usuarios:', error);
+      }
     }
+
   },
   mounted() {
     this.actualizarSaludo();
     this.actualizarHora();
+    this.obtenerDatosUsuarios();
+    setInterval(() => {
+      this.obtenerDatosUsuarios();
+    }, 60000); // Actualiza cada 1 minuto
     setInterval(() => {
       this.actualizarHora();
     }, 1000); // Actualiza la hora cada segundo
@@ -304,40 +313,7 @@ export default {
   .header span {
     color: var(--primary-color);
   }
-  
-  .info-principal {
-    display: flex;
-    gap: 10px;
-    margin: 20px 0;
-  }
-  
-  .info-card {
-    background: #f4f4f4;
-    padding: 10px;
-    border-radius: 8px;
-    text-align: center;
-    flex: 1;
-  }
-  
-  .info-card h2 {
-    margin: 0;
-  }
-  
-  .opciones {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .opcion-card {
-    flex: 1;
-    background: #007bff;
-    color: white;
-    text-align: center;
-    padding: 15px;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  
+
   .departamentos,
   .aseguradoras,
   .satisfaccion {
@@ -394,7 +370,9 @@ export default {
   margin-left: 10px; 
 }
 .header h1.small-text {
-  font-size: 24px; 
+  font-size: 20px; 
+  color: var(--primary-color);
+  font-weight: 300;
 }
 .vertical-line {
   width: 4px;
@@ -451,23 +429,6 @@ export default {
   height: 80px;
 }
 
-
-.percentage {
-  color: #1ea87a;
-  font-size: 12px;
-  margin-top: 5px;
-}
-
-
-.saludo-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  font-family: 'Outfit', sans-serif;
-  color: #17195e; /* Azul oscuro */
-}
-
 .saludo {
   display: flex;
   align-items: center;
@@ -495,7 +456,7 @@ export default {
 .icon-container {
   display: flex;
   align-items: center;
-  gap: 10px; /* Espacio entre el círculo y el texto */
+  gap: 15px; /* Espacio entre el círculo y el texto */
   margin-left: auto;
 }
 
@@ -567,11 +528,6 @@ export default {
   gap: 20px; /* Espacio entre contenedores */
 }
 
-.icon-container {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
 
 
 .title {
@@ -591,7 +547,7 @@ export default {
 .small-text {
   font-size: 14px;
   margin: 0;
-  color: #cde8ff; /* Azul claro */
+  color: var(--color-azul2);
 }
 
 .highlight {

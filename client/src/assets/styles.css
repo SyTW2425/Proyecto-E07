@@ -25,20 +25,6 @@ body {
   background-color: var(--background-color);
 }
 
-/* Estilos de componentes */
-.header {
-  display: flex;
-  justify-content: space-evenly;
-  padding: 3%;
-  background-color: var(--menu-color);
-  color: var(--primary-color);
-  border-radius: 25px;
-  position: relative;
-  width: 90%;
-  height: 7em;
-  margin: 0 auto;
-  top: 10px;
-}
 
 
 .hero {
@@ -365,3 +351,139 @@ button {
   margin: 0 auto;
 
 }
+
+/* Cabecera */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: calc(100% - 0rem); 
+  background-color: #e1e1e1;
+  
+  padding: 1rem;
+  text-align: left;
+  display: flex;
+
+  align-items: left;
+  justify-content: left;
+
+  gap: 10px;
+  border-radius: 15px; 
+}
+.header img.logo {
+  width: 200px;
+  height: auto; 
+}
+.header h1.left-align {
+  text-align: left;
+  margin-left: 10px; 
+}
+.header h1.small-text {
+  font-size: 20px; 
+  color: var(--primary-color);
+  font-weight: 300;
+}
+.header h1 {
+  font-size: 24px;
+}
+.header span {
+  color: var(--primary-color);
+}
+
+
+/* Tarjetas de información */
+.stat-card {
+  display: flex;
+  flex-direction: row; /* Alinear contenido en fila */
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  padding: 20px;
+  flex: 1; /* Permitir que cada tarjeta crezca para ocupar el espacio disponible */
+  min-width: 0; /* Prevenir problemas de desbordamiento */
+  border-radius: 8px;
+}
+.stat-card h2 {
+  margin: 0;
+  font-weight: 800; /* Aplica el estilo extrabold */
+}
+.stat-card p,
+.stat-card .text-content {
+  flex: 1; /* Ocupa el espacio restante */
+  font-weight: 300; /* Aplica el estilo light */
+}
+.stat-card .icon {
+  margin-left: 10px; /* Separar el ícono del texto */
+  width: 80px;
+  height: 80px;
+}
+
+
+/* Margenes de la página */
+.estilo-pagina {  
+  margin-left: 2rem; 
+  margin-right: 2rem;
+}
+
+/* Línea vertical azul */
+.vertical-line {
+  width: 4px;
+  height: 70px;
+  background-color: #92bdf6; 
+}
+
+/* Contenedor de tarjetas de información */
+.stats-container {
+  display: flex;
+  gap: 15px;
+  justify-content: space-between; /* Espacio uniforme entre las tarjetas */
+  width: 100%; /* Asegúrate de ocupar el ancho completo del contenedor */
+}
+
+
+/* Saludo al usuario (buenos días, tardes, noches...) */
+.saludo {
+  display: flex;
+  align-items: center;
+}
+.saludo-icono {
+  width: 150px;
+  height: 150px;
+  margin-right: 10px;
+}
+.saludo-texto {
+  font-size: 45px; /* Ajusta el tamaño de la fuente */
+  color: var(--primary-color);
+  line-height: 1.2; /* Controla la separación entre líneas  */
+}
+
+/* Reloj */
+.reloj {
+  font-size: 24px;
+  font-weight: bold;
+  margin-left: auto;
+}
+
+/* Información sobre tipo de usuario */
+.icon-container {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Espacio entre el círculo y el texto */
+  margin-left: auto;
+}
+
+/* Círculo para contener iconos */
+.circle {
+  width: 90px; /* Tamaño del círculo */
+  height: 90px;
+  border-radius: 50%; /* Hace que sea un círculo */
+  background-color: var(--primary-color); /* Usa el color definido */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+

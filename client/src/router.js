@@ -16,6 +16,8 @@ import PaginaEspecialidades from './components/PaginaEspecialidades.vue';
 import CreacionUsuarios from './components/CreacionUsuarios.vue';
 import GestionDepartamentos from './components/GestionDepartamentos.vue';
 import SaludoUsuario from './components/Saludo.vue';
+import InicioMedico from './components/InicioMedico.vue';
+import PruebasCodigo from './components/PruebasCodigo.vue';
 
 const routes = [
   { path: '/', component: PaginaInicio },
@@ -34,7 +36,9 @@ const routes = [
   { path: '/lista_contacto', component: ListaFormContacto },
   { path: '/reservarcitas', component: ReservarCitas },
   { path: '/iniciogerencia', component: InicioGerencia },
-  { path: '/:pathMatch(.*)*', component: PaginaError }, 
+  { path: '/iniciomedico', component: InicioMedico },
+  { path: '/pruebas', component: PruebasCodigo },
+  { path: '/:pathMatch(.*)*', component: PaginaError },
 ];
 
 const router = createRouter({
