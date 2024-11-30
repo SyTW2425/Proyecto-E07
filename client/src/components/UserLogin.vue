@@ -38,6 +38,9 @@
         <p class="register-link">
           ¿No eres usuario? <a href="/register">Regístrate</a>
         </p>
+
+        <!-- Enlace para iniciar sesión con Google -->
+        <a href="http://localhost:3000/auth/google" class="google-login-button">Iniciar sesión con Google</a>
       </section>
     </main>
   </div>
@@ -78,6 +81,18 @@ export default {
         } else {
           this.errorMessage = 'Error al configurar la solicitud. Por favor, intenta nuevamente.';
         }
+      }
+    }
+  },
+  async mounted() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('google')) {
+      const authStore = useAuthStore();
+      try {
+        await authStore.loginWithGoogle();
+      } catch (error) {
+        console.error('Error al iniciar sesión con Google:', error);
+        this.errorMessage = 'Error al iniciar sesión con Google. Por favor, intenta nuevamente.';
       }
     }
   }
@@ -200,9 +215,23 @@ export default {
   text-decoration: none;
   font-weight: bold;
 }
-/* Estilo para el mensaje de error */
+
 .error-message {
   color: red;
   margin-top: 1rem;
+}
+
+.google-login-button {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #db4437;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  font-weight: bold;
 }
 </style>

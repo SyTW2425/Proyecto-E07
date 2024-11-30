@@ -5,6 +5,7 @@ const Usuario = require('../models/Usuario');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
+const { generarUsername } = require('../utils');
 const { loginLimiter, validateLogin, validateRegister } = require('../middleware/loginMiddlewares');
 
 // Ruta para el login de usuarios
@@ -35,6 +36,7 @@ router.post('/login', [
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', 
+      sameSite: 'Strict',
       maxAge: 3600000 
     });
 
@@ -77,6 +79,7 @@ router.get('/check-auth', async (req, res) => {
 // Ruta para cerrar sesión
 router.post('/logout', (req, res) => {
   res.cookie('token', '', { maxAge: 0 });
+  res.cookie('connect.sid', '', { maxAge: 0 });
   res.status(200).json({ message: 'Sesión cerrada correctamente' });
 });
 
@@ -92,25 +95,6 @@ router.post('/register', validateRegister, async (req, res) => {
   await usuario.save();
   res.status(201).json(usuario);
 });
-
-// Función para generar un username único
-async function generarUsername(nombre, apellidos) {
-  const iniciales = `${nombre.charAt(0).toLowerCase()}${apellidos.replace(/\s+/g, '').slice(0, 2).toLowerCase()}`;
-  const generarNumeros = () => Math.floor(1000 + Math.random() * 9000);
-
-  let username;
-  let usernameExiste = true;
-
-  while (usernameExiste) {
-    const numeros = generarNumeros();
-    username = `${iniciales}${numeros}`;
-
-    const usuarioExistente = await Usuario.findOne({ username });
-    usernameExiste = !!usuarioExistente; 
-  }
-
-  return username;
-}
 
 // Ruta para obtener todos los usuarios
 router.get('/usuarios', async (req, res) => {

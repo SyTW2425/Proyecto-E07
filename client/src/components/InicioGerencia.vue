@@ -238,6 +238,7 @@
   
 <script>
 import apiClient from '@/apiClient';
+import { useAuthStore } from '../../store/auth';
 
 
 export default {
@@ -247,13 +248,18 @@ export default {
       saludo: '',
       icono: '',
       horaActual: '',
-      nombreUsuario: localStorage.getItem('usuario') || 'Usuario', // Leer el nombre del usuario desde localStorage
       usuarios: [],
       numeroUsuarios: 'NaN',
       numeroPacientes: 'NaN',
       numeroMedicos: 'NaN',
       numeroAdministrativos: 'NaN',
     };
+  },
+  computed: {
+    nombreUsuario() {
+      const authStore = useAuthStore();
+      return authStore.getUser ? authStore.getUser.nombre : 'Usuario';
+    }
   },
   methods: {
     actualizarSaludo() {

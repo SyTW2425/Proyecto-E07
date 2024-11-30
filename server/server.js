@@ -3,13 +3,18 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
 const http = require('http');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+require('./config/passportConfig');
 
 // Ejecucción: nodemon server.js
 
+dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
-dotenv.config();
+
 
 // Define los orígenes permitidos
 const allowedOrigins = [
@@ -31,7 +36,6 @@ app.use(cors({
   credentials: true
 }));
 
-
 // Middleware para procesar JSON en el cuerpo de las solicitudes
 app.use(express.json());
 app.use(cookieParser());
@@ -41,6 +45,21 @@ app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} request to ${req.url}`);
   next();
 });
+
+// Configurar sesiones
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false
+}));
+
+// Inicializa Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Rutas de autenticación con Google
+const authRoutes = require('./routes/authRoutes.js');
+app.use(authRoutes);
 
 // Conexión a MongoDB Atlas
 const dbUri = process.env.NODE_ENV === 'test' ? process.env.MONGODB_URI_TEST : process.env.MONGODB_URI;
