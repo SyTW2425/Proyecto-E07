@@ -9,8 +9,7 @@ const http = require('http');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const path = require('path'); 
-dotenv.config({ path: path.resolve(__dirname, '.env') });
+dotenv.config();
 
 // Define los orígenes permitidos
 const allowedOrigins = [
