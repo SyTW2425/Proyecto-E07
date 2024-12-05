@@ -57,7 +57,4 @@ jobs:
         npm install -g nodemon
         nodemon server.js
       env:
-        NODE_ENV: test
-        MONGODB_URI: ${{ secrets.MONGODB_URI }}
-        JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        MONGODB_TEST_URI: ${{ secrets.MONGODB_TEST_URI }}
+        NODE_ENV: test_lihao
