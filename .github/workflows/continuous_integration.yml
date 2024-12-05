@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - dev_lihao
+  pull_request:
+    branches:
+      - dev_lihao
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Install dependencies for client
+      run: |
+        cd client
+        npm install
+
+    - name: Install dependencies for server
+      run: |
+        cd server
+        npm install
+
+    - name: Run client
+      run: |
+        cd client
+        npm run serve &
+      env:
+        NODE_ENV: test
+
+    - name: Run server
+      run: |
+        cd server
+        npm install -g nodemon
+        nodemon server.js
+      env:
+        NODE_ENV: test
