@@ -18,12 +18,17 @@ router.get('/recetas', async (req, res) => {
       filtro.fecha = new Date(fecha);
     }
 
-    const receta = await Receta.find(filtro)
-      .populate('medicoId', 'nombre apellidos') // Incluye campos del médico
-      .populate('pacienteId', 'nombre apellidos') // Incluye campos del paciente
-      .sort({ fecha: 1, hora: 1 }); // Ordena por fecha y hora
+    const recetas = await Receta.find(filtro)
+      .populate('medicoId', 'nombre apellidos') 
+      .populate('pacienteId', 'nombre apellidos') 
+      .sort({ fecha: 1, hora: 1 }); 
 
-    res.status(200).json(receta);
+    const recetasFormateadas = recetas.map(receta => ({
+      ...receta.toObject(),
+      fecha: receta.fecha.toISOString().split('T')[0] // Formato YYYY-MM-DD
+    }));
+
+    res.status(200).json(recetasFormateadas);
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener recetas', error });
   }

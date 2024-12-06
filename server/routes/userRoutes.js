@@ -83,19 +83,6 @@ router.post('/logout', (req, res) => {
   res.status(200).json({ message: 'Sesión cerrada correctamente' });
 });
 
-// Ruta para registrar un nuevo usuario
-router.post('/register', validateRegister, async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const usuarioData = { ...req.body };
-  const usuario = new Usuario(usuarioData);
-  await usuario.save();
-  res.status(201).json(usuario);
-});
-
 // Ruta para obtener todos los usuarios
 router.get('/usuarios', async (req, res) => {
   try {
@@ -119,16 +106,13 @@ router.get('/usuarios', async (req, res) => {
 });
 
 // Ruta para crear un usuario, incluyendo la carga de imagen
-router.post('/usuarios', async (req, res) => {
+router.post('/usuarios', validateRegister, async (req, res) => {
   try {
-    // Asignar null a departamento si el valor es una cadena vacía
     if (req.body.departamento === "") {
       req.body.departamento = null;
     }
 
-    // Genera un `username` único basado en el nombre y apellidos
     req.body.username = await generarUsername(req.body.nombre, req.body.apellidos);
-
     const usuarioData = { ...req.body };
     const usuario = new Usuario(usuarioData);
     await usuario.save();
@@ -162,6 +146,11 @@ router.put('/usuarios/:id', async (req, res) => {
       const salt = await bcrypt.genSalt(10);
       usuarioData.password = await bcrypt.hash(usuarioData.password, salt);
     }
+
+    if (!usuarioData.departamento) {
+      delete usuarioData.departamento;
+    }
+
     console.log('ID del usuario:', req.params.id);
     console.log('Datos del usuario recibidos:', req.body);
 

@@ -7,6 +7,7 @@ const session = require('express-session');
 const http = require('http');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const bodyParser = require('body-parser');
 require('./config/passportConfig');
 
 // Ejecucción: nodemon server.js
@@ -35,6 +36,9 @@ app.use(cors({
   },
   credentials: true
 }));
+
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
 // Middleware para procesar JSON en el cuerpo de las solicitudes
 app.use(express.json());

@@ -1,5 +1,6 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const { google } = require('googleapis');
 const Usuario = require('../models/Usuario');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
@@ -7,20 +8,45 @@ const jwt = require('jsonwebtoken');
 const { generarUsername } = require('../utils'); 
 require('dotenv').config();
 
+const oauth2Client = new google.auth.OAuth2(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  "http://localhost:3000/auth/google/callback"
+);
+
+const genderMap = {
+  male: 'Masculino',
+  female: 'Femenino',
+  other: 'No especificado'
+};
+
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: "http://localhost:3000/auth/google/callback"
+  callbackURL: "http://localhost:3000/auth/google/callback",
+  scope: ['profile', 'email', 'https://www.googleapis.com/auth/user.birthday.read', 'https://www.googleapis.com/auth/user.gender.read'],
+  prompt: 'consent'
 },
 async (accessToken, refreshToken, profile, done) => {
   try {
-    console.log(profile);
+    // Configura el cliente OAuth2 con el token de acceso
+    oauth2Client.setCredentials({ access_token: accessToken });
+
+    // Llamada a la People API para obtener información adicional
+    const people = google.people({ version: 'v1', auth: oauth2Client });
+    const me = await people.people.get({
+      resourceName: 'people/me',
+      personFields: 'birthdays,genders,photos',
+    });
+
+    const birthday = me.data.birthdays ? me.data.birthdays[0].date : null;
+    const gender = me.data.genders ? genderMap[me.data.genders[0].value] || 'No especificado' : 'No especificado';
+    const photo = me.data.photos ? me.data.photos[0].url : null;
+
     let usuario = await Usuario.findOne({ googleId: profile.id });
     if (!usuario) {
-      // Verificar si el email ya existe
       usuario = await Usuario.findOne({ email: profile.emails[0].value });
       if (usuario) {
-        // Actualizar el googleId del usuario existente
         usuario.googleId = profile.id;
       } else {
         const randomPassword = crypto.randomBytes(8).toString('hex'); 
@@ -35,8 +61,10 @@ async (accessToken, refreshToken, profile, done) => {
           username: username, 
           password: hashedPassword, 
           tipo: 'Paciente',
-          genero: profile.gender || 'No especificado' ,
-          fechaNacimiento: profile.birthday || null
+          genero: gender,
+          fechaNacimiento: birthday ? new Date(birthday.year, birthday.month - 1, birthday.day) : null,
+          telefono: null,
+          foto: profile.photos[0].value
         });
       }
       await usuario.save();
@@ -45,6 +73,7 @@ async (accessToken, refreshToken, profile, done) => {
     usuario.token = token;
     done(null, usuario);
   } catch (error) {
+    console.error('Error en la autenticación:', error);
     done(error, null);
   }
 }));
