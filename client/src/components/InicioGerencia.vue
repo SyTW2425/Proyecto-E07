@@ -132,7 +132,6 @@
     </div>
     <br>
     <br>
-    <br>
 
 
     <!-- Botones de acceso rápido -->
@@ -224,60 +223,48 @@
         </button>
       </a>
     </div>
-  
-      <section class="departamentos">
-        <h2>Departamentos</h2>
-        <p>Total: <strong>26</strong></p>
-        <div class="departamento-info">
-          <p>Con más pacientes: <strong>Dermatología</strong></p>
-          <p>Con mayor rentabilidad: <strong>Cirugía General</strong></p>
-          <p>Con menor rentabilidad: <strong>Obstetricia</strong></p>
+
+    <br>
+    <br>
+
+    <div class="insurance-box">
+      <div class="icon-container" style="align-items: center; justify-content: center;">
+
+        <div class="circle" style="background-color: var(--color-azul2);">
+
+          <svg
+              width="60"
+              height="60"
+              viewBox="0 0 48 48"
+              xmlns="http://www.w3.org/2000/svg"
+              class="icon icono-azul"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M21.671 6.80092C23.4182 5.73302 25.6603 5.73303 27.4076 6.80092L29.4455 8.04646C32.3025 9.79264 35.5581 10.1824 38.8277 10.5739C39.8847 10.7005 40.9432 10.8272 41.9901 11C41.9901 11 42.0132 12.8335 41.9889 13.6659L41.78 20.817C41.6008 26.9498 38.8735 32.7654 34.1951 36.991C31.988 38.9844 29.7054 40.7851 27.0825 42.2813C25.5274 43.1684 23.6035 43.2387 21.9814 42.4676C18.953 41.028 16.271 39.2023 13.8227 36.991C9.14422 32.7654 6.41696 26.9498 6.23778 20.817L6.02952 13.6887C6.00485 12.8445 6.02952 11 6.02952 11C6.8795 10.8996 7.74583 10.8173 8.61872 10.7344C12.4722 10.3682 16.4534 9.98986 19.7195 7.99367L21.671 6.80092ZM21.9998 22V15H25.9998V22H32.9998V26H25.9998V33H21.9998V26H14.9998V22H21.9998Z"
+                fill="currentColor"
+              />
+          </svg>
         </div>
-        <button>Ver todos</button>
-      </section>
-  
-      <section class="aseguradoras">
-        <h2>Compañías aseguradoras</h2>
-        <p>Total: <strong>7</strong></p>
-        <p>Compañía con más pacientes: <strong>Adeslas</strong></p>
-      </section>
-  
-      <section class="satisfaccion">
-        <h2>Satisfacción general</h2>
-        <p><strong>4.1/5</strong></p>
-      </section>
+        <span class="icon-text" style="color: white; font-size: 30px; font-weight: 300; line-height: 1.1;">Compañías <br> aseguradoras</span>
+        <div class="vertical-line" style="width: 1px;"></div>
+        <p style="align-items: top;">Total:</p>
+        <p style="align-items: top; font-size: 100px;">7</p>
+        </div>
 
-      <div class="insurance-section">
-  <div class="icon-container">
-    <div class="circle">
-      <svg
-        width="48"
-        height="48"
-        viewBox="0 0 48 48"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
-          d="M21.671 6.80092C23.4182 5.73302 25.6603 5.73303 27.4076 6.80092L29.4455 8.04646C32.3025 9.79264 35.5581 10.1824 38.8277 10.5739C39.8847 10.7005 40.9432 10.8272 41.9901 11C41.9901 11 42.0132 12.8335 41.9889 13.6659L41.78 20.817C41.6008 26.9498 38.8735 32.7654 34.1951 36.991C31.988 38.9844 29.7054 40.7851 27.0825 42.2813C25.5274 43.1684 23.6035 43.2387 21.9814 42.4676C18.953 41.028 16.271 39.2023 13.8227 36.991C9.14422 32.7654 6.41696 26.9498 6.23778 20.817L6.02952 13.6887C6.00485 12.8445 6.02952 11 6.02952 11C6.8795 10.8996 7.74583 10.8173 8.61872 10.7344C12.4722 10.3682 16.4534 9.98986 19.7195 7.99367L21.671 6.80092ZM21.9998 22V15H25.9998V22H32.9998V26H25.9998V33H21.9998V26H14.9998V22H21.9998Z"
-          fill="currentColor"
-        />
-      </svg>
+
     </div>
-    <div>
-      <p class="title">Compañías aseguradoras</p>
-      <p class="subtitle">Total: <strong>7</strong></p>
-    </div>
-  </div>
-  <div class="details-container">
-    <p class="small-text">Compañía con más pacientes</p>
-    <p class="highlight">Adeslas</p>
-  </div>
+
+        <br>
+        <br>
+        <br>
+
+
+
+
 </div>
-
-  </div>
-  </template>
+</template>
   
 <script>
 import apiClient from '@/apiClient';
@@ -502,7 +489,7 @@ export default {
 .icon-container {
   display: flex;
   align-items: center;
-  gap: 15px; /* Espacio entre el círculo y el texto */
+  gap: 10px; /* Espacio entre el círculo y el texto */
   margin-left: auto;
 }
 
@@ -518,6 +505,7 @@ export default {
   margin-top: 0.5rem;
   margin: 0.5rem;
 }
+
 /* Estilo del texto */
 .icon-text {
   font-size: 44px;
@@ -609,6 +597,52 @@ export default {
   font-size: 1.4rem;
   color: #162d57; /* Azul oscuro */
   margin: 0 auto;
+}
+
+
+
+
+
+
+
+.insurance-box {
+  display: flex;
+  flex-direction: column; /* Cambia a disposición vertical */
+  align-items: center; /* Centra horizontalmente */
+  justify-content: center; /* Centra verticalmente */
+  background-color: var(--primary-color);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  height: 100%; /* Asegúrate de que la caja tenga altura suficiente */
+}
+
+
+.icon-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+.total-section {
+  text-align: center;
+}
+
+.total-number {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.highlight-section {
+  text-align: right;
+  margin-left: auto;
+}
+
+.highlight {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
 }
 
 </style>
