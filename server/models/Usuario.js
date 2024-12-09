@@ -42,10 +42,21 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+    trim: true,
     minlength: 6,
+    maxlength: 100,
     validate(value) {
-      if (!validator.isStrongPassword(value, { minLength: 6 })) {
-        throw new Error('Contraseña inválida. Debe tener al menos 6 caracteres.');
+      if (!validator.isLength(value, { min: 6 })) {
+        throw new Error('La contraseña debe tener al menos 6 caracteres.');
+      }
+      if (!/[A-Z]/.test(value)) {
+        throw new Error('La contraseña debe contener al menos una letra mayúscula.');
+      }
+      if (!/[a-z]/.test(value)) {
+        throw new Error('La contraseña debe contener al menos una letra minúscula.');
+      }
+      if (!/[0-9]/.test(value)) {
+        throw new Error('La contraseña debe contener al menos un número.');
       }
     }
   },
@@ -70,14 +81,17 @@ const userSchema = new mongoose.Schema({
   fechaNacimiento: {
     type: Date,
     validate(value) {
-      if (value && !validator.isDate(value.toString())) {
+      if (value && isNaN(Date.parse(value))) {
         throw new Error('Fecha de nacimiento inválida.');
+      }
+      if (value && new Date(value) > new Date()) {
+        throw new Error('Fecha de nacimiento no puede ser una fecha futura.');
       }
     }
   },
   genero: {
     type: String,
-    enum: ['Masculino', 'Femenino']
+    enum: ['Masculino', 'Femenino', 'No especificado']
   },
   direccion: {
     type: String,
@@ -111,6 +125,10 @@ const userSchema = new mongoose.Schema({
         throw new Error('El email no puede exceder los 100 caracteres.');
       }
     }
+  },
+  foto: {
+    type: String,
+    default: null,
   },
   fechaUltimoAcceso: {
     type: Date,

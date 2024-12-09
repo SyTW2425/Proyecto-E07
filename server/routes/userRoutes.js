@@ -5,6 +5,7 @@ const Usuario = require('../models/Usuario');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
+const { generarUsername } = require('../utils');
 const { loginLimiter, validateLogin, validateRegister } = require('../middleware/loginMiddlewares');
 
 // Ruta para el login de usuarios
@@ -35,6 +36,7 @@ router.post('/login', [
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', 
+      sameSite: 'Strict',
       maxAge: 3600000 
     });
 
@@ -77,40 +79,9 @@ router.get('/check-auth', async (req, res) => {
 // Ruta para cerrar sesión
 router.post('/logout', (req, res) => {
   res.cookie('token', '', { maxAge: 0 });
+  res.cookie('connect.sid', '', { maxAge: 0 });
   res.status(200).json({ message: 'Sesión cerrada correctamente' });
 });
-
-// Ruta para registrar un nuevo usuario
-router.post('/register', validateRegister, async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const usuarioData = { ...req.body };
-  const usuario = new Usuario(usuarioData);
-  await usuario.save();
-  res.status(201).json(usuario);
-});
-
-// Función para generar un username único
-async function generarUsername(nombre, apellidos) {
-  const iniciales = `${nombre.charAt(0).toLowerCase()}${apellidos.replace(/\s+/g, '').slice(0, 2).toLowerCase()}`;
-  const generarNumeros = () => Math.floor(1000 + Math.random() * 9000);
-
-  let username;
-  let usernameExiste = true;
-
-  while (usernameExiste) {
-    const numeros = generarNumeros();
-    username = `${iniciales}${numeros}`;
-
-    const usuarioExistente = await Usuario.findOne({ username });
-    usernameExiste = !!usuarioExistente; 
-  }
-
-  return username;
-}
 
 // Ruta para obtener todos los usuarios
 router.get('/usuarios', async (req, res) => {
@@ -135,16 +106,13 @@ router.get('/usuarios', async (req, res) => {
 });
 
 // Ruta para crear un usuario, incluyendo la carga de imagen
-router.post('/usuarios', async (req, res) => {
+router.post('/usuarios', validateRegister, async (req, res) => {
   try {
-    // Asignar null a departamento si el valor es una cadena vacía
     if (req.body.departamento === "") {
       req.body.departamento = null;
     }
 
-    // Genera un `username` único basado en el nombre y apellidos
     req.body.username = await generarUsername(req.body.nombre, req.body.apellidos);
-
     const usuarioData = { ...req.body };
     const usuario = new Usuario(usuarioData);
     await usuario.save();
@@ -178,6 +146,11 @@ router.put('/usuarios/:id', async (req, res) => {
       const salt = await bcrypt.genSalt(10);
       usuarioData.password = await bcrypt.hash(usuarioData.password, salt);
     }
+
+    if (!usuarioData.departamento) {
+      delete usuarioData.departamento;
+    }
+
     console.log('ID del usuario:', req.params.id);
     console.log('Datos del usuario recibidos:', req.body);
 
