@@ -102,7 +102,7 @@
       <h2 id="personal-health-heading" tabindex="0">Área personal de salud</h2>
       <p tabindex="0">Accede a cualquier hora del día para cuidar tu salud. En el Portal del Paciente tienes tu espacio personal privado y seguro en el que puedes solicitar y gestionar tus citas o consultar tus informes clínicos.</p>
       <div class="d-grid gap-2 d-md-block">
-        <button class="btn btn-primary" color="white" type="button">Regístrate ahora</button>
+        <router-link to="/register" class="btn btn-primary" color="white" type="button"> Regístrate ahora</router-link>
       </div>
     </section>
   
@@ -126,6 +126,8 @@
 </template>
   
 <script>
+import { useAuthStore } from '../../store/auth';
+
 export default {
   name: 'PaginaInicio',
   data() {
@@ -135,7 +137,12 @@ export default {
   },
   methods: {
     redirectToLogin() {
-      this.$router.push('/login'); 
+      const authStore = useAuthStore(); 
+      if (authStore.isAuthenticated) {
+        this.$router.push('/iniciopaciente'); 
+      } else {
+        this.$router.push('/login'); 
+      }
     },
     scrollToTop() {
       window.scrollTo({ top: 0, behavior: 'smooth' });

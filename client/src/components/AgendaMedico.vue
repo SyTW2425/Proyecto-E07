@@ -18,7 +18,7 @@
 
         <!-- Especialidad (rellenado automáticamente) -->
         <label>Especialidad:
-          <input type="text" :value="departamento.nombre || ''" readonly />
+          <input type="text" :value="departamento?.nombre || ''" readonly />
         </label>
 
         <!-- Selección de Prestación -->
@@ -26,7 +26,7 @@
           <select v-model="nuevaCita.prestacionId" required>
             <option disabled value="">Seleccione una prestación</option>
             <option v-for="prestacion in prestaciones" :key="prestacion._id || prestacion" :value="prestacion._id || prestacion">
-              {{ prestacion.nombre || prestacion }}
+              {{ prestacion?.nombre || prestacion }}
             </option>
           </select>
         </label>
@@ -89,7 +89,7 @@
             <select v-model="nuevaCita.pacienteId" required>
               <option disabled value="">Seleccione un paciente</option>
               <option v-for="paciente in pacientes" :key="paciente._id" :value="paciente._id">
-              {{ paciente.nombre }} {{ paciente.apellidos }}
+                {{ paciente?.nombre }} {{ paciente?.apellidos }}
               </option>
             </select>
           </label>
@@ -168,9 +168,9 @@
               <i class="bi bi-trash"></i>
             </v-btn>
           </td>
-            <td>{{ cita.medicoId.nombre }} {{ cita.medicoId.apellidos }}</td>
-            <td>{{ cita.especialidadId.nombre }}</td>
-            <td>{{ cita.prestacionId.nombre }}</td>
+            <td>{{ cita.medicoId?.nombre }} {{ cita.medicoId?.apellidos }}</td>
+            <td>{{ cita.especialidadId?.nombre }}</td>
+            <td>{{ cita.prestacionId?.nombre }}</td>
             <td>{{ cita.fecha | formatDate }}</td>
             <td>{{ cita.hora }}</td>
             <td>{{ cita.duracion }}</td>

@@ -22,6 +22,7 @@ import GestionEncuestas from './components/GestionEncuestas.vue';
 import InicioPaciente from './components/InicioPaciente.vue';
 import InicioAdmision from './components/InicioAdministracion.vue';
 import "@/assets/styles.css";
+import PerfilUsuario from './components/PerfilUsuario.vue';
 
 const routes = [
   { path: '/', component: PaginaInicio },
@@ -44,6 +45,7 @@ const routes = [
   { path: '/encuestas', component: GestionEncuestas },  
   { path: '/pruebas', component: PruebasCodigo },
   { path: '/iniciopaciente', component: InicioPaciente },
+  { path: '/iniciopaciente/perfil', component: PerfilUsuario },
   { path: '/inicioadministracion', component: InicioAdmision },
   { path: '/:pathMatch(.*)*', component: PaginaError }, // Updated catch-all route
 ];

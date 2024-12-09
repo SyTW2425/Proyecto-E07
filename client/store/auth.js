@@ -59,6 +59,27 @@ export const useAuthStore = defineStore('auth', {
         throw error;
       }
     },
+    async loginWithGoogle() {
+      try {
+        const response = await axios.get(`${process.env.VUE_APP_BACKEND_URL}/auth/google/success`, {
+          withCredentials: true
+        });
+        const { usuario } = response.data;
+        this.user = usuario;
+
+        if (usuario.tipo === 'Paciente') {
+          router.push('/inicioPaciente');
+        } else {
+          this.logout();
+          const error = new Error('Acceso denegado. Solo los pacientes pueden iniciar sesión.');
+          error.response = { status: 403 };
+          throw error;
+        }
+      } catch (error) {
+        console.error('Error al iniciar sesión con Google:', error);
+        throw error;
+      }
+    },
     async logout() {
       const userType = this.user ? this.user.tipo : null;
       this.user = null;

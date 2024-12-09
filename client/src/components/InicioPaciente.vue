@@ -10,7 +10,7 @@
           <path d="M6 36C6 31.0347 17.9925 28 24 28C30.0075 28 42 31.0347 42 36V42H6V36Z" fill="currentColor"/>
           <path fill-rule="evenodd" clip-rule="evenodd" d="M24 26C29.5228 26 34 21.5228 34 16C34 10.4772 29.5228 6 24 6C18.4772 6 14 10.4772 14 16C14 21.5228 18.4772 26 24 26Z" fill="currentColor"/>
         </svg>
-        <span> {{ nombreUsuario }} </span>
+        <h1><router-link to="/iniciopaciente/perfil" class="usuario-boton">{{ nombreUsuario }}</router-link></h1>
       </div>
       <div class="reloj">
         <span>{{ horaActual }}</span>
@@ -199,77 +199,100 @@
   </div>
   </template>
   
-<script>
-export default {
-  name: "InicioPaciente",
-  data() {
-    return {
-      saludo: '',
-      icono: '',
-      horaActual: '',
-      nombreUsuario: localStorage.getItem('usuario') || 'Usuario', // Leer el nombre del usuario desde localStorage
-    };
-  },
-  methods: {
-    actualizarSaludo() {
-      const ahora = new Date();
-      const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
-      const hora = horaCanarias.getHours();
-
-      if (hora >= 6 && hora < 12) {
-        this.saludo = "Buenos días";
-        this.icono = require('@/assets/icons/buenos_dias.png');
-      } else if (hora >= 13 && hora < 20) {
-        this.saludo = "Buenas tardes";
-        this.icono = require('@/assets/icons/buenas_tardes.png');
-      } else {
-        this.saludo = "Buenas noches";
-        this.icono = require('@/assets/icons/buenas_noches.png');
+  <script>
+  import { useAuthStore } from '../../store/auth';
+  
+  export default {
+    name: "InicioPaciente",
+    data() {
+      return {
+        saludo: '',
+        icono: '',
+        horaActual: '',
+      };
+    },
+    computed: {
+      nombreUsuario() {
+        const authStore = useAuthStore();
+        return authStore.getUser ? authStore.getUser.nombre : 'Usuario';
       }
     },
-    actualizarHora() {
-      const ahora = new Date();
-      const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
-      this.horaActual = horaCanarias.toLocaleTimeString('es-ES', { hour12: false });
+    methods: {
+      actualizarSaludo() {
+        const ahora = new Date();
+        const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
+        const hora = horaCanarias.getHours();
+  
+        if (hora >= 6 && hora < 12) {
+          this.saludo = "Buenos días";
+          this.icono = require('@/assets/icons/buenos_dias.png');
+        } else if (hora >= 13 && hora < 20) {
+          this.saludo = "Buenas tardes";
+          this.icono = require('@/assets/icons/buenas_tardes.png');
+        } else {
+          this.saludo = "Buenas noches";
+          this.icono = require('@/assets/icons/buenas_noches.png');
+        }
+      },
+      actualizarHora() {
+        const ahora = new Date();
+        const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
+        this.horaActual = horaCanarias.toLocaleTimeString('es-ES', { hour12: false });
+      },
+      async verificarAutenticacion() {
+        const authStore = useAuthStore();
+        await authStore.checkAuth();
+      },
+      handleLogout() {
+      const authStore = useAuthStore();
+      authStore.logout();
+      }
     },
-
-  },
-  mounted() {
-    this.actualizarSaludo();
-    this.actualizarHora();
-    setInterval(() => {
+    async mounted() {
+      await this.verificarAutenticacion();
+      this.actualizarSaludo();
       this.actualizarHora();
-    }, 1000); // Actualiza la hora cada segundo
-  }
-};
-  </script>
-  <style src="@/assets/styles.css"></style>
-  <style scoped>
-  
-  .header h1 {
-    font-size: 24px;
-  }
-  
-  .header span {
-    color: var(--primary-color);
-  }
-  
-  .departamento-info p {
-    margin: 5px 0;
-  }
-  
-  button {
-    background: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-  }
+      setInterval(() => {
+        this.actualizarHora();
+      }, 1000); // Actualiza la hora cada segundo
+    }
+  };
+</script>
+
+<style src="@/assets/styles.css"></style>
+<style scoped>
+
+.header h1 {
+  font-size: 24px;
+}
+
+.header span {
+  color: var(--primary-color);
+}
+
+.departamento-info p {
+  margin: 5px 0;
+}
+
+.usuario-boton {
+color: #007bff;
+text-decoration: none;
+cursor: pointer;
+font-size: 0.8em;
+margin-left: 0.4em;
+}
   
   button:hover {
     background: var(--color-azul);
   }
+button {
+  background: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
 
 .header {
   display: flex;
