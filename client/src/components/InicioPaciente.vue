@@ -282,6 +282,9 @@ font-size: 0.8em;
 margin-left: 0.4em;
 }
   
+  button:hover {
+    background: var(--color-azul);
+  }
 button {
   background: #007bff;
   color: white;
@@ -289,10 +292,6 @@ button {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-}
-
-button:hover {
-  background: #0056b3;
 }
 
 .header {

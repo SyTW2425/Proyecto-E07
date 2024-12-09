@@ -21,6 +21,7 @@ import PruebasCodigo from './components/PruebasCodigo.vue';
 import GestionEncuestas from './components/GestionEncuestas.vue';
 import InicioPaciente from './components/InicioPaciente.vue';
 import InicioAdmision from './components/InicioAdministracion.vue';
+import "@/assets/styles.css";
 import PerfilUsuario from './components/PerfilUsuario.vue';
 
 const routes = [
