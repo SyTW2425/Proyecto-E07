@@ -62,6 +62,8 @@ const medicoCitas = require('./routes/medicoCitas');
 const recetaRoutes = require('./routes/recetaRoutes');
 const contactFormsRoutes = require('./routes/contactFormsRoutes');
 const encuestaRoutes = require('./routes/encuestaRoutes');
+const informeRoutes = require('./routes/informeRoutes');
+const autorizacionRoutes = require('./routes/autorizacionRoutes');
 
 app.use('/api', userRoutes);         // Rutas para usuarios
 app.use('/api', departamentoRoutes); // Rutas para departamentos
@@ -71,6 +73,8 @@ app.use('/api', medicoCitas); // Rutas para citas médicas
 app.use('/api', recetaRoutes); // Rutas para recetas
 app.use('/api', contactFormsRoutes); // Rutas para contact_forms
 app.use('/api', encuestaRoutes); // Rutas para encuestas
+app.use('/api', informeRoutes); // Rutas para informes
+app.use('/api', autorizacionRoutes); // Rutas para autorizaciones
 
 // Crear el servidor HTTP
 const server = http.createServer(app);
