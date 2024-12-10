@@ -16,7 +16,7 @@ const recetaSchema = new mongoose.Schema({
     type: Date, 
     required: true,
     validate(value) {
-      if (!validator.isDate(value.toString())) {
+      if (value && isNaN(Date.parse(value))) {
         throw new Error('Fecha inválida.');
       }
     }

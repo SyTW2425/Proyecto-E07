@@ -24,7 +24,7 @@
       
       <div class="icon-container">
 
-      <div class="circle">
+      <div class="circle" style="background-color: var(--color-azul2);">
 
       <svg
         width="50"
@@ -32,7 +32,7 @@
         fill="currentColor"
         viewBox="0 0 16 16"
         xmlns="http://www.w3.org/2000/svg"
-        class="icon icono-blanco"
+        class="icon icono-azul"
       >
       <path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v1.384l7.614 2.03a1.5 1.5 0 0 0 .772 0L16 5.884V4.5A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5"/>
       <path d="M0 12.5A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5V6.85L8.129 8.947a.5.5 0 0 1-.258 0L0 6.85z"/>
@@ -132,29 +132,31 @@
     </div>
     <br>
     <br>
-    <br>
 
 
+    <!-- Botones de acceso rápido -->
     <div class="button-container">
       <a href="#" style="text-decoration: none;">
         <button class="caja-contenido" href="#" >
           <div class="circle">
             <svg
-              width="48"
-              height="48"
+              width="60"
+              height="60"
               viewBox="0 0 48 48"
               xmlns="http://www.w3.org/2000/svg"
               class="icon icono-blanco"
             >
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M21.671 6.80092C23.4182 5.73302 25.6603 5.73303 27.4076 6.80092L29.4455 8.04646C32.3025 9.79264 35.5581 10.1824 38.8277 10.5739C39.8847 10.7005 40.9432 10.8272 41.9901 11C41.9901 11 42.0132 12.8335 41.9889 13.6659L41.78 20.817C41.6008 26.9498 38.8735 32.7654 34.1951 36.991C31.988 38.9844 29.7054 40.7851 27.0825 42.2813C25.5274 43.1684 23.6035 43.2387 21.9814 42.4676C18.953 41.028 16.271 39.2023 13.8227 36.991C9.14422 32.7654 6.41696 26.9498 6.23778 20.817L6.02952 13.6887C6.00485 12.8445 6.02952 11 6.02952 11C6.8795 10.8996 7.74583 10.8173 8.61872 10.7344C12.4722 10.3682 16.4534 9.98986 19.7195 7.99367L21.671 6.80092ZM21.9998 22V15H25.9998V22H32.9998V26H25.9998V33H21.9998V26H14.9998V22H21.9998Z"
-                fill="currentColor"
-              />
+            <path d="M18 16.5C18 18.9862 15.9862 21 13.5 21C11.0138 21 9 18.9862 9 16.5C9 14.0138 11.0138 12 13.5 12C15.9862 12 18 14.0138 18 16.5Z" fill="currentColor"/>
+            <path d="M4 28.3333C4 24.7867 10.3294 23 13.5 23C16.6706 23 23 24.7867 23 28.3333V36H4V28.3333Z" fill="currentColor"/>
+            <path d="M39 16.5C39 18.9862 36.9863 21 34.5 21C32.0138 21 30 18.9862 30 16.5C30 14.0138 32.0138 12 34.5 12C36.9863 12 39 14.0138 39 16.5Z" fill="currentColor"/>
+            <path d="M27 15C27 16.6575 25.6575 18 24 18C22.3425 18 21 16.6575 21 15C21 13.3425 22.3425 12 24 12C25.6575 12 27 13.3425 27 15Z" fill="currentColor"/>
+            <path d="M25 28.3333C25 24.7867 31.3294 23 34.5 23C37.6706 23 44 24.7867 44 28.3333V36H25V28.3333Z" fill="currentColor"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M28.7508 22.185C28.4839 22.2831 28.2206 22.3873 27.9625 22.4975C26.7914 22.998 25.6088 23.6741 24.69 24.5785C24.444 24.8208 24.2105 25.0864 24 25.375C23.7895 25.0864 23.556 24.8208 23.3099 24.5785C22.3912 23.6741 21.2085 22.998 20.0374 22.4975C19.7794 22.3873 19.5161 22.2831 19.2491 22.185C20.7717 21.3961 22.7298 21 24 21C25.2701 21 27.2282 21.3961 28.7508 22.185Z" fill="currentColor"/>
+
             </svg>
           </div>
-          <span style="color: #162d57;">Usuarios</span>
+          <br>
+          <span class="button-text">Usuarios</span>
         </button>
       </a>
   
@@ -162,8 +164,29 @@
         <button class="caja-contenido" href="#">
           <div class="circle">
             <svg
-              width="48"
-              height="48"
+              width="60"
+              height="60"
+              viewBox="0 0 48 48"
+              xmlns="http://www.w3.org/2000/svg"
+              class="icon icono-blanco"
+            >
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M37.9725 27.9747C39.2563 25.9594 40 23.5665 40 21C40 13.8203 34.1797 8 27 8C24.4335 8 22.0407 8.74375 20.0253 10.0275C18.6579 10.1048 17.3336 10.3437 16.0714 10.7254C18.8073 7.8165 22.6915 6 27 6C35.2843 6 42 12.7157 42 21C42 25.3085 40.1835 29.1927 37.2746 31.9286C37.6563 30.6664 37.8953 29.3422 37.9725 27.9747Z" fill="currentColor"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M39.9333 28.6028C39.2073 29.8352 38.3101 30.9547 37.2746 31.9286C37.6563 30.6664 37.8953 29.3422 37.9725 27.9747C37.9725 27.9749 37.9726 27.9745 37.9725 27.9747C39.256 25.9598 39.9997 23.5675 40 21.0015C40 21.001 40 21.0005 40 21C40 13.8203 34.1797 8 27 8C24.4335 8 22.0407 8.74375 20.0253 10.0275C20.0251 10.0275 20.0256 10.0275 20.0253 10.0275C18.6579 10.1048 17.3336 10.3437 16.0714 10.7254C17.0454 9.68988 18.1648 8.79277 19.3972 8.06676C21.6173 6.75886 24.2037 6.00629 26.9654 6.00004C26.9769 6.00001 26.9885 6 27 6C35.2843 6 42 12.7157 42 21C42 21.151 41.9978 21.3014 41.9934 21.4513C41.9164 24.0564 41.1752 26.4947 39.9333 28.6028Z" fill="currentColor"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M36 27C36 35.2843 29.2843 42 21 42C12.7157 42 6 35.2843 6 27C6 18.7157 12.7157 12 21 12C29.2843 12 36 18.7157 36 27ZM20 22C18.8954 22 18 22.8954 18 24C18 25.1046 18.8954 26 20 26V22ZM22 20V19H20V20C17.7909 20 16 21.7909 16 24C16 26.2091 17.7909 28 20 28V32C19.1307 32 18.3886 31.4449 18.1135 30.6668C17.9295 30.146 17.3582 29.8731 16.8375 30.0572C16.3167 30.2412 16.0438 30.8125 16.2279 31.3332C16.7765 32.8855 18.2568 34 20 34V35H22V34C24.2091 34 26 32.2091 26 30C26 27.7909 24.2091 26 22 26V22C22.8693 22 23.6114 22.5551 23.8865 23.3332C24.0705 23.854 24.6418 24.1269 25.1625 23.9428C25.6833 23.7588 25.9562 23.1875 25.7721 22.6668C25.2235 21.1145 23.7432 20 22 20ZM22 28V32C23.1046 32 24 31.1046 24 30C24 28.8954 23.1046 28 22 28Z" fill="currentColor"/>
+
+            </svg>
+          </div>
+          <br>
+          <span class="button-text">Finanzas</span>
+        </button>
+      </a>
+
+      <a href="#" style="text-decoration: none; color: inherit;">
+        <button class="caja-contenido" href="#">
+          <div class="circle">
+            <svg
+              width="60"
+              height="60"
               viewBox="0 0 48 48"
               xmlns="http://www.w3.org/2000/svg"
               class="icon icono-blanco"
@@ -176,68 +199,76 @@
               />
             </svg>
           </div>
-          <span style="color: #162d57;">Finanzas</span>
+          <br>
+          <span class="button-text">Aseguradoras</span>
         </button>
       </a>
-      
+
+      <a href="#" style="text-decoration: none; color: inherit;">
+        <button class="caja-contenido" href="#">
+          <div class="circle">
+            <svg
+              width="60"
+              height="60"
+              viewBox="0 0 48 48"
+              xmlns="http://www.w3.org/2000/svg"
+              class="icon icono-blanco"
+            >
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M6 20.5C6 12.4919 12.4919 6 20.5 6H27.5C35.5081 6 42 12.4919 42 20.5C42 28.5081 35.5081 35 27.5 35H26.8V42C26.8 42 6 38.5 6 20.5ZM27.6914 12.4815C28.7211 13.1664 29.4977 14.2754 29.4977 15.7611C29.4977 17.3398 28.8609 18.4998 27.8298 19.2103C27.4025 19.5047 26.9427 19.6971 26.5 19.8236V21.3559C26.5 22.1844 25.8284 22.8559 25 22.8559C24.1716 22.8559 23.5 22.1844 23.5 21.3559V18.5586C23.5 17.769 24.1121 17.1147 24.8999 17.062C25.4539 17.0249 25.8743 16.9146 26.1276 16.74C26.2342 16.6665 26.3107 16.5823 26.3681 16.4677C26.4278 16.3486 26.4977 16.1339 26.4977 15.7611C26.4977 15.4485 26.3747 15.2088 26.0299 14.9794C25.6378 14.7186 25.0078 14.5265 24.2513 14.5025C23.5028 14.4787 22.776 14.625 22.2418 14.884C21.7049 15.1443 21.5087 15.4358 21.4533 15.6513C21.2472 16.4537 20.4297 16.9371 19.6273 16.731C18.825 16.5249 18.3416 15.7074 18.5476 14.905C18.8921 13.5637 19.8955 12.6875 20.9331 12.1845C21.9733 11.6802 23.1959 11.4674 24.3467 11.504C25.4895 11.5403 26.7089 11.828 27.6914 12.4815ZM25 29C26.1046 29 27 28.1046 27 27C27 25.8954 26.1046 25 25 25C23.8954 25 23 25.8954 23 27C23 28.1046 23.8954 29 25 29Z" fill="currentColor"/>
+
+            </svg>
+          </div>
+          <br>
+          <span class="button-text">Encuestas</span>
+        </button>
+      </a>
     </div>
-  
-      <section class="departamentos">
-        <h2>Departamentos</h2>
-        <p>Total: <strong>26</strong></p>
-        <div class="departamento-info">
-          <p>Con más pacientes: <strong>Dermatología</strong></p>
-          <p>Con mayor rentabilidad: <strong>Cirugía General</strong></p>
-          <p>Con menor rentabilidad: <strong>Obstetricia</strong></p>
+
+    <br>
+    <br>
+
+    <div class="insurance-box">
+      <div class="icon-container" style="align-items: center; justify-content: center;">
+
+        <div class="circle" style="background-color: var(--color-azul2);">
+
+          <svg
+              width="60"
+              height="60"
+              viewBox="0 0 48 48"
+              xmlns="http://www.w3.org/2000/svg"
+              class="icon icono-azul"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M21.671 6.80092C23.4182 5.73302 25.6603 5.73303 27.4076 6.80092L29.4455 8.04646C32.3025 9.79264 35.5581 10.1824 38.8277 10.5739C39.8847 10.7005 40.9432 10.8272 41.9901 11C41.9901 11 42.0132 12.8335 41.9889 13.6659L41.78 20.817C41.6008 26.9498 38.8735 32.7654 34.1951 36.991C31.988 38.9844 29.7054 40.7851 27.0825 42.2813C25.5274 43.1684 23.6035 43.2387 21.9814 42.4676C18.953 41.028 16.271 39.2023 13.8227 36.991C9.14422 32.7654 6.41696 26.9498 6.23778 20.817L6.02952 13.6887C6.00485 12.8445 6.02952 11 6.02952 11C6.8795 10.8996 7.74583 10.8173 8.61872 10.7344C12.4722 10.3682 16.4534 9.98986 19.7195 7.99367L21.671 6.80092ZM21.9998 22V15H25.9998V22H32.9998V26H25.9998V33H21.9998V26H14.9998V22H21.9998Z"
+                fill="currentColor"
+              />
+          </svg>
         </div>
-        <button>Ver todos</button>
-      </section>
-  
-      <section class="aseguradoras">
-        <h2>Compañías aseguradoras</h2>
-        <p>Total: <strong>7</strong></p>
-        <p>Compañía con más pacientes: <strong>Adeslas</strong></p>
-      </section>
-  
-      <section class="satisfaccion">
-        <h2>Satisfacción general</h2>
-        <p><strong>4.1/5</strong></p>
-      </section>
+        <span class="icon-text" style="color: white; font-size: 30px; font-weight: 300; line-height: 1.1;">Compañías <br> aseguradoras</span>
+        <div class="vertical-line" style="width: 1px;"></div>
+        <p style="align-items: top;">Total:</p>
+        <p style="align-items: top; font-size: 100px;">7</p>
+        </div>
 
-      <div class="insurance-section">
-  <div class="icon-container">
-    <div class="circle">
-      <svg
-        width="48"
-        height="48"
-        viewBox="0 0 48 48"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
-          d="M21.671 6.80092C23.4182 5.73302 25.6603 5.73303 27.4076 6.80092L29.4455 8.04646C32.3025 9.79264 35.5581 10.1824 38.8277 10.5739C39.8847 10.7005 40.9432 10.8272 41.9901 11C41.9901 11 42.0132 12.8335 41.9889 13.6659L41.78 20.817C41.6008 26.9498 38.8735 32.7654 34.1951 36.991C31.988 38.9844 29.7054 40.7851 27.0825 42.2813C25.5274 43.1684 23.6035 43.2387 21.9814 42.4676C18.953 41.028 16.271 39.2023 13.8227 36.991C9.14422 32.7654 6.41696 26.9498 6.23778 20.817L6.02952 13.6887C6.00485 12.8445 6.02952 11 6.02952 11C6.8795 10.8996 7.74583 10.8173 8.61872 10.7344C12.4722 10.3682 16.4534 9.98986 19.7195 7.99367L21.671 6.80092ZM21.9998 22V15H25.9998V22H32.9998V26H25.9998V33H21.9998V26H14.9998V22H21.9998Z"
-          fill="currentColor"
-        />
-      </svg>
+
     </div>
-    <div>
-      <p class="title">Compañías aseguradoras</p>
-      <p class="subtitle">Total: <strong>7</strong></p>
-    </div>
-  </div>
-  <div class="details-container">
-    <p class="small-text">Compañía con más pacientes</p>
-    <p class="highlight">Adeslas</p>
-  </div>
+
+        <br>
+        <br>
+        <br>
+
+
+
+
 </div>
-
-  </div>
-  </template>
+</template>
   
 <script>
 import apiClient from '@/apiClient';
+import { useAuthStore } from '../../store/auth';
 
 
 export default {
@@ -247,13 +278,18 @@ export default {
       saludo: '',
       icono: '',
       horaActual: '',
-      nombreUsuario: localStorage.getItem('usuario') || 'Usuario', // Leer el nombre del usuario desde localStorage
       usuarios: [],
-      numeroUsuarios: 'NaN',
-      numeroPacientes: 'NaN',
-      numeroMedicos: 'NaN',
-      numeroAdministrativos: 'NaN',
+      numeroUsuarios: '-',
+      numeroPacientes: '-',
+      numeroMedicos: '-',
+      numeroAdministrativos: '-',
     };
+  },
+  computed: {
+    nombreUsuario() {
+      const authStore = useAuthStore();
+      return authStore.getUser ? authStore.getUser.nombre : 'Usuario';
+    }
   },
   methods: {
     actualizarSaludo() {
@@ -337,7 +373,7 @@ export default {
   }
   
   button:hover {
-    background: #0056b3;
+    background: var(--color-azul);
   }
 
 .header {
@@ -459,19 +495,21 @@ export default {
 .icon-container {
   display: flex;
   align-items: center;
-  gap: 15px; /* Espacio entre el círculo y el texto */
+  gap: 10px; /* Espacio entre el círculo y el texto */
   margin-left: auto;
 }
 
 /* Estilo del círculo */
 .circle {
-  width: 70px; /* Tamaño del círculo */
-  height: 70px;
+  width: 6rem; /* Tamaño del círculo */
+  height: 6rem;
   border-radius: 50%; /* Hace que sea un círculo */
   background-color: var(--primary-color); /* Usa el color definido */
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 0.5rem;
+  margin: 0.5rem;
 }
 
 /* Estilo del texto */
@@ -490,18 +528,18 @@ export default {
   margin: 0 auto;
 }
 
+
+
 .caja-contenido {
   background-color: var(--color-azul2);
-  border-radius: 12px; /* Bordes redondeados */
-  width: 150px; /* Ajusta el ancho */
-  height: 150px; /* Ajusta la altura */
+  border-radius: 2rem; /* Bordes redondeados */
+  width: 15rem; /* Ajusta el ancho */
+  height: 15rem; /* Ajusta la altura */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
-
-
 
 .button p {
   font-size: 18px;
@@ -559,6 +597,58 @@ export default {
   font-weight: bold;
   margin: 0;
   color: white;
+}
+
+.button-text {
+  font-size: 1.4rem;
+  color: #162d57; /* Azul oscuro */
+  margin: 0 auto;
+}
+
+
+
+
+
+
+
+.insurance-box {
+  display: flex;
+  flex-direction: column; /* Cambia a disposición vertical */
+  align-items: center; /* Centra horizontalmente */
+  justify-content: center; /* Centra verticalmente */
+  background-color: var(--primary-color);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  height: 100%; /* Asegúrate de que la caja tenga altura suficiente */
+}
+
+
+.icon-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+.total-section {
+  text-align: center;
+}
+
+.total-number {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.highlight-section {
+  text-align: right;
+  margin-left: auto;
+}
+
+.highlight {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
 }
 
 </style>

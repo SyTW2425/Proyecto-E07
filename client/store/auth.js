@@ -19,7 +19,7 @@ export const useAuthStore = defineStore('auth', {
         this.user = usuario;
 
         if (usuario.tipo === 'Paciente') {
-          router.push('/saludo');
+          router.push('/inicioPaciente');
         } else {
           this.logout();
           const error = new Error('Acceso denegado. Solo los pacientes pueden iniciar sesión.');
@@ -43,10 +43,12 @@ export const useAuthStore = defineStore('auth', {
         this.user = usuario;
 
         if (usuario.tipo === 'Médico') {
-          router.push('/saludo');
+          router.push('/inicioMedico');
         } else if (usuario.tipo === 'Administración') {
+          router.push('/inicioadministracion');
+        } else if (usuario.tipo === 'Gerencia') {
           router.push('/iniciogerencia');
-        } else {
+        } else {      
           this.logout();
           const error = new Error('Acceso denegado. Solo los médicos o administradores pueden iniciar sesión.');
           error.response = { status: 403 };
@@ -54,6 +56,27 @@ export const useAuthStore = defineStore('auth', {
         }
       } catch (error) {
         console.error('Error al iniciar sesión:', error);
+        throw error;
+      }
+    },
+    async loginWithGoogle() {
+      try {
+        const response = await axios.get(`${process.env.VUE_APP_BACKEND_URL}/auth/google/success`, {
+          withCredentials: true
+        });
+        const { usuario } = response.data;
+        this.user = usuario;
+
+        if (usuario.tipo === 'Paciente') {
+          router.push('/inicioPaciente');
+        } else {
+          this.logout();
+          const error = new Error('Acceso denegado. Solo los pacientes pueden iniciar sesión.');
+          error.response = { status: 403 };
+          throw error;
+        }
+      } catch (error) {
+        console.error('Error al iniciar sesión con Google:', error);
         throw error;
       }
     },

@@ -23,46 +23,32 @@
         <h2 class="form-title">Registro usuarios</h2>
         <form @submit.prevent="handleRegister">
           <label for="nombre">Nombre:</label>
-          <input type="text" id="nombre" v-model="nombre" required />
+          <input type="text" id="nombre" v-model="nuevoUsuario.nombre" required />
           
           <label for="apellidos">Apellidos:</label>
-          <input type="text" id="apellidos" v-model="apellidos" required />
+          <input type="text" id="apellidos" v-model="nuevoUsuario.apellidos" required />
           
           <label for="username">Usuario:</label>
-          <input type="text" id="username" v-model="username" />
+          <input type="text" id="username" v-model="nuevoUsuario.username" />
           
           <label for="password">Contraseña:</label>
-          <input type="password" id="password" v-model="password" required />
+          <input type="password" id="password" v-model="nuevoUsuario.password" required />
           
           <label for="fechaNacimiento">Fecha de Nacimiento:</label>
-          <input type="date" id="fechaNacimiento" v-model="fechaNacimiento" />
+          <input type="date" id="fechaNacimiento" v-model="nuevoUsuario.fechaNacimiento" />
           
-          <label for="genero">Género:</label>
-          <v-menu
-            v-model="menu"
-            :close-on-content-click="false"
-            offset-y
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-text-field
-                v-model="genero"
-                readonly
-                v-bind="attrs"
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-list>
-              <v-list-item @click="selectGenero('Masculino')">
-                <v-list-item-title>Masculino</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="selectGenero('Femenino')">
-                <v-list-item-title>Femenino</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
+          <label for="genero">Género:
+            <select id="genero" v-model="nuevoUsuario.genero" required>
+              <option value="" disabled selected>Seleccione género</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Femenino">Femenino</option>
+            </select>
+          </label>
+
+          <br>
           
           <label for="email">Email:</label>
-          <input type="email" id="email" v-model="email" />
+          <input type="email" id="email" v-model="nuevoUsuario.email" />
 
           <button type="submit" class="login-button">Registrar</button>
         </form>
@@ -80,36 +66,29 @@ export default {
   name: 'UserRegister',
   data() {
     return {
-      nombre: '',
-      apellidos: '',
-      username: '',
-      password: '',
-      tipo: 'Paciente', 
-      fechaNacimiento: '',
-      genero: '',
-      email: '',
+      nuevoUsuario: {
+        nombre: '',
+        apellidos: '',
+        username: '',
+        password: '',
+        tipo: 'Paciente', 
+        fechaNacimiento: '',
+        genero: '',
+        email: ''
+      },
       errorMessage: '',
       menu: false,
     };
   },
   methods: {
     selectGenero(genero) {
-      this.genero = genero;
+      this.nuevoUsuario.genero = genero;
       this.menu = false;
     },
     async handleRegister() {
       this.errorMessage = ''; 
       try {
-        await axios.post(`${process.env.VUE_APP_BACKEND_URL}/api/register`, {
-          nombre: this.nombre,
-          apellidos: this.apellidos,
-          username: this.username,
-          password: this.password,
-          tipo: this.tipo, 
-          fechaNacimiento: this.fechaNacimiento,
-          genero: this.genero,
-          email: this.email
-        });
+        await axios.post(`${process.env.VUE_APP_BACKEND_URL}/api/register`, this.nuevoUsuario);
         this.$router.push('/login');
       } catch (error) {
         console.error('Error al registrar usuario:', error);
@@ -128,7 +107,6 @@ export default {
     }
   }
 };
-
 </script>
 
 <style scoped>
@@ -213,21 +191,18 @@ export default {
   margin-top: 1rem;
   align-self: flex-start; 
 }
-.login-form input {
+.login-form input, .login-form select {
   width: 100%;
   padding: 0.5rem;
   margin-top: 0.5rem;
-  border-radius: 5px;
+  border-radius: 15px;
   background-color: #c6defd; 
-  border-radius: 15px; 
+  box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el ancho total */
 }
-.login-form .v-text-field {
-  width: 100%;
-  padding: 0.3rem;
-  margin-top: 0.5rem;
-  border-radius: 5px;
-  background-color: #c6defd; 
-  border-radius: 15px; 
+.login-form select {
+  -webkit-appearance: none; /* Eliminar la apariencia predeterminada de los navegadores */
+  -moz-appearance: none; /* Eliminar la apariencia predeterminada de los navegadores */
+  appearance: none; /* Eliminar la apariencia predeterminada de los navegadores */
 }
 .forgot-password {
   margin-top: 1rem;
@@ -242,9 +217,8 @@ export default {
   background-color: #17195e;
   color: #fff;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
   border-radius: 30px; 
+  cursor: pointer;
 }
 .register-link {
   margin-top: 0.7rem;
