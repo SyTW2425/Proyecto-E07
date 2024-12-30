@@ -21,9 +21,11 @@ import PruebasCodigo from './components/PruebasCodigo.vue';
 import GestionEncuestas from './components/GestionEncuestas.vue';
 import InicioPaciente from './components/InicioPaciente.vue';
 import InicioAdmision from './components/InicioAdministracion.vue';
+import "@/assets/styles.css";
 import PerfilUsuario from './components/PerfilUsuario.vue';
 import RecetasPaciente from './components/Recetas.vue';
 import RecetasMedico from './components/RecetasMedico.vue';
+import GestionAseguradoras from './components/GestionAseguradoras.vue';
 
 const routes = [
   { path: '/', component: PaginaInicio },
@@ -50,7 +52,9 @@ const routes = [
   { path: '/iniciopaciente/perfil', component: PerfilUsuario },
   { path: '/iniciopaciente/recetaspaciente', component: RecetasPaciente },
   { path: '/inicioadministracion', component: InicioAdmision },
-  { path: '/:pathMatch(.*)*', component: PaginaError }, // Updated catch-all route
+  { path: '/:pathMatch(.*)*', component: PaginaError }, 
+  { path: '/aseguradoras', component: GestionAseguradoras },
+
 ];
 
 const router = createRouter({

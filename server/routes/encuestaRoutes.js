@@ -16,7 +16,7 @@ router.get('/encuestas', async (req, res) => {
 // Ruta para obtener un encuesta por ID
 router.get('/encuestas/:id', async (req, res) => {
   try {
-    const encuesta = await Encuesta.findById(req.params.id).populate('prestaciones');
+    const encuesta = await Encuesta.findById(req.params.id);
     if (!encuesta) {
       return res.status(404).json({ message: 'Encuesta no encontrado' });
     }
