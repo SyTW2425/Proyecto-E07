@@ -12,25 +12,16 @@
             <router-link class="nav-link" to="/">Inicio</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/especialidades">Especialidades</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/equipo-medico">Equipo Medico</router-link>
-          </li>
-          <li class="nav-item">
             <router-link class="nav-link" to="/usuarios">Usuarios</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/departamentos">Departamentos</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/agenda-medico">Agenda Médico</router-link>
+            <router-link class="nav-link" to="/agenda-medico">Agenda</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/login">Login</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/saludo">Saludo</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/prestaciones">Prestaciones</router-link>
@@ -58,6 +49,9 @@
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/inicioadministracion">Admision (Inicio)</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/aseguradoras">Aseguradoras</router-link>
           </li>
         </ul>
       </div>
