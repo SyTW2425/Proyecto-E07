@@ -88,7 +88,7 @@ export default {
     async handleRegister() {
       this.errorMessage = ''; 
       try {
-        await axios.post(`${process.env.VUE_APP_BACKEND_URL}/api/register`, this.nuevoUsuario);
+        await axios.post(`${process.env.VUE_APP_BACKEND_URL}/api/usuarios`, this.nuevoUsuario);
         this.$router.push('/login');
       } catch (error) {
         console.error('Error al registrar usuario:', error);

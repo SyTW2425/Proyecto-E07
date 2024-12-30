@@ -110,7 +110,7 @@
         </button>
       </a>
   
-      <a href="#" style="text-decoration: none; color: inherit;">
+      <a href="/iniciopaciente/recetaspaciente" style="text-decoration: none; color: inherit;">
         <button class="caja-contenido" href="#">
           <div class="circle">
             <svg
@@ -261,10 +261,6 @@
 
 <style src="@/assets/styles.css"></style>
 <style scoped>
-
-.header h1 {
-  font-size: 24px;
-}
 
 .header span {
   color: var(--primary-color);

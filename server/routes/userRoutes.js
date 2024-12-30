@@ -203,7 +203,16 @@ router.get('/usuarios/medicos', async (req, res) => {
 
 router.get('/usuarios/pacientes', async (req, res) => {
   try {
-    const pacientes = await Usuario.find({ tipo: 'Paciente' });
+    const search = req.query.search;
+    const regex = new RegExp(search, 'i'); // 'i' para búsqueda insensible a mayúsculas/minúsculas
+    const pacientes = await Usuario.find({
+      tipo: 'Paciente',
+      $or: [
+        { nombre: regex },
+        { apellidos: regex },
+        { dni: regex }
+      ]
+    });
     res.status(200).json(pacientes);
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener pacientes', error });

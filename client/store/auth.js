@@ -7,6 +7,9 @@ export const useAuthStore = defineStore('auth', {
     user: null,
   }),
   actions: {
+    setUser(user) {
+      this.user = user;
+    },
     async loginPaciente(username, password) {
       try {
         const response = await axios.post(`${process.env.VUE_APP_BACKEND_URL}/api/login`, {

@@ -63,7 +63,7 @@ const userSchema = new mongoose.Schema({
   tipo: {
     type: String,
     required: true,
-    enum: ['Paciente', 'Doctor', 'Administrador']
+    enum: ['Paciente', 'Médico', 'Administrador']
   },
   departamento: {
     type: mongoose.Schema.Types.ObjectId,
