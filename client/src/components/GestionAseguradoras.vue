@@ -14,8 +14,7 @@
               required
               pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
               @input="validateNombre"
-              @blur="validateRequired($event, 'El nombre solo puede contener letras.')"
-              @invalid="setCustomMessage($event, 'El nombre solo puede contener letras.')"
+              @blur="validateRequired($event, 'Obligatorio. Debe contener letras.')"
             />
           </label>
 
@@ -54,16 +53,16 @@
             min="0"
          />
         </label>
-        <button @click.prevent="agregarPrestacion" class="boton-agregar">Agregar Prestación</button>
+        <button @click.prevent="agregarPrestacion" class="boton-agregar">Añadir</button>
         </div>
         </div>
   
           <!-- Lista de Prestaciones Añadidas con Tarifas -->
           <ul>
             <li v-for="(cobertura, index) in nuevaAseguradora.cobertura" :key="index">
-                {{ obtenerNombreEspecialidad(cobertura.especialidad) }} - 
+                {{ obtenerNombreEspecialidad(cobertura.especialidad) }}:
                 {{ obtenerNombrePrestacion(cobertura.prestacion) }} - 
-                {{ cobertura.tarifa }} €
+                <strong>{{ cobertura.tarifa }} €</strong>
                 <button @click.prevent="eliminarPrestacion(index)" class="boton-eliminar-operacion">Eliminar</button>
             </li>
           </ul>
@@ -129,7 +128,10 @@
                 </v-btn>
               </td>
               <td>{{ aseguradora.nombre }}</td>
-              <td>{{ aseguradora.cobertura }}</td>
+              <tr v-for="cobertura in aseguradora.cobertura" :key="aseguradora._id">
+                <td>{{ cobertura.prestacion.nombre }} ({{ cobertura.especialidad.nombre }}):
+                {{ cobertura.tarifa }}</td>
+              </tr>
             </tr>
           </tbody>
         </table>
@@ -234,19 +236,27 @@
             tarifa: this.prestacionTemp.tarifa,
           });
           this.prestacionTemp = { id: '', tarifa: '' };
-          this.especialidadTemp = '';
+          // this.especialidadTemp = '';
         }
       },
       eliminarPrestacion(index) {
         this.nuevaAseguradora.cobertura.splice(index, 1);
       },
       obtenerNombreEspecialidad(id) {
-        const especialidad = this.especialidades.find((e) => e._id === id);
-        return especialidad ? especialidad.nombre : '';
+        if (id.nombre) {
+          return id.nombre;
+        } else {
+          const especialidad = this.especialidades.find((e) => e._id === id);
+          return especialidad ? especialidad.nombre : '';
+        }  
       },
       obtenerNombrePrestacion(id) {
-        const prestacion = this.prestaciones.find((p) => p._id === id);
-        return prestacion ? prestacion.nombre : '';
+        if (id.nombre) {
+          return id.nombre;
+        } else {
+          const prestacion = this.prestaciones.find((p) => p._id === id);
+          return prestacion ? prestacion.nombre : '';
+        }
       },
       async crearAseguradora() {
         try {
