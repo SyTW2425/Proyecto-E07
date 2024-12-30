@@ -1,143 +1,143 @@
 <template>
-    <div class="contenedor-principal">
-      <!-- Columna izquierda: Formulario de creación de aseguradoras -->
-      <div class="columna-formulario">
-        <h2>Gestión de Aseguradoras</h2>
-  
-        <!-- Formulario para crear o editar una aseguradora -->
-        <form @submit.prevent="editarAseguradoraId ? actualizarAseguradora() : crearAseguradora()">
-          <!-- Campo de Nombre -->
-          <label>Nombre:
-            <input
-              type="text"
-              v-model="nuevaAseguradora.nombre"
-              required
-              pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
-              @input="validateNombre"
-              @blur="validateRequired($event, 'Obligatorio. Debe contener letras.')"
-            />
-          </label>
+  <div class="contenedor-principal">
+    <!-- Columna izquierda: Formulario de creación de aseguradoras -->
+    <div class="columna-formulario">
+      <h2>Gestión de Aseguradoras</h2>
 
-          
-  
-          <!-- Selección de Especialidades -->
-          <label>Especialidad:
-            <select v-model="especialidadTemp" @change="obtenerPrestaciones">
-              <option disabled value="">Seleccione una especialidad</option>
-              <option v-for="especialidad in especialidades" :key="especialidad._id" :value="especialidad._id">
-                {{ especialidad.nombre }}
+      <!-- Formulario para crear o editar una aseguradora -->
+      <form @submit.prevent="editarAseguradoraId ? actualizarAseguradora() : crearAseguradora()">
+        <!-- Campo de Nombre -->
+        <label>Nombre:
+          <input
+            type="text"
+            v-model="nuevaAseguradora.nombre"
+            required
+            pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
+            @input="validateNombre"
+            @blur="validateRequired($event, 'Obligatorio. Debe contener letras.')"
+          />
+        </label>
+
+        <!-- Selección de Especialidades -->
+        <label>Especialidad:
+          <select v-model="especialidadTemp" @change="obtenerPrestaciones">
+            <option disabled value="">Seleccione una especialidad</option>
+            <option v-for="especialidad in especialidades" :key="especialidad._id" :value="especialidad._id">
+              {{ especialidad.nombre }}
+            </option>
+          </select>
+        </label>
+
+        <!-- Selección de Prestaciones con Tarifas -->
+        <div v-if="prestaciones.length > 0">
+          <label>Prestaciones:
+            <select v-model="prestacionTemp.id">
+              <option disabled value="">Seleccione una prestación</option>
+              <option v-for="prestacion in prestaciones" :key="prestacion._id" :value="prestacion._id">
+                {{ prestacion.nombre }}
               </option>
             </select>
           </label>
-  
-          
-         <!-- Selección de Prestaciones con Tarifas -->
-        <div v-if="prestaciones.length > 0">
-        <label>Prestaciones:
-            <select v-model="prestacionTemp.id">
-                <option disabled value="">Seleccione una prestación</option>
-                <option v-for="prestacion in prestaciones" :key="prestacion._id" :value="prestacion._id">
-                    {{ prestacion.nombre }}
-                </option>
-            </select>
-        </label>
 
-        <!-- Campo de Tarifa, visible solo si hay una prestación seleccionada -->
-        <div v-if="prestacionTemp.id">
-        <label>Tarifa (€):
-         <input
-            type="number"
-            v-model="prestacionTemp.tarifa"
-            placeholder="Tarifa (€)"
-            required
-            min="0"
-         />
-        </label>
-        <button @click.prevent="agregarPrestacion" class="boton-agregar">Añadir</button>
+          <!-- Campo de Tarifa, visible solo si hay una prestación seleccionada -->
+          <div v-if="prestacionTemp.id">
+            <label>Tarifa (€):
+              <input
+                type="number"
+                v-model="prestacionTemp.tarifa"
+                placeholder="Tarifa (€)"
+                required
+                min="0"
+              />
+            </label>
+            <button @click.prevent="agregarPrestacion" class="boton-agregar">Añadir</button>
+          </div>
         </div>
-        </div>
-  
-          <!-- Lista de Prestaciones Añadidas con Tarifas -->
-          <ul>
-            <li v-for="(cobertura, index) in nuevaAseguradora.cobertura" :key="index">
-                {{ obtenerNombreEspecialidad(cobertura.especialidad) }}:
-                {{ obtenerNombrePrestacion(cobertura.prestacion) }} - 
-                <strong>{{ cobertura.tarifa }} €</strong>
-                <button @click.prevent="eliminarPrestacion(index)" class="boton-eliminar-operacion">Eliminar</button>
-            </li>
-          </ul>
-  
-          <!-- Botones de acción -->
-          <v-btn class="ma-2 boton-crear" type="submit" v-if="!editarAseguradoraId">
-            Crear Aseguradora
-          </v-btn>
-          <v-btn class="ma-2 boton-guardar" type="button" v-if="editarAseguradoraId" @click="actualizarAseguradora">
-            Guardar Cambios
-          </v-btn>
-          <v-btn class="ma-2 boton-cancelar" type="button" v-if="editarAseguradoraId" @click="cancelarEdicion">
-            Cancelar
-          </v-btn>
-        </form>
-      </div>
-  
-      <!-- Columna derecha: Lista de aseguradoras -->
-      <div class="columna-lista">
-        <h3>Listado de Aseguradoras</h3>
-  
-        <!-- Indicador de error y carga -->
-        <v-alert
-          v-if="errorServidor"
-          type="error"
-          class="alerta-error"
-          prominent
-          color="red lighten-3"
-        >
-          <span class="alert-text">Fallo de comunicación con el servidor</span>
-        </v-alert>
-  
-        <div v-if="cargando && !errorServidor" class="text-center">
-          <v-progress-circular
-            :size="70"
-            :width="7"
-            color="#17195e"
-            indeterminate
-          ></v-progress-circular>
-        </div>
-  
-        <div v-if="!cargando && !errorServidor && aseguradoras.length === 0" class="texto-centrado">
-          <p>La lista está vacía</p>
-        </div>
-  
-        <!-- Tabla de aseguradoras -->
-        <table class="department-table" v-if="aseguradoras.length !== 0">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Nombre</th>
-              <th>Prestaciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="aseguradora in aseguradoras" :key="aseguradora._id">
-              <td class="department-actions">
-                <v-btn class="boton-modificar" @click="cargarAseguradora(aseguradora)">
-                  <i class="bi bi-pencil-square"></i>
-                </v-btn>
-                <v-btn class="boton-eliminar" @click="confirmarEliminacion(aseguradora._id)">
-                  <i class="bi bi-trash"></i>
-                </v-btn>
-              </td>
-              <td>{{ aseguradora.nombre }}</td>
-              <tr v-for="cobertura in aseguradora.cobertura" :key="aseguradora._id">
-                <td>{{ cobertura.prestacion.nombre }} ({{ cobertura.especialidad.nombre }}):
-                {{ cobertura.tarifa }}</td>
-              </tr>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+
+        <!-- Lista de Prestaciones Añadidas con Tarifas -->
+        <ul>
+          <li v-for="(cobertura, index) in nuevaAseguradora.cobertura" :key="index">
+            {{ obtenerNombreEspecialidad(cobertura.especialidad) }}:
+            {{ obtenerNombrePrestacion(cobertura.prestacion) }} -
+            <strong>{{ cobertura.tarifa }} €</strong>
+            <button @click.prevent="eliminarPrestacion(index)" class="boton-eliminar-operacion">Eliminar</button>
+          </li>
+        </ul>
+
+        <!-- Botones de acción -->
+        <v-btn class="ma-2 boton-crear" type="submit" v-if="!editarAseguradoraId">
+          Crear Aseguradora
+        </v-btn>
+        <v-btn class="ma-2 boton-guardar" type="button" v-if="editarAseguradoraId" @click="actualizarAseguradora">
+          Guardar Cambios
+        </v-btn>
+        <v-btn class="ma-2 boton-cancelar" type="button" v-if="editarAseguradoraId" @click="cancelarEdicion">
+          Cancelar
+        </v-btn>
+      </form>
     </div>
-  </template>
+
+    <!-- Columna derecha: Lista de aseguradoras -->
+    <div class="columna-lista">
+      <h3>Listado de Aseguradoras</h3>
+
+      <!-- Indicador de error y carga -->
+      <v-alert
+        v-if="errorServidor"
+        type="error"
+        class="alerta-error"
+        prominent
+        color="red lighten-3"
+      >
+        <span class="alert-text">Fallo de comunicación con el servidor</span>
+      </v-alert>
+
+      <div v-if="cargando && !errorServidor" class="text-center">
+        <v-progress-circular
+          :size="70"
+          :width="7"
+          color="#17195e"
+          indeterminate
+        ></v-progress-circular>
+      </div>
+
+      <div v-if="!cargando && !errorServidor && aseguradoras.length === 0" class="texto-centrado">
+        <p>La lista está vacía</p>
+      </div>
+
+      <!-- Tabla de aseguradoras -->
+      <table class="department-table" v-if="aseguradoras.length !== 0">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Nombre</th>
+            <th>Prestaciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="aseguradora in aseguradoras" :key="aseguradora._id">
+            <td class="department-actions">
+              <v-btn class="boton-modificar" @click="cargarAseguradora(aseguradora)">
+                <i class="bi bi-pencil-square"></i>
+              </v-btn>
+              <v-btn class="boton-eliminar" @click="confirmarEliminacion(aseguradora._id)">
+                <i class="bi bi-trash"></i>
+              </v-btn>
+            </td>
+            <td>{{ aseguradora.nombre }}</td>
+            <td>
+              <ul>
+                <li v-for="(cobertura, coberturaIndex) in aseguradora.cobertura" :key="coberturaIndex">
+                  {{ cobertura.prestacion.nombre }} ({{ cobertura.especialidad.nombre }}): {{ cobertura.tarifa }}
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>
   
   <script>
   import apiClient from '@/apiClient';

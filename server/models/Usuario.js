@@ -80,14 +80,14 @@ const userSchema = new mongoose.Schema({
   },
   fechaNacimiento: {
     type: Date,
-    validate(value) {
+    /*validate(value) {
       if (value && isNaN(Date.parse(value))) {
         throw new Error('Fecha de nacimiento inválida.');
       }
       if (value && new Date(value) > new Date()) {
         throw new Error('Fecha de nacimiento no puede ser una fecha futura.');
       }
-    }
+    }*/
   },
   genero: {
     type: String,
