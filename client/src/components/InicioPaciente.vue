@@ -87,7 +87,7 @@
 
     <!-- Botones de acceso rápido -->
     <div class="button-container">
-      <a href="#" style="text-decoration: none;">
+      <a href="/citas" style="text-decoration: none;">
         <button class="caja-contenido" href="#" >
           <div class="circle">
             <svg
@@ -106,7 +106,7 @@
             </svg>
           </div>
           <br>
-          <span class="button-text">Pedir cita</span>
+            <span class="button-text">Pedir cita</span>
         </button>
       </a>
   

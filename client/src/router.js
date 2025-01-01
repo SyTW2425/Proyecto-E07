@@ -26,6 +26,8 @@ import PerfilUsuario from './components/PerfilUsuario.vue';
 import RecetasPaciente from './components/Recetas.vue';
 import RecetasMedico from './components/RecetasMedico.vue';
 import GestionAseguradoras from './components/GestionAseguradoras.vue';
+import InicioWrapper from './components/InicioWrapper.vue';
+import ReservarCita from './components/ReservarCita.vue';
 
 const routes = [
   { path: '/', component: PaginaInicio },
@@ -54,6 +56,9 @@ const routes = [
   { path: '/inicioadministracion', component: InicioAdmision },
   { path: '/:pathMatch(.*)*', component: PaginaError }, 
   { path: '/aseguradoras', component: GestionAseguradoras },
+  { path: '/inicio', component: InicioWrapper },
+  { path: '/citas', component: ReservarCita },
+
 
 ];
 

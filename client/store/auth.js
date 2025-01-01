@@ -22,7 +22,7 @@ export const useAuthStore = defineStore('auth', {
         this.user = usuario;
 
         if (usuario.tipo === 'Paciente') {
-          router.push('/inicioPaciente');
+          router.push('/inicio');
         } else {
           this.logout();
           const error = new Error('Acceso denegado. Solo los pacientes pueden iniciar sesión.');
@@ -46,11 +46,11 @@ export const useAuthStore = defineStore('auth', {
         this.user = usuario;
 
         if (usuario.tipo === 'Médico') {
-          router.push('/inicioMedico');
+          router.push('/inicio');
         } else if (usuario.tipo === 'Administración') {
-          router.push('/inicioadministracion');
+          router.push('/inicio');
         } else if (usuario.tipo === 'Gerencia') {
-          router.push('/iniciogerencia');
+          router.push('/inicio');
         } else {      
           this.logout();
           const error = new Error('Acceso denegado. Solo los médicos o administradores pueden iniciar sesión.');
@@ -71,7 +71,7 @@ export const useAuthStore = defineStore('auth', {
         this.user = usuario;
 
         if (usuario.tipo === 'Paciente') {
-          router.push('/inicioPaciente');
+          router.push('/inicio');
         } else {
           this.logout();
           const error = new Error('Acceso denegado. Solo los pacientes pueden iniciar sesión.');

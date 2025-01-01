@@ -1,25 +1,67 @@
 <template>
+  <div class="estilo-pagina">
+    <header class="header">
+      <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
+      <div class="vertical-line"></div>
+      <h1 class="left-align small-text">INTRANET</h1>
+
+      <div class="user-head">
+        <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: #92bdf6;">
+          <path d="M6 36C6 31.0347 17.9925 28 24 28C30.0075 28 42 31.0347 42 36V42H6V36Z" fill="currentColor"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M24 26C29.5228 26 34 21.5228 34 16C34 10.4772 29.5228 6 24 6C18.4772 6 14 10.4772 14 16C14 21.5228 18.4772 26 24 26Z" fill="currentColor"/>
+        </svg>
+        <h1><router-link to="/iniciopaciente/perfil" class="usuario-boton">{{ nombreUsuario }}</router-link></h1>
+      </div>
+      <div class="reloj">
+        <span>{{ horaActual }}</span>
+      </div>
+    </header>
+    <br>
+    <button class="boton" @click="goBack">
+      <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
+        <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
+      </svg>
+      Volver
+    </button>
+    <br>  
+    <br>
+
+  <div v-if="!esMedico" class="error-cuadro">
+    <svg xmlns="http://www.w3.org/2000/svg" height="50px" viewBox="0 -960 960 960" width="50px" fill="var(--background-color)">
+      <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240ZM330-120 120-330v-300l210-210h300l210 210v300L630-120H330Zm34-80h232l164-164v-232L596-760H364L200-596v232l164 164Zm116-280Z"/>
+    </svg>
+    <strong>Error: </strong>El usuario no es un Médico
+  </div>
   <div class="contenedor-principal">
+    
+
     <!-- Columna izquierda: Formulario de creación de citas médicas -->
     <div class="columna-formulario">
-      <h2>Crear Cita Médica</h2>
+      <div class="alinear-elementos">
+          <div class="circle">
+            <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="var(--primary-color)">
+              <path d="M680-80v-120H560v-80h120v-120h80v120h120v80H760v120h-80Zm-480-80q-33 0-56.5-23.5T120-240v-480q0-33 23.5-56.5T200-800h40v-80h80v80h240v-80h80v80h40q33 0 56.5 23.5T760-720v244q-20-3-40-3t-40 3v-84H200v320h280q0 20 3 40t11 40H200Zm0-480h480v-80H200v80Zm0 0v-80 80Z"/>
+            </svg>
+          </div>
+          <h2 style="color: var(--primary-color);">Generar nuevas citas</h2>
+        </div>
+        <br>
 
       <!-- Formulario para crear una cita médica -->
       <form @submit.prevent="crearCita">
-        <!-- Selección de Médico -->
-        <label>Médico:
-          <select v-model="nuevaCita.medicoId" @change="actualizarEspecialidadYPrestaciones" required>
-            <option disabled value="">Seleccione un médico</option>
-            <option v-for="medico in medicos" :key="medico._id" :value="medico._id">
-              {{ medico.nombre }} {{ medico.apellidos }}
-            </option>
-          </select>
-        </label>
-
+        <!-- Mostrar el nombre del médico seleccionado -->
+        <label>Médico: <span>{{ medico.nombre }} {{ medico.apellidos }}</span></label>
+        <br>
+        <label>ID Médico: <span>{{ medico._id }}</span></label>
+        <br>
         <!-- Especialidad (rellenado automáticamente) -->
         <label>Especialidad:
-          <input type="text" :value="departamento?.nombre || ''" readonly />
+          <span>{{ departamento.nombre }}</span>
         </label>
+        <br>
+        <label>ID Especialidad: <span>{{ departamento._id }}</span></label>
+        <br>
+        <br>
 
         <!-- Selección de Prestación -->
         <label>Prestación:
@@ -30,12 +72,20 @@
             </option>
           </select>
         </label>
+        <br>
+        <label>ID Prestación: <span>{{ nuevaCita.prestacionId }}</span></label>
+        <br>
+        <br>
 
 
         <!-- Selección de Fecha -->
         <label>Fecha:
           <input type="date" v-model="nuevaCita.fecha" required />
         </label>
+
+        <br>
+        <label>DATE: <span>{{ nuevaCita.fecha }}</span></label>
+        <br>
 
         
         <!-- Mostrar solo si la prestación seleccionada es "Consulta" -->
@@ -84,6 +134,10 @@
             <input type="number" v-model="nuevaCita.duracion" min="1" />
           </label>
 
+          <br>
+          <br>
+
+
           <!-- Selección de Paciente -->
           <label>Paciente:
             <select v-model="nuevaCita.pacienteId" required>
@@ -96,9 +150,13 @@
 
         </div>
 
-        <v-btn class="ma-2 boton-crear" type="button" :disabled="cargando" @click="procesarCitas">
+        <br>
+        <br>
+
+
+        <button v-if="esMedico" class="boton-crear" type="button" :disabled="cargando" @click="procesarCitas">
           Crear Cita
-        </v-btn>
+        </button>
 
 
         
@@ -106,31 +164,16 @@
     </div>
 
     <!-- Columna derecha: Listado de citas -->
-    <div class="columna-lista">
-      <h3>Listado de Citas Médicas</h3>
-
-      <!-- Filtro para la especialidad -->
-<div class="filtro-especialidad">
-  <label for="filtroEspecialidad">Filtrar por especialidad:</label>
-  <select v-model="filtroEspecialidad">
-    <option value="">Todas las especialidades</option>
-    <option v-for="especialidad in especialidades" :key="especialidad._id" :value="especialidad._id">
-      {{ especialidad.nombre }}
-    </option>
-  </select>
-</div>
-
-<!-- Filtro para el médico -->
-<div class="filtro-medico">
-  <label for="filtroMedico">Filtrar por médico:</label>
-  <select v-model="filtroMedico">
-    <option value="">Todos los médicos</option>
-    <option v-for="medico in medicos" :key="medico._id" :value="medico._id">
-      {{ medico.nombre }} {{ medico.apellidos }}
-    </option>
-  </select>
-</div>
-
+    <div class="columna-citas">
+      <div class="alinear-elementos">
+       
+       <div class="circle">
+         <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="var(--primary-color)">
+           <path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm280 240q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-160 0q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm320 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-160 0q-17 0-28.5-11.5T280-280q0-17 11.5-28.5T320-320q17 0 28.5 11.5T360-280q0 17-11.5 28.5T320-240Zm320 0q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"/>
+         </svg>
+       </div>
+       <h2 style="color: var(--primary-color);">Agenda</h2>
+     </div>
 
 
       <!-- Mensaje de error de comunicación -->
@@ -152,8 +195,6 @@
         <thead>
           <tr>
             <th></th>
-            <th>Médico</th>
-            <th>Especialidad</th>
             <th>Prestación</th>
             <th>Fecha</th>
             <th>Hora</th>
@@ -168,11 +209,9 @@
               <i class="bi bi-trash"></i>
             </v-btn>
           </td>
-            <td>{{ cita.medicoId?.nombre }} {{ cita.medicoId?.apellidos }}</td>
-            <td>{{ cita.especialidadId?.nombre }}</td>
             <td>{{ cita.prestacionId?.nombre }}</td>
-            <td>{{ cita.fecha | formatDate }}</td>
-            <td>{{ cita.hora }}</td>
+            <td>{{ formatearFecha(cita.fechaHora) }}</td>
+            <td>{{ formatearHora(cita.fechaHora) }}</td>
             <td>{{ cita.duracion }}</td>
             <td>{{ cita.pacienteId ? cita.pacienteId.nombre + ' ' + cita.pacienteId.apellidos : '-' }}</td>
           </tr>
@@ -180,16 +219,17 @@
       </table>
     </div>
   </div>
+  </div>
 </template>
 
 <script>
 import apiClient from '@/apiClient';
+import { useAuthStore } from '../../store/auth';
 
 export default {
   data() {
     return {
-      medicos: [], // Lista de médicos
-      especialidades: [], // especialidades disponibles
+      horaActual: '',
       pacientes: [], // Lista de pacientes
       citas: [], // Lista de citas
       departamento: {}, // Datos del departamento del médico seleccionado
@@ -211,15 +251,29 @@ export default {
     };
   },
   methods: {
-    async obtenerMedicos() {
-      try {
-        const response = await apiClient.get('/api/usuarios/medicos');
-        this.medicos = response.data;
-      } catch (error) {
-        console.error('Error al obtener médicos:', error);
-        this.errorServidor = true;
-      }
+    goBack() {
+      this.$router.go(-1);
     },
+    datosUsuario() {
+      const authStore = useAuthStore();
+      this.medico = authStore.getUser ? authStore.getUser : 'Usuario';
+      this.nuevaCita.medicoId = this.medico._id;
+      this.actualizarEspecialidadYPrestaciones();
+    },
+    async verificarAutenticacion() {
+      const authStore = useAuthStore();
+      await authStore.checkAuth();
+    },
+    handleLogout() {
+      const authStore = useAuthStore();
+      authStore.logout();
+    },
+    actualizarHora() {
+      const ahora = new Date();
+      const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
+      this.horaActual = horaCanarias.toLocaleTimeString('es-ES', { hour12: false });
+    },
+
     async obtenerPacientes() {
       try {
         const response = await apiClient.get('/api/usuarios/pacientes');
@@ -235,21 +289,17 @@ export default {
     async obtenerCitas() {
       this.cargando = true;
       try {
-        const response = await apiClient.get('/api/citas');
+        const response = await apiClient.get('/api/citas', {
+          params: {
+            medicoId: this.medico._id
+          }
+        });
         this.citas = response.data;
       } catch (error) {
         console.error('Error al obtener citas:', error);
         this.errorServidor = true;
       } finally {
         this.cargando = false;
-      }
-    },
-    async obtenerEspecialidades() {
-      try {
-        const response = await apiClient.get('/api/departamentos/especialidades');
-        this.especialidades = response.data;
-      } catch (error) {
-        console.error('Error al obtener departamentos:', error);
       }
     },
     async actualizarEspecialidadYPrestaciones() {
@@ -355,12 +405,27 @@ export default {
     if (!cita.duracion || cita.duracion <= 0) throw new Error("La duración debe ser mayor que 0.");
     
     },
+    formatearFecha(fechaHora) {
+      const fecha = new Date(fechaHora);
+      const dia = String(fecha.getDate()).padStart(2, '0');
+      const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+      const anio = fecha.getFullYear();
+      return `${dia}/${mes}/${anio}`;
+    },
+    formatearHora(fechaHora) {
+      const fecha = new Date(fechaHora);
+      const horas = String(fecha.getHours()).padStart(2, '0');
+      const minutos = String(fecha.getMinutes()).padStart(2, '0');
+      return `${horas}:${minutos} h`;
+    },
     async crearCita(cita) {
       try {
         this.validarDatosCita(cita); // Verificar los datos antes de enviarlos
         console.log('Datos enviados:', cita);
         // Realizar la petición para crear la cita
         await apiClient.post('/api/citas', cita);
+        this.resetFormulario();
+        this.obtenerCitas();
       } catch (error) {
         console.error('Error al crear cita:', error);
         throw error; // Relanzar el error para manejarlo en procesarCitas
@@ -408,16 +473,12 @@ export default {
     },
     resetFormulario() {
       this.nuevaCita = {
-        medicoId: '',
-        especialidadId: '',
         prestacionId: '',
         fecha: '',
         hora: '',
         duracion: '',
         pacienteId: ''
       };
-      this.medico = {};
-      this.departamento = {};
       this.prestaciones = [];
       this.paciente = {};
       this.horaInicio = '';
@@ -439,7 +500,7 @@ export default {
     },
     async obtenerDatos() {
       // Obtener todas las citas, especialidades y médicos al montar el componente
-      await Promise.all([this.obtenerCitas(), this.obtenerEspecialidades(), this.obtenerMedicos()]);
+      await Promise.all([this.obtenerCitas()]);
     },
     validarFechaHora() {
       const hoy = new Date();
@@ -478,19 +539,40 @@ export default {
     }
     return true;
   },
+  created() {
+    this.obtenerCitas();
+  },
   mounted() {
     this.obtenerDatos();
     this.intervalId = setInterval(() => {
       this.obtenerCitas();
     }, 60000); // Actualiza cada 1 minuto
-    this.obtenerMedicos();
     this.obtenerPacientes();
-    this.obtenerCitas();
+
+    this.verificarAutenticacion();
+    this.actualizarHora();
+    setInterval(() => {
+      this.actualizarHora();
+    }, 1000); // Actualiza la hora cada segundo
+    this.datosUsuario();
+
+
+    
+
   },
   beforeDestroy() {
     clearInterval(this.intervalId);
   },
   computed: {
+    nombreUsuario() {
+      const authStore = useAuthStore();
+      return authStore.getUser ? `${authStore.getUser.nombre} ${authStore.getUser.apellidos}` : 'Usuario';
+    },
+
+    esMedico() {
+      return this.medico.tipo === 'Médico';
+    },
+
     citasFiltradas() {
       let citasFiltradas = this.citas;
 
@@ -523,59 +605,153 @@ export default {
 
 
 <style scoped>
-/* Estilos similares a los de "Gestión Departamentos" */
-.contenedor-principal {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 20px;
-}
+  .contenedor-principal {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .columna-formulario {
+    width: 45%;
+  }
+  .columna-citas {
+    width: 65%;
+  }
+  
+  button {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
 
-.columna-formulario {
-  flex: 1;
-  max-width: 40%;
-}
 
-.columna-lista {
-  flex: 2;
-  max-width: 60%;
-}
+  .estilo-pagina {  
+    margin-left: 2rem; 
+    margin-right: 2rem;
+  }
 
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
 
-.citas-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
+  .header span {
+    color: var(--primary-color);
+  }
 
-.citas-table th, .citas-table td {
-  padding: 10px;
-  text-align: left;
-  border: 1px solid #ddd;
-}
+  .header img.logo {
+    width: 200px;
+    height: auto; 
+  }
 
-.citas-table th {
-  background-color: #f4f4f4;
-  font-weight: bold;
-}
+  .header h1.left-align {
+    text-align: left;
+    margin-left: 10px; 
+  }
 
-.boton-crear {
-  background-color: var(--primary-color);
-  color: white;
-  padding: 10px;
-  border-radius: 5px;
-  font-weight: bold;
-}
+  .header h1.small-text {
+    font-size: 20px; 
+    color: var(--primary-color);
+    font-weight: 300;
+  }
 
-.alerta-error {
-  background-color: #f44336;
-  color: white;
-  padding: 10px;
-  border-radius: 5px;
-}
-</style>
+  .vertical-line {
+    width: 4px;
+    height: 70px;
+    background-color: #92bdf6; 
+  }
+
+  .user-head {
+    position: relative;
+    align-items: center;
+    display: flex;
+    margin-left: 2rem;
+    justify-content: center;
+  }
+
+  .usuario-boton {
+    color: var(--primary-color);
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 0.8em;
+    margin-left: 0.4em;
+  }
+
+  .boton {
+    background-color: #cbe3fd;
+    color: #1c1c5a;
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .boton:hover {
+    background-color: #b0d4fc;
+  }
+
+  .boton-crear {
+    background-color: var(--color-verde);
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .boton-crear:hover {
+    background-color: var(--color-azul2);
+  }
+
+  /* Estilo del círculo */
+  .circle {
+    width: 5rem; /* Tamaño del círculo */
+    height: 5rem;
+    border-radius: 50%; /* Hace que sea un círculo */
+    background-color: var(--color-azul); /* Usa el color definido */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.5rem;
+    margin: 0.5rem;
+    margin-right: 20px; 
+
+  }
+
+  .alinear-elementos {
+    display: flex;
+    align-items: center;
+  }
+
+  label {
+    font-size: 1.4rem; /* Ajusta el tamaño del texto de la clase label */
+    font-weight: light; /* Aumenta el grosor de la fuente de letra */
+
+  }
+
+  .informacion {
+    font-weight: bold; /* Aumenta el grosor de la fuente de letra */
+    font-size: 1.6rem; /* Ajusta el tamaño del texto de nombreUsuario */
+  }
+  
+  select, option {
+    font-weight: bold; /* Aumenta el grosor de la fuente de letra */
+    font-size: 1.6rem; /* Ajusta el tamaño del texto */
+  }
+
+
+  .error-cuadro {
+    background-color: var(--error-color);
+    color: white;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+  }
+
+
+
+  </style>
+  
