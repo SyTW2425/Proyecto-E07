@@ -214,7 +214,7 @@
     computed: {
       nombreUsuario() {
         const authStore = useAuthStore();
-        return authStore.getUser ? authStore.getUser.nombre : 'Usuario';
+        return authStore.getUser ? `${authStore.getUser.nombre} ${authStore.getUser.apellidos}` : 'Usuario';
       }
     },
     methods: {

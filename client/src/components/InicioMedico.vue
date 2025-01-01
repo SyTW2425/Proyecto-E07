@@ -81,7 +81,7 @@
         </button>
       </a>
   
-      <a href="#" style="text-decoration: none; color: inherit;">
+      <a href="/iniciomedico/recetasmedico" style="text-decoration: none; color: inherit;">
         <button class="caja-contenido" href="#">
           <div class="circle">
             <svg
