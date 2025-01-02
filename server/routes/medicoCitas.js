@@ -169,10 +169,13 @@ router.put('/citas/:id', async (req, res) => {
 
     if (pacienteId) {
       cita.pacienteId = pacienteId;
+    } else {
+      cita.pacienteId = null;
     }
 
     // Guardar la cita actualizada
     const citaActualizada = await cita.save();
+    console.log('Cita actualizada:', citaActualizada);
 
     res.status(200).json(citaActualizada);
   } catch (error) {

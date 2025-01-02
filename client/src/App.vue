@@ -18,7 +18,7 @@
             <router-link class="nav-link" to="/departamentos">Departamentos</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/agenda-medico">Agenda</router-link>
+            <router-link class="nav-link" to="/intranet">Intranet</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/login">Login</router-link>
@@ -30,25 +30,16 @@
             <router-link class="nav-link" to="/recetas">Recetas</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/lista_contacto">Lista contacto</router-link>
+            <router-link class="nav-link" to="/iniciogerencia">Gerencia</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/reservarcitas">Reservar Citas</router-link>
+            <router-link class="nav-link" to="/iniciomedico">Médico</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/iniciogerencia">Gerencia (Inicio)</router-link>
+            <router-link class="nav-link" to="/iniciopaciente">Paciente</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/iniciomedico">Médico (Inicio)</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/encuestas">Encuestas</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/iniciopaciente">Paciente (Inicio)</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/inicioadministracion">Admision (Inicio)</router-link>
+            <router-link class="nav-link" to="/inicioadministracion">Admisión</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/aseguradoras">Aseguradoras</router-link>

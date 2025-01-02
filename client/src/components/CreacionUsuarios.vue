@@ -49,6 +49,7 @@
             <option value="Administración">Administración</option>
             <option value="Paciente">Paciente</option>
             <option value="Médico">Médico</option>
+            <option value="Gerencia">Gerencia</option>
           </select>
         </label>
 
@@ -122,6 +123,7 @@
           <option value="Administración">Administración</option>
           <option value="Paciente">Paciente</option>
           <option value="Médico">Médico</option>
+          <option value="Gerencia">Gerencia</option>
         </select>
       </div>
       
