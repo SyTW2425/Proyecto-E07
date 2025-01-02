@@ -59,7 +59,7 @@ const routes = [
   { path: '/iniciomedico/recetasmedico', component: RecetasMedico, meta: { requiresAuth: true, allowedRoles: ['Médico'] } },
   
   { path: '/iniciopaciente', component: InicioPaciente, meta: { requiresAuth: true, allowedRoles: ['Paciente'] } },
-  { path: '/iniciopaciente/perfil', component: PerfilUsuario, meta: { requiresAuth: true } },
+  { path: '/perfil', component: PerfilUsuario, meta: { requiresAuth: true } },
 
   { path: '/iniciopaciente/recetaspaciente', component: RecetasPaciente, meta: { requiresAuth: true, allowedRoles: ['Paciente'] } },
   { path: '/inicioadministracion', component: InicioAdmision, meta: { requiresAuth: true, allowedRoles: ['Administración'] } },

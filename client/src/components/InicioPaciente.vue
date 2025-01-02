@@ -1,21 +1,7 @@
 <template>
   <div class="estilo-pagina">
-    <header class="header">
-      <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
-      <div class="vertical-line"></div>
-      <h1 class="left-align small-text">PORTAL DEL PACIENTE</h1>
-
-      <div class="user-head">
-        <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: #92bdf6;">
-          <path d="M6 36C6 31.0347 17.9925 28 24 28C30.0075 28 42 31.0347 42 36V42H6V36Z" fill="currentColor"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M24 26C29.5228 26 34 21.5228 34 16C34 10.4772 29.5228 6 24 6C18.4772 6 14 10.4772 14 16C14 21.5228 18.4772 26 24 26Z" fill="currentColor"/>
-        </svg>
-        <h1><router-link to="/iniciopaciente/perfil" class="usuario-boton">{{ nombreUsuario }}</router-link></h1>
-      </div>
-      <div class="reloj">
-        <span>{{ horaActual }}</span>
-      </div>
-    </header>
+    <!-- Importa el header -->
+    <Header/>
     <br>
     <br>  
     <br>
@@ -106,7 +92,7 @@
             </svg>
           </div>
           <br>
-            <span class="button-text">Pedir cita</span>
+            <span class="button-text">Gestionar citas</span>
         </button>
       </a>
   
@@ -200,10 +186,15 @@
   </template>
   
   <script>
+  import Header from '@/components/Header.vue'; // Ajusta la ruta si es necesario
+
   import { useAuthStore } from '../../store/auth';
   
   export default {
     name: "InicioPaciente",
+    components: {
+      Header,
+    },
     data() {
       return {
         saludo: '',

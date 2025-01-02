@@ -10,6 +10,9 @@
     </div>
     </header>
     <br>
+    <button class="boton" @click="cerrarSesion">
+      Cerrar sesión
+    </button> 
     <br>  
     <br>
     
@@ -292,6 +295,10 @@ export default {
     }
   },
   methods: {
+    cerrarSesion() {
+      const authStore = useAuthStore();
+      authStore.logout();
+    },
     actualizarSaludo() {
       const ahora = new Date();
       const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));

@@ -17,8 +17,13 @@
       </div>
     </header>
     <br>
+    <button class="boton" @click="cerrarSesion">
+      Cerrar sesión
+    </button> 
     <br>  
     <br>
+
+    
     
     <!-- Saludo y banner fraudes -->
     <div class="saludo">
@@ -212,10 +217,10 @@
       <h2 class="titulo">Encuestas de satisfacción</h2>
       <button class="btn-encuestas">Ver resultados</button>
     </div>
-    
-  </div>
-  </template>
   
+  </div>
+
+ </template>  
 <script>
 
 import apiClient from '@/apiClient';
@@ -240,6 +245,10 @@ export default {
     }
   },
   methods: {
+    cerrarSesion() {
+      const authStore = useAuthStore();
+      authStore.logout();
+    },
     actualizarSaludo() {
       const ahora = new Date();
       const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));

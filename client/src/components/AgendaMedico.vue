@@ -23,6 +23,11 @@
       </svg>
       Volver
     </button>
+
+
+    <button class="boton" @click="cerrarSesion">
+      Cerrar sesión
+    </button>
     <br>  
     <br>
 
@@ -227,6 +232,7 @@ import apiClient from '@/apiClient';
 import { useAuthStore } from '../../store/auth';
 
 export default {
+  name: "AgendaMedico",
   data() {
     return {
       horaActual: '',
@@ -251,6 +257,10 @@ export default {
     };
   },
   methods: {
+    cerrarSesion() {
+      const authStore = useAuthStore();
+      authStore.logout();
+    },
     goBack() {
       this.$router.go(-1);
     },

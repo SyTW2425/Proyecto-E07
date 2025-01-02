@@ -5,16 +5,32 @@
       <div class="vertical-line"></div>
       <h1 class="left-align small-text">PORTAL DEL PACIENTE</h1>
 
-      <div class="user-head">
-        <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: #92bdf6;">
-          <path d="M6 36C6 31.0347 17.9925 28 24 28C30.0075 28 42 31.0347 42 36V42H6V36Z" fill="currentColor"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M24 26C29.5228 26 34 21.5228 34 16C34 10.4772 29.5228 6 24 6C18.4772 6 14 10.4772 14 16C14 21.5228 18.4772 26 24 26Z" fill="currentColor"/>
+      <div class="header-right">
+        <div style="margin-right: 0.5rem; font-size: 1.4rem; color: var(--primary-color); font-weight: 500;">
+          {{ this.usuario.nombre }} {{ this.usuario.apellidos }}
+        </div>
+      <div class="circle-usuario" @click="toggleMenu" :class="{ 'active': mostrarMenu }">
+        <svg xmlns="http://www.w3.org/2000/svg" height="47px" viewBox="0 -960 960 960" width="47px" fill="white" :class="{ 'active': mostrarMenu }">
+          <path d="M234-276q51-39 114-61.5T480-360q69 0 132 22.5T726-276q35-41 54.5-93T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 59 19.5 111t54.5 93Zm246-164q-59 0-99.5-40.5T340-580q0-59 40.5-99.5T480-720q59 0 99.5 40.5T620-580q0 59-40.5 99.5T480-440Zm0 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q53 0 100-15.5t86-44.5q-39-29-86-44.5T480-280q-53 0-100 15.5T294-220q39 29 86 44.5T480-160Zm0-360q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm0-60Zm0 360Z"/>
         </svg>
-        <h1><router-link to="/iniciopaciente/perfil" class="usuario-boton">{{ nombreUsuario }}</router-link></h1>
       </div>
-      <div class="reloj">
-        <span>{{ horaActual }}</span>
+      <div v-if="mostrarMenu" class="dropdown-menu">
+            <ul>
+              <li @click="irConfiguracion">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
+                  <path d="M160-40v-80h640v80H160Zm0-800v-80h640v80H160Zm320 400q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm70-80q45-56 109-88t141-32q77 0 141 32t109 88h70v-480H160v480h70Zm118 0h264q-29-20-62.5-30T480-280q-36 0-69.5 10T348-240Zm132-280q-17 0-28.5-11.5T440-560q0-17 11.5-28.5T480-600q17 0 28.5 11.5T520-560q0 17-11.5 28.5T480-520Zm0 40Z"/>
+                </svg>
+                Mis datos</li>
+              <li @click="cerrarSesion">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
+                  <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/>
+                </svg>
+                
+                Cerrar sesión</li>
+            </ul>
+          </div>
       </div>
+
     </header>
     <br>
     <button class="boton" @click="goBack">
@@ -25,14 +41,6 @@
     </button>
     <br>  
     <br>
-
-
-    <div v-if="mostrarError && !esPaciente" class="error-cuadro">
-      <svg xmlns="http://www.w3.org/2000/svg" height="50px" viewBox="0 -960 960 960" width="50px" fill="white">
-        <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240ZM330-120 120-330v-300l210-210h300l210 210v300L630-120H330Zm34-80h232l164-164v-232L596-760H364L200-596v232l164 164Zm116-280Z"/>
-      </svg>
-      <strong>Error: </strong>El usuario no es un Paciente
-    </div>
 
     <div class="contenedor-principal">
       <!-- Columna izquierda -->
@@ -49,38 +57,33 @@
         <br>
 
         <!-- Mostrar el nombre del paciente seleccionado -->
-        <label>Paciente:  </label><label v-if="esPaciente"><span> {{ paciente.nombre }} {{ paciente.apellidos }}</span></label>
-        <br>
-        <br>
   
         <!-- Selector de Especialidad -->
         <label>Especialidad:
-          <label v-if="esPaciente">
           <select v-model="selectedEspecialidad" @change="cargarMedicos">
             <option value="">Seleccione una especialidad</option>
             <option v-for="especialidad in especialidades" :key="especialidad._id" :value="especialidad._id">
               {{ especialidad.nombre }}
             </option>
-          </select></label>
+          </select>
         </label>
         <br>
         <br>
   
         <!-- Selector de Médico -->
         <label>Médico:
-          <label v-if="esPaciente">
           <select v-model="selectedMedico" @change="cargarCitasDisponibles">
             <option value="">Cualquiera</option>
             <option v-for="medico in medicos" :key="medico._id" :value="medico._id">
               {{ medico.nombre }} {{ medico.apellidos }}
             </option>
-          </select></label>
+          </select>
         </label>
         <br>
         <br>
     
         <!-- Mostrar las citas disponibles -->
-        <div v-if="esPaciente && citasDisponibles.length > 0">
+        <div v-if="citasDisponibles.length > 0">
           <div v-for="(cita, index) in citasDisponibles" :key="index" class="citas-disponibles-item">
             <p>
               <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
@@ -188,7 +191,6 @@
             </p>
             <br>
 
-            <p styles="color: black"> {{ cita.pacienteId.nombre }}</p>
             <!-- Botón para cancelar cita -->
             <button @click="confirmarCancelarCita(cita._id)">Cancelar Cita</button>
           </div>
@@ -211,24 +213,15 @@
     name: "ReservarCitas",
     data() {
       return {
-        horaActual: '',
+        mostrarMenu: false,
         especialidades: [], // Lista de especialidades
         medicos: [], // Lista de médicos filtrados por especialidad
         citasDisponibles: [], // Citas filtradas por paciente, especialidad y médico
-        paciente: '',
+        usuario: '',
         selectedEspecialidad: '', // Especialidad seleccionada
         selectedMedico: '', // Médico seleccionado
         citasConsulta: [], // Citas de tipo consulta donde pacienteId no es null
       };
-    },
-    computed: {
-      nombreUsuario() {
-        const authStore = useAuthStore();
-        return authStore.getUser ? `${authStore.getUser.nombre} ${authStore.getUser.apellidos}` : 'Usuario';
-      },
-      esPaciente() {
-        return this.paciente.tipo === 'Paciente';
-      },
     },
     methods: {
       goBack() {
@@ -237,16 +230,18 @@
       async datosUsuario() {
         const authStore = useAuthStore();
         await authStore.checkAuth();
-        this.paciente = authStore.getUser ? authStore.getUser : 'Usuario';
+        this.usuario = authStore.getUser ? authStore.getUser : 'Usuario';
       },
-      handleLogout() {
-      const authStore = useAuthStore();
-      authStore.logout();
+      toggleMenu() {
+        this.mostrarMenu = !this.mostrarMenu;
+        console.log('Mostrar menú', this.mostrarMenu);
       },
-      actualizarHora() {
-        const ahora = new Date();
-        const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
-        this.horaActual = horaCanarias.toLocaleTimeString('es-ES', { hour12: false });
+      irConfiguracion() {
+        this.$router.push('/perfil');
+      },
+      cerrarSesion() {
+        const authStore = useAuthStore();
+        authStore.logout();
       },
 
       formatearFecha(fechaHora) {
@@ -265,14 +260,13 @@
 
       async obtenerCitasConsulta() {
           try {
-            if (this.esPaciente) {
-              const response = await apiClient.get('/api/citas', {
-                params: {
-                  pacienteId: this.paciente._id
-                }
-              });
-              this.citasConsulta = response.data;
-          }  
+            const response = await apiClient.get('/api/citas', {
+              params: {
+                pacienteId: this.usuario._id
+              }
+            });
+            this.citasConsulta = response.data;
+          
           } catch (error) {
               console.error('Error al obtener citas de consulta:', error);
           }
@@ -324,7 +318,7 @@
   
           // Realizar la petición PUT para reservar la cita
           const response = await apiClient.put(`/api/citas/${citaId}`, {
-            pacienteId: this.paciente._id // Se asigna el paciente seleccionado
+            pacienteId: this.usuario._id // Se asigna el paciente seleccionado
           });
   
           // Manejar la respuesta de éxito
@@ -381,30 +375,19 @@
       selectedMedico() {
         this.cargarCitasDisponibles(); // Recargar citas disponibles cuando cambie el médico
       },
-      selectedPaciente() {
-        this.cargarCitasDisponibles(); // Recargar citas disponibles cuando cambie el paciente
-      },
     },
     async mounted() {      
-      await this.datosUsuario();      
-      this.actualizarHora();
-      setInterval(() => {
-        this.actualizarHora();
-      }, 1000); // Actualiza la hora cada segundo
+      await this.datosUsuario();    
 
       this.obtenerEspecialidades();
       this.obtenerCitasConsulta(); 
 
       setInterval(() => {
         this.obtenerCitasConsulta();
-      }, 30000); // Actualiza la hora cada segundo
+      }, 30000); // Actualiza cada 30 segundos
 
       // console.log(this.obtenerCitasConsulta); // Verificar si el método está disponible
       
-      // Mostrar el mensaje de error después de 10 segundos
-      setTimeout(() => {
-        this.mostrarError = true;
-      }, 1000);
     },
   };
   </script>
@@ -464,27 +447,23 @@
     font-weight: 300;
   }
 
+  .header-right {
+    font-weight: bold;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+
+    position: relative;
+  }
+
+  
+
   .vertical-line {
     width: 4px;
     height: 70px;
     background-color: #92bdf6; 
   }
 
-  .user-head {
-    position: relative;
-    align-items: center;
-    display: flex;
-    margin-left: 2rem;
-    justify-content: center;
-  }
-
-  .usuario-boton {
-    color: var(--primary-color);
-    text-decoration: none;
-    cursor: pointer;
-    font-size: 0.8em;
-    margin-left: 0.4em;
-  }
 
   .boton {
     background-color: #cbe3fd;
@@ -531,18 +510,8 @@
   }
   
   select, option {
-    font-weight: bold; /* Aumenta el grosor de la fuente de letra */
-    font-size: 1.6rem; /* Ajusta el tamaño del texto */
+    font-weight: 500; /* Ajuste del grosor de la fuente de letra  */
   }
-
-  .error-cuadro {
-    background-color: rgb(193, 26, 26);
-    color: white;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-  }
-
 
   .cita-item {
     background-color: white; /* Fondo azul */
@@ -611,6 +580,66 @@
 
   .aviso-cuadro p {
     text-align: center; /* Centrar el texto */
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: block;
+
+    top: 100%; /* Esto lo coloca justo debajo del círculo */
+    left: 0; /* Esto asegura que esté alineado con el borde izquierdo del círculo */
+
+  }
+
+
+
+
+
+  .dropdown-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .dropdown-menu li {
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+
+  .dropdown-menu li:hover {
+    background-color: #f0f0f0;
+  }
+
+  .circle-usuario {
+    width: 4rem; /* Tamaño del círculo */
+    height: 4rem;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.5rem;
+    margin: 0.5rem;
+    margin-right: 20px;
+    position: relative; /* Agregado */
+    cursor: pointer;
+  }
+
+  /* Estilo cuando el menú está activo */
+  .circle-usuario.active {
+    background-color: var(--color-azul); /* Cambiar el color cuando está activo */
+    transform: scale(1.1); /* Aumentar el tamaño para resaltar */
+    transition: all 0.3s ease; /* Añadir transición suave */
+  }
+
+  .circle-usuario svg.active {
+    fill: var(--primary-color); /* Cambia el color del icono cuando está activo */
   }
 
 
