@@ -3,13 +3,13 @@
     <header class="header">
       <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
       <div class="vertical-line"></div>
-      <h1 class="left-align small-text">PORTAL DEL PACIENTE</h1>
+      <h1 class="left-align small-text">INTRANET</h1>
       <div class="user-head">
         <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: #92bdf6;">
           <path d="M6 36C6 31.0347 17.9925 28 24 28C30.0075 28 42 31.0347 42 36V42H6V36Z" fill="currentColor"/>
           <path fill-rule="evenodd" clip-rule="evenodd" d="M24 26C29.5228 26 34 21.5228 34 16C34 10.4772 29.5228 6 24 6C18.4772 6 14 10.4772 14 16C14 21.5228 18.4772 26 24 26Z" fill="currentColor"/>
         </svg>
-        <h1><router-link to="/iniciopaciente/perfil" class="usuario-boton">{{ nombreUsuario }}</router-link></h1>
+        <h1><router-link to="#" class="usuario-boton">{{ nombreUsuario }}</router-link></h1>
       </div>
       <div class="reloj">
         <span>{{ horaActual }}</span>
@@ -19,7 +19,7 @@
     <br>  
 
     <div class="contenedor-principal">
-      <h2 class="titulo">Citas anteriores - Justificantes</h2>
+      <h2 class="titulo">Citas disponibles - Informes</h2>
       <br/>
       <!-- Indicador de error y carga -->
       <v-alert
@@ -40,13 +40,13 @@
         ></v-progress-circular>
       </div>
       <div v-if="!cargando && !errorServidor && citasPasadas.length === 0" class="texto-centrado">
-        <p>No tienes citas pasadas disponibles.</p>
+        <p>No tienes citas disponibles.</p>
       </div>
       <!-- Lista de citasPasadas -->
       <div v-if="citasPasadas.length !== 0" class="citas-container">
         <div class="cita" v-for="cita in citasPasadas" :key="cita._id">
           <div class="cita-header">
-            <h3><i class="fas fa-user-md"></i> <span class="medico-label">Médico:</span> <span class="medico-nombre">{{ cita.medicoId?.nombre }} {{ cita.medicoId?.apellidos }}</span></h3>
+            <h3><i class="fas fa-user-md"></i> <span class="medico-label">Paciente:</span> <span class="medico-nombre">{{ cita.pacienteId?.nombre }} {{ cita.pacienteId?.apellidos }}</span></h3>
             <p><i class="fas fa-calendar-alt"></i> {{ formatearFecha(cita.fechaHora) }} - <i class="fas fa-clock"></i> {{ formatearHora(cita.fechaHora) }}</p>
           </div>
           <div class="cita-body">
@@ -54,9 +54,11 @@
             <p><strong>Prestacion:</strong> {{ cita.prestacionId.nombre }}</p>
           </div>
           <div class="cita-footer">
-            <button @click="imprimirReceta(cita)" class="btn-imprimir"><i class="fas fa-print"></i> Imprimir</button>
-            <button @click="descargarReceta(cita)" class="btn-descargar"><i class="fas fa-download"></i> Descargar</button>
+            <a href="#" class="btn-imprimir" style="text-decoration: none;"> Generar informe</a>
+            <button @click="imprimirInforme(cita)" class="btn-imprimir"><i class="fas fa-print"></i> Imprimir</button>
+            <button @click="descargarInforme(cita)" class="btn-descargar"><i class="fas fa-download"></i> Descargar</button>
           </div>
+          
         </div>
       </div>
     </div>
@@ -101,11 +103,11 @@
               throw new Error('Usuario no autenticado');
             }
             const response = await apiClient.get('/api/citas', {
-              params: { pacienteId: this.usuarioId }
+              params: { medicoId: this.usuarioId }
             });
             const citas = response.data;
             const ahora = new Date();
-            this.citasPasadas = citas.filter(cita => new Date(cita.fechaHora) < ahora);
+            this.citasPasadas = citas.filter(cita => new Date(cita.fechaHora) < ahora && cita.pacienteId !== null);
           } catch (error) {
             this.errorServidor = true;
           } finally {
@@ -154,7 +156,7 @@
         const minutos = String(fecha.getMinutes()).padStart(2, '0');
         return `${horas}:${minutos} h`;
       },
-      imprimirReceta(cita) {
+      imprimirInforme(cita) {
         const doc = new jsPDF();
 
         // Agregar logo
@@ -198,7 +200,7 @@
           window.open(pdfData, '_blank');
         };
       },
-      async descargarReceta(cita) {
+      async descargarInforme(cita) {
         const doc = new jsPDF();
 
         // Agregar logo
