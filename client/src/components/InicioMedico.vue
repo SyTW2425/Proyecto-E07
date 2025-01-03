@@ -62,7 +62,7 @@
 
   <!-- Botones de acceso rápido -->
   <div class="button-container">
-      <a href="#" style="text-decoration: none;">
+      <a href="/agenda-medico" style="text-decoration: none;">
         <button class="caja-contenido" href="#" >
           <div class="circle">
 

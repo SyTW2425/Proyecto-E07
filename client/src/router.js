@@ -26,6 +26,8 @@ import PerfilUsuario from './components/PerfilUsuario.vue';
 import RecetasPaciente from './components/Recetas.vue';
 import RecetasMedico from './components/RecetasMedico.vue';
 import GestionAseguradoras from './components/GestionAseguradoras.vue';
+import JustificantesPaciente from './components/JustificantesPaciente.vue';
+import ReservarCita from './components/ReservarCita.vue';
 
 const routes = [
   { path: '/', component: PaginaInicio },
@@ -51,10 +53,11 @@ const routes = [
   { path: '/iniciopaciente', component: InicioPaciente },
   { path: '/iniciopaciente/perfil', component: PerfilUsuario },
   { path: '/iniciopaciente/recetaspaciente', component: RecetasPaciente },
+  { path: '/iniciopaciente/justificantes', component: JustificantesPaciente },
   { path: '/inicioadministracion', component: InicioAdmision },
   { path: '/:pathMatch(.*)*', component: PaginaError }, 
+  { path: '/citas', component: ReservarCita},
   { path: '/aseguradoras', component: GestionAseguradoras },
-
 ];
 
 const router = createRouter({
