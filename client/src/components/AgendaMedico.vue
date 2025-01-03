@@ -77,9 +77,9 @@
           <label>Número de Citas Médicas: <strong>{{ citasCalculadas.total }}</strong></label>
           <div>
             <!-- Lista numerada con los horarios -->
-            <ul>
-              <li v-for="(horario, index) in calculoCitas().horarios" :key="index">
-                {{ horario }}
+            <ul style="display: flex; flex-wrap: wrap; justify-content: left; gap: 5px; padding: 5px; list-style-type: none;">
+              <li v-for="(horario, index) in calculoCitas().horarios" :key="index" style="background-color: var(--color-azul2); color: var(--primary-color); padding: 10px; margin: 5px; border-radius: 5px; flex: 0 1 auto;">
+              {{ horario }}
               </li>
             </ul>
           </div>
@@ -121,8 +121,8 @@
         <br>
 
 
-        <button class="boton-crear" type="button" :disabled="cargando" @click="procesarCitas">
-          Crear Cita
+        <button v-if="nuevaCita.duracion" class="boton-crear" type="button" :disabled="cargando" @click="procesarCitas">
+          Crear cita
         </button>
 
 
@@ -153,7 +153,7 @@
       </div>
 
       <div v-if="!cargando && !errorServidor && citas.length === 0" class="texto-centrado">
-        <p>La lista está vacía</p>
+        <p>La agenda está vacía</p>
       </div>
 
       <!-- Tabla de citas -->
@@ -171,11 +171,11 @@
         </thead>
         <tbody>
           <tr v-for="cita in citasFiltradas" :key="cita._id">
-            <td class="user-actions">
-            <v-btn class="boton-eliminar" @click="confirmarEliminacion(cita._id)">
-              <i class="bi bi-trash"></i>
-            </v-btn>
-          </td>
+            <td class="citas-actions">
+              <button class="boton-eliminar" @click="confirmarEliminacion(cita._id)">
+                Cancelar
+              </button>
+            </td>
             <td>{{ cita.prestacionId?.nombre }}</td>
             <td>{{ formatearFecha(cita.fechaHora) }}</td>
             <td>{{ formatearHora(cita.fechaHora) }}</td>
@@ -265,7 +265,13 @@ export default {
             medicoId: this.medico._id
           }
         });
-        this.citas = response.data;
+
+        const citas = response.data;
+        const ahora = new Date();
+
+        this.citas = citas
+          .filter(cita => new Date(cita.fechaHora) > ahora)
+          .sort((a, b) => new Date(a.fechaHora) - new Date(b.fechaHora))
       } catch (error) {
         console.error('Error al obtener citas:', error);
         this.errorServidor = true;
@@ -575,7 +581,7 @@ export default {
   }
   
   .columna-formulario {
-    width: 45%;
+    width: 40%;
   }
   .columna-citas {
     width: 65%;
@@ -657,7 +663,6 @@ export default {
 
   }
 
-
   .boton-crear {
     background-color: var(--color-verde);
     color: var(--primary-color);
@@ -668,7 +673,7 @@ export default {
     cursor: pointer;
   }
   .boton-crear:hover {
-    background-color: var(--color-azul2);
+    background-color: #00e682;
   }
 
   /* Estilo del círculo */
@@ -723,6 +728,55 @@ export default {
     margin-left: auto;
   }
 
+
+  
+  .citas-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  .citas-table th,
+  .citas-table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+    vertical-align: top; /* Asegura que el contenido se alinee en la parte superior */
+    
+  }
+
+  .citas-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+
+  }
+
+  .citas-table td {
+    background-color: white;
+    
+  }
+
+  .citas-actions {
+    width: auto; /* Ajusta el ancho según el contenido */
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+
+  .boton-eliminar {
+    background-color: #dc3545; /* Fondo rojo para el botón */
+    color: white; /* Texto blanco */
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .boton-eliminar:hover {
+    background-color: #c82333; /* Cambia el color al pasar el ratón */
+  }
 
 
   </style>

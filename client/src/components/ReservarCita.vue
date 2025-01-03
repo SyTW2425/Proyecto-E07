@@ -169,7 +169,7 @@
             </p>
             <br>
             <!-- Botón para cancelar cita -->
-            <button @click="confirmarCancelarCita(cita._id)">Cancelar Cita</button>
+            <button @click="confirmarCancelarCita(cita._id)">Cancelar</button>
           </div>
         
         </div>
