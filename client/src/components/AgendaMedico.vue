@@ -66,12 +66,12 @@
           <!-- Selección de Hora Final -->
           <label>Hora Final:
             <input type="time" v-model="horaFinal" />
-          </label>
+          </label><br>
 
           <!-- Selección de Duración -->
           <label>Duración (minutos):
             <input type="number" v-model="nuevaCita.duracion" min="1" />
-          </label>
+          </label><br><br>
 
           <!-- Número de citas calculadas -->
           <label>Número de Citas Médicas: <strong>{{ citasCalculadas.total }}</strong></label>
@@ -101,7 +101,6 @@
             <input type="number" v-model="nuevaCita.duracion" min="1" />
           </label>
 
-          <br>
           <br>
 
 
@@ -696,11 +695,6 @@ export default {
     align-items: center;
   }
 
-  label {
-    font-size: 1.4rem; /* Ajusta el tamaño del texto de la clase label */
-    font-weight: light; /* Aumenta el grosor de la fuente de letra */
-
-  }
 
   .informacion {
     font-weight: bold; /* Aumenta el grosor de la fuente de letra */
@@ -777,6 +771,33 @@ export default {
   .boton-eliminar:hover {
     background-color: #c82333; /* Cambia el color al pasar el ratón */
   }
+
+  /* Estilo para los campos de entrada de texto, email y el selector */
+  input[type="text"],
+  input[type="date"],
+  input[type="time"],
+  input[type="number"],
+  select {
+    background-color: #C6DEFD; /* Color de fondo del campo */
+    padding: 8px;
+    border-radius: 5px;
+    outline: none;
+    font-family: 'Outfit', sans-serif; /* Asegura que la fuente sea uniforme */
+  }
+
+  /* Cambia el color del borde y añade un efecto cuando el campo está enfocado */
+  input[type="text"]:focus,
+  select:focus {
+    border-color: var(--color-azul); /* Cambia el color del borde al hacer foco */
+    box-shadow: 0 0 5px var(--color-azul); /* Añade sombra al hacer foco */
+    background-color: #C6DEFD; /* Mantiene el color de fondo al hacer foco */
+  }
+
+  label {
+    margin-bottom: 10px;
+    text-align: left; /* Alinea los labels a la izquierda para mejor legibilidad */
+    font-weight: bold; /* Resalta los labels */
+  } 
 
 
   </style>
