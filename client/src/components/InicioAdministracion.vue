@@ -1,25 +1,6 @@
 <template>
   <div class="estilo-pagina">
-    <header class="header">
-      <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
-      <div class="vertical-line"></div>
-      <h1 class="left-align small-text">INTRANET</h1>
-
-      <div class="user-head">
-        <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: #92bdf6;">
-          <path d="M6 36C6 31.0347 17.9925 28 24 28C30.0075 28 42 31.0347 42 36V42H6V36Z" fill="currentColor"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M24 26C29.5228 26 34 21.5228 34 16C34 10.4772 29.5228 6 24 6C18.4772 6 14 10.4772 14 16C14 21.5228 18.4772 26 24 26Z" fill="currentColor"/>
-        </svg>
-        <span> {{ nombreUsuario }} </span>
-      </div>
-      <div class="reloj">
-        <span>{{ horaActual }}</span>
-      </div>
-    </header>
-    <br>
-    <button class="boton" @click="cerrarSesion">
-      Cerrar sesión
-    </button> 
+    <Header/>
     <br>  
     <br>
 
@@ -225,9 +206,13 @@
 
 import apiClient from '@/apiClient';
 import { useAuthStore } from '../../store/auth';
+import Header from './Header.vue';
 
 export default {
   name: "InicioAdministracion",
+  components: {
+    Header
+  },
   data() {
     return {
       saludo: '',
@@ -245,10 +230,6 @@ export default {
     }
   },
   methods: {
-    cerrarSesion() {
-      const authStore = useAuthStore();
-      authStore.logout();
-    },
     actualizarSaludo() {
       const ahora = new Date();
       const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
@@ -264,11 +245,6 @@ export default {
         this.saludo = "Buenas noches";
         this.icono = require('@/assets/icons/buenas_noches.png');
       }
-    },
-    actualizarHora() {
-      const ahora = new Date();
-      const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
-      this.horaActual = horaCanarias.toLocaleTimeString('es-ES', { hour12: false });
     },
     async obtenerDatosUsuarios() {
       try {
@@ -286,27 +262,16 @@ export default {
   },
   mounted() {
     this.actualizarSaludo();
-    this.actualizarHora();
     this.obtenerDatosUsuarios();
     setInterval(() => {
       this.obtenerDatosUsuarios();
     }, 60000); // Actualiza cada 1 minuto
-    setInterval(() => {
-      this.actualizarHora();
-    }, 1000); // Actualiza la hora cada segundo
   }
 };
   </script>
   <style src="@/assets/styles.css"></style>
   <style scoped>
-  
-  .header h1 {
-    font-size: 24px;
-  }
-  
-  .header span {
-    color: var(--primary-color);
-  }
+
   
   .departamento-info p {
     margin: 5px 0;
@@ -325,48 +290,13 @@ export default {
     background: var(--color-azul);
   }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  width: calc(100% - 0rem); 
-  background-color: #e1e1e1;
-  
-  padding: 1rem;
-  text-align: left;
-  display: flex;
-
-  align-items: left;
-  justify-content: left;
-
-  gap: 10px;
-  border-radius: 15px; 
-}
 
 
 .estilo-pagina {  
   margin-left: 2rem; 
   margin-right: 2rem;
 }
-.header img.logo {
-  width: 200px;
-  height: auto; 
-}
-.header h1.left-align {
-  text-align: left;
-  margin-left: 10px; 
-}
-.header h1.small-text {
-  font-size: 20px; 
-  color: var(--primary-color);
-  font-weight: 300;
-}
-.vertical-line {
-  width: 4px;
-  height: 70px;
-  background-color: #92bdf6; 
-}
+
 
 .icono-blanco {
   color: #ffffff; 
@@ -390,10 +320,7 @@ export default {
 }
 
 
-.reloj {
-  font-size: 24px;
-  font-weight: bold;
-}
+
 
 /* Estilo del círculo */
 .circle {

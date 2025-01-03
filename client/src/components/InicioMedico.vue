@@ -1,14 +1,6 @@
 <template>
   <div class="estilo-pagina">
-    <header class="header">
-      <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
-      <div class="vertical-line"></div>
-      <h1 class="left-align small-text">INTRANET</h1>
-
-      <div class="reloj">
-      <span>{{ horaActual }}</span>
-    </div>
-    </header>
+    <Header/>
     <br>
     <br>  
     <br>
@@ -159,10 +151,13 @@
   import '../assets/styles.css';
   import { useAuthStore } from '../../store/auth';
   import apiClient from '@/apiClient';
-
+  import Header from './Header.vue';
 
   export default {
     name: 'InicioMedico',
+    components: {
+      Header,
+    },
     data() {
       return {
         saludo: '',
@@ -257,13 +252,6 @@
   margin-left: auto;
 }
 
-/* Información sobre tipo de usuario */
-.icon-container {
-  display: flex;
-  align-items: center;
-  gap: 10px; /* Espacio entre el círculo y el texto */
-  margin-left: auto;
-}
 
 /* Estilo del círculo */
 .circle {

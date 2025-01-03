@@ -1,44 +1,8 @@
 <template>
+    
     <div class="estilo-pagina">
-    <header class="header">
-      <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
-      <div class="vertical-line"></div>
-      <h1 class="left-align small-text">PORTAL DEL PACIENTE</h1>
-
-      <div class="header-right">
-        <div style="margin-right: 0.5rem; font-size: 1.4rem; color: var(--primary-color); font-weight: 500;">
-          {{ this.usuario.nombre }} {{ this.usuario.apellidos }}
-        </div>
-      <div class="circle-usuario" @click="toggleMenu" :class="{ 'active': mostrarMenu }">
-        <svg xmlns="http://www.w3.org/2000/svg" height="47px" viewBox="0 -960 960 960" width="47px" fill="white" :class="{ 'active': mostrarMenu }">
-          <path d="M234-276q51-39 114-61.5T480-360q69 0 132 22.5T726-276q35-41 54.5-93T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 59 19.5 111t54.5 93Zm246-164q-59 0-99.5-40.5T340-580q0-59 40.5-99.5T480-720q59 0 99.5 40.5T620-580q0 59-40.5 99.5T480-440Zm0 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q53 0 100-15.5t86-44.5q-39-29-86-44.5T480-280q-53 0-100 15.5T294-220q39 29 86 44.5T480-160Zm0-360q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm0-60Zm0 360Z"/>
-        </svg>
-      </div>
-      <div v-if="mostrarMenu" class="dropdown-menu">
-            <ul>
-              <li @click="irConfiguracion">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
-                  <path d="M160-40v-80h640v80H160Zm0-800v-80h640v80H160Zm320 400q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm70-80q45-56 109-88t141-32q77 0 141 32t109 88h70v-480H160v480h70Zm118 0h264q-29-20-62.5-30T480-280q-36 0-69.5 10T348-240Zm132-280q-17 0-28.5-11.5T440-560q0-17 11.5-28.5T480-600q17 0 28.5 11.5T520-560q0 17-11.5 28.5T480-520Zm0 40Z"/>
-                </svg>
-                Mis datos</li>
-              <li @click="cerrarSesion">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
-                  <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/>
-                </svg>
-                
-                Cerrar sesión</li>
-            </ul>
-          </div>
-      </div>
-
-    </header>
+    <Header/>
     <br>
-    <button class="boton" @click="goBack">
-      <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
-        <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
-      </svg>
-      Volver
-    </button>
     <br>  
     <br>
 
@@ -85,44 +49,49 @@
         <!-- Mostrar las citas disponibles -->
         <div v-if="citasDisponibles.length > 0">
           <div v-for="(cita, index) in citasDisponibles" :key="index" class="citas-disponibles-item">
-            <p>
-              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
+            <p class="icono-texto">
+              <span class="circle-citas-disponibles">
+              <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="var(--primary-color)">
                 <path d="M680-320q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm0-80q17 0 28.5-11.5T720-440q0-17-11.5-28.5T680-480q-17 0-28.5 11.5T640-440q0 17 11.5 28.5T680-400ZM440-40v-116q0-21 10-39.5t28-29.5q32-19 67.5-31.5T618-275l62 75 62-75q37 6 72 18.5t67 31.5q18 11 28.5 29.5T920-156v116H440Zm79-80h123l-54-66q-18 5-35 13t-34 17v36Zm199 0h122v-36q-16-10-33-17.5T772-186l-54 66Zm-76 0Zm76 0Zm-518 0q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v200q-16-20-35-38t-45-24v-138H200v560h166q-3 11-4.5 22t-1.5 22v36H200Zm80-480h280q26-20 57-30t63-10v-40H280v80Zm0 160h200q0-21 4.5-41t12.5-39H280v80Zm0 160h138q11-9 23.5-16t25.5-13v-51H280v80Zm-80 80v-560 137-17 440Zm480-240Z"/>
-              </svg>
+              </svg></span>
               {{ cita.medicoId.nombre }} {{ cita.medicoId.apellidos }}
             </p>  
 
-            <p>
+            <p class="icono-texto">
+              <span class="circle-citas-disponibles">
               <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
                 <path d="M540-80q-108 0-184-76t-76-184v-23q-86-14-143-80.5T80-600v-240h120v-40h80v160h-80v-40h-40v160q0 66 47 113t113 47q66 0 113-47t47-113v-160h-40v40h-80v-160h80v40h120v240q0 90-57 156.5T360-363v23q0 75 52.5 127.5T540-160q75 0 127.5-52.5T720-340v-67q-35-12-57.5-43T640-520q0-50 35-85t85-35q50 0 85 35t35 85q0 39-22.5 70T800-407v67q0 108-76 184T540-80Zm220-400q17 0 28.5-11.5T800-520q0-17-11.5-28.5T760-560q-17 0-28.5 11.5T720-520q0 17 11.5 28.5T760-480Zm0-40Z"/>
-              </svg>
+              </svg></span>
               {{ cita.especialidadId ? cita.especialidadId.nombre : 'No asignada' }}
             </p>
 
-            <p>
+            <p class="icono-texto">
+              <span class="circle-citas-disponibles">
               <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
                 <path d="M480-254 330-104q-23 23-56 23t-56-23L104-218q-23-23-23-56t23-56l150-150-150-150q-23-23-23-56t23-56l114-114q23-23 56-23t56 23l150 150 150-150q23-23 56-23t56 23l114 114q23 23 23 56t-23 56L706-480l150 150q23 23 23 56t-23 56L742-104q-23 23-56 23t-56-23L480-254Zm0-266q17 0 28.5-11.5T520-560q0-17-11.5-28.5T480-600q-17 0-28.5 11.5T440-560q0 17 11.5 28.5T480-520Zm-170-16 114-114-150-150-114 114 150 150Zm90 96q17 0 28.5-11.5T440-480q0-17-11.5-28.5T400-520q-17 0-28.5 11.5T360-480q0 17 11.5 28.5T400-440Zm80 80q17 0 28.5-11.5T520-400q0-17-11.5-28.5T480-440q-17 0-28.5 11.5T440-400q0 17 11.5 28.5T480-360Zm80-80q17 0 28.5-11.5T600-480q0-17-11.5-28.5T560-520q-17 0-28.5 11.5T520-480q0 17 11.5 28.5T560-440Zm-24 130 150 150 114-114-150-150-114 114ZM339-621Zm282 282Z"/>
-              </svg>
+              </svg></span>
              {{ cita.prestacionId ? cita.prestacionId.nombre : 'No asignada' }}
             </p>
 
-            <p>
+            <p class="icono-texto">
+              <span class="circle-citas-disponibles">
               <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
                 <path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm280 240q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-160 0q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm320 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-160 0q-17 0-28.5-11.5T280-280q0-17 11.5-28.5T320-320q17 0 28.5 11.5T360-280q0 17-11.5 28.5T320-240Zm320 0q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"/>
-              </svg>
+              </svg></span>
               {{ formatearFecha(cita.fechaHora) }}
             </p>
 
-            <p>
+            <p class="icono-texto">
+              <span class="circle-citas-disponibles">
               <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
                 <path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z"/>
-              </svg>
+              </svg></span>
               {{ formatearHora(cita.fechaHora) }} ({{ cita.duracion }} minutos)
             </p>
             <br>
               <!-- Mostrar el botón de "Reservar cita" solo si hay un paciente y una especialidad seleccionados -->
               <button v-if="selectedEspecialidad"
-                @click="reservarCita(cita._id)">
+                @click="confirmarReservarCita(cita._id)">
                 Reservar cita
               </button>
           </div>
@@ -153,54 +122,65 @@
         <br>
         <div v-if="citasConsulta.length > 0">
           <div v-for="(cita, index) in citasConsulta" :key="index" class="cita-item">
-            
-            <p>
-              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
-                <path d="M680-320q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm0-80q17 0 28.5-11.5T720-440q0-17-11.5-28.5T680-480q-17 0-28.5 11.5T640-440q0 17 11.5 28.5T680-400ZM440-40v-116q0-21 10-39.5t28-29.5q32-19 67.5-31.5T618-275l62 75 62-75q37 6 72 18.5t67 31.5q18 11 28.5 29.5T920-156v116H440Zm79-80h123l-54-66q-18 5-35 13t-34 17v36Zm199 0h122v-36q-16-10-33-17.5T772-186l-54 66Zm-76 0Zm76 0Zm-518 0q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v200q-16-20-35-38t-45-24v-138H200v560h166q-3 11-4.5 22t-1.5 22v36H200Zm80-480h280q26-20 57-30t63-10v-40H280v80Zm0 160h200q0-21 4.5-41t12.5-39H280v80Zm0 160h138q11-9 23.5-16t25.5-13v-51H280v80Zm-80 80v-560 137-17 440Zm480-240Z"/>
-              </svg>
+
+            <p class="icono-texto">
+              <span class="circle-elementos">
+                <svg xmlns="http://www.w3.org/2000/svg" height="21px" viewBox="0 -960 960 960" width="21px" fill="var(--primary-color)">
+                  <path d="M680-320q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm0-80q17 0 28.5-11.5T720-440q0-17-11.5-28.5T680-480q-17 0-28.5 11.5T640-440q0 17 11.5 28.5T680-400ZM440-40v-116q0-21 10-39.5t28-29.5q32-19 67.5-31.5T618-275l62 75 62-75q37 6 72 18.5t67 31.5q18 11 28.5 29.5T920-156v116H440Zm79-80h123l-54-66q-18 5-35 13t-34 17v36Zm199 0h122v-36q-16-10-33-17.5T772-186l-54 66Zm-76 0Zm76 0Zm-518 0q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v200q-16-20-35-38t-45-24v-138H200v560h166q-3 11-4.5 22t-1.5 22v36H200Zm80-480h280q26-20 57-30t63-10v-40H280v80Zm0 160h200q0-21 4.5-41t12.5-39H280v80Zm0 160h138q11-9 23.5-16t25.5-13v-51H280v80Zm-80 80v-560 137-17 440Zm480-240Z"/>
+                </svg>
+              </span>
               {{ cita.medicoId.nombre }} {{ cita.medicoId.apellidos }}
             </p>  
             
 
-            <p>
-              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
+            <p class="icono-texto">
+              <span class="circle-elementos">
+              <svg xmlns="http://www.w3.org/2000/svg" height="21px" viewBox="0 -960 960 960" width="21px" fill="var(--primary-color)">
                 <path d="M540-80q-108 0-184-76t-76-184v-23q-86-14-143-80.5T80-600v-240h120v-40h80v160h-80v-40h-40v160q0 66 47 113t113 47q66 0 113-47t47-113v-160h-40v40h-80v-160h80v40h120v240q0 90-57 156.5T360-363v23q0 75 52.5 127.5T540-160q75 0 127.5-52.5T720-340v-67q-35-12-57.5-43T640-520q0-50 35-85t85-35q50 0 85 35t35 85q0 39-22.5 70T800-407v67q0 108-76 184T540-80Zm220-400q17 0 28.5-11.5T800-520q0-17-11.5-28.5T760-560q-17 0-28.5 11.5T720-520q0 17 11.5 28.5T760-480Zm0-40Z"/>
-              </svg>
+              </svg></span>
               {{ cita.especialidadId ? cita.especialidadId.nombre : 'No asignada' }}
             </p>
 
-            <p>
-              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
+            <p class="icono-texto">
+              <span class="circle-elementos">
+              <svg xmlns="http://www.w3.org/2000/svg" height="21px" viewBox="0 -960 960 960" width="21px" fill="var(--primary-color)">
                 <path d="M480-254 330-104q-23 23-56 23t-56-23L104-218q-23-23-23-56t23-56l150-150-150-150q-23-23-23-56t23-56l114-114q23-23 56-23t56 23l150 150 150-150q23-23 56-23t56 23l114 114q23 23 23 56t-23 56L706-480l150 150q23 23 23 56t-23 56L742-104q-23 23-56 23t-56-23L480-254Zm0-266q17 0 28.5-11.5T520-560q0-17-11.5-28.5T480-600q-17 0-28.5 11.5T440-560q0 17 11.5 28.5T480-520Zm-170-16 114-114-150-150-114 114 150 150Zm90 96q17 0 28.5-11.5T440-480q0-17-11.5-28.5T400-520q-17 0-28.5 11.5T360-480q0 17 11.5 28.5T400-440Zm80 80q17 0 28.5-11.5T520-400q0-17-11.5-28.5T480-440q-17 0-28.5 11.5T440-400q0 17 11.5 28.5T480-360Zm80-80q17 0 28.5-11.5T600-480q0-17-11.5-28.5T560-520q-17 0-28.5 11.5T520-480q0 17 11.5 28.5T560-440Zm-24 130 150 150 114-114-150-150-114 114ZM339-621Zm282 282Z"/>
-              </svg>
+              </svg></span>
              {{ cita.prestacionId ? cita.prestacionId.nombre : 'No asignada' }}
             </p>
 
-            <p>
-              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
+            <p class="icono-texto">
+              <span class="circle-elementos">
+              <svg xmlns="http://www.w3.org/2000/svg" height="21px" viewBox="0 -960 960 960" width="21px" fill="var(--primary-color)">
                 <path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm280 240q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-160 0q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm320 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-160 0q-17 0-28.5-11.5T280-280q0-17 11.5-28.5T320-320q17 0 28.5 11.5T360-280q0 17-11.5 28.5T320-240Zm320 0q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"/>
-              </svg>
-              {{ formatearFecha(cita.fechaHora) }}
+              </svg></span>
+              
+              <strong>{{ formatearFecha(cita.fechaHora) }}</strong>
+            
             </p>
 
-            <p>
-              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
-                <path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z"/>
-              </svg>
+            <p class="icono-texto">
+              <span class="circle-elementos">
+                <svg xmlns="http://www.w3.org/2000/svg" height="21px" viewBox="0 -960 960 960" width="21px" fill="var(--primary-color)">
+                  <path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z"/>
+                </svg></span>
+                
               {{ formatearHora(cita.fechaHora) }} ({{ cita.duracion }} minutos)
             </p>
             <br>
-
             <!-- Botón para cancelar cita -->
             <button @click="confirmarCancelarCita(cita._id)">Cancelar Cita</button>
           </div>
+        
         </div>
         <div v-else>
           <p>No hay citas reservadas.</p>
         </div>
       </div>
+
     </div>
     </div>
+
   </template>
     
     
@@ -208,9 +188,13 @@
   <script>
   import apiClient from '@/apiClient';
   import { useAuthStore } from '../../store/auth';
+  import Header from './Header.vue';
 
   export default {
     name: "ReservarCitas",
+    components: {
+      Header
+    },
     data() {
       return {
         mostrarMenu: false,
@@ -265,8 +249,13 @@
                 pacienteId: this.usuario._id
               }
             });
-            this.citasConsulta = response.data;
-          
+            const citas = response.data;
+            const ahora = new Date();
+
+            this.citasConsulta = citas
+            .filter(cita => new Date(cita.fechaHora) > ahora)
+            .sort((a, b) => new Date(a.fechaHora) - new Date(b.fechaHora))
+
           } catch (error) {
               console.error('Error al obtener citas de consulta:', error);
           }
@@ -303,7 +292,13 @@
   
         try {
           const response = await apiClient.get(`/api/citas?especialidadId=${this.selectedEspecialidad}${medicoFilter}${pacienteFilter}`);
-          this.citasDisponibles = response.data;
+          const citas = response.data;
+          const ahora = new Date();
+          this.citasDisponibles = citas
+          .filter(cita => new Date(cita.fechaHora) > ahora)
+          .sort((a, b) => new Date(a.fechaHora) - new Date(b.fechaHora))
+
+
         } catch (error) {
           console.error('Error al obtener citas:', error);
         }
@@ -365,6 +360,11 @@
       confirmarCancelarCita(citaId) {
         if (confirm('¿Estás seguro de que deseas cancelar esta cita?')) {
           this.cancelarCita(citaId);
+        }
+      },
+      confirmarReservarCita(citaId) {
+        if (confirm('¿Estás seguro de que deseas reservar esta cita?')) {
+          this.reservarCita(citaId);
         }
       },
     },
@@ -493,6 +493,21 @@
 
   }
 
+  /* Estilo del círculo */
+  .circle-elementos {
+    width: 2.2rem; /* Tamaño del círculo */
+    height: 2.2rem;
+    border-radius: 50%; /* Hace que sea un círculo */
+    background-color: var(--color-azul2); /* Usa el color definido */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.5rem;
+    margin: 0.1rem;
+    margin-right: 10px; 
+
+  }
+
   .alinear-elementos {
     display: flex;
     align-items: center;
@@ -514,12 +529,13 @@
   }
 
   .cita-item {
-    background-color: white; /* Fondo azul */
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
     color: var(--primary-color); /* Texto blanco para mejor contraste */
-    border: 3px solid var(--primary-color); /* Ajusta el grosor del borde */
+
+    background-color: #f4f9ff;
+    border: 1px solid #d2e4fd;
 
   }
 
@@ -541,12 +557,13 @@
   }
 
   .citas-disponibles-item {
-    background-color: white; /* Fondo azul */
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
     color: var(--primary-color); /* Texto blanco para mejor contraste */
-    border: 3px solid var(--color-azul); /* Ajusta el grosor del borde */
+
+    background-color: #f4f9ff;
+    border: 1px solid #d2e4fd;
   }
 
   .citas-disponibles-item p {
@@ -641,6 +658,38 @@
   .circle-usuario svg.active {
     fill: var(--primary-color); /* Cambia el color del icono cuando está activo */
   }
+
+  .icono {
+    width: 40px;
+    height: 40px;
+    background-color: var(--color-azul2);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  } 
+
+  .icono-texto {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Estilo del círculo */
+  .circle-citas-disponibles {
+    width: 2rem; /* Tamaño del círculo */
+    height: 2rem;
+    border-radius: 50%; /* Hace que sea un círculo */
+    background-color: var(--color-azul2); /* Usa el color definido */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.5rem;
+    margin: 0.1rem;
+    margin-right: 10px; 
+
+  }
+
+
 
 
   </style>

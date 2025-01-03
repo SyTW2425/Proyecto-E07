@@ -253,25 +253,17 @@
 <style src="@/assets/styles.css"></style>
 <style scoped>
 
-.header span {
-  color: var(--primary-color);
-}
 
 .departamento-info p {
   margin: 5px 0;
 }
 
-.usuario-boton {
-color: #007bff;
-text-decoration: none;
-cursor: pointer;
-font-size: 0.8em;
-margin-left: 0.4em;
-}
+
   
-  button:hover {
-    background: var(--color-azul);
-  }
+button:hover {
+  background: var(--color-azul);
+}
+
 button {
   background: #007bff;
   color: white;
@@ -281,47 +273,10 @@ button {
   cursor: pointer;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  width: calc(100% - 0rem); 
-  background-color: #e1e1e1;
-  
-  padding: 1rem;
-  text-align: left;
-  display: flex;
-
-  align-items: left;
-  justify-content: left;
-
-  gap: 10px;
-  border-radius: 15px; 
-}
-
-
 .estilo-pagina {  
   margin-left: 2rem; 
   margin-right: 2rem;
-}
-.header img.logo {
-  width: 200px;
-  height: auto; 
-}
-.header h1.left-align {
-  text-align: left;
-  margin-left: 10px; 
-}
-.header h1.small-text {
-  font-size: 20px; 
-  color: var(--primary-color);
-  font-weight: 300;
-}
-.vertical-line {
-  width: 4px;
-  height: 70px;
-  background-color: #92bdf6; 
+  
 }
 
 .icono-blanco {
@@ -343,12 +298,6 @@ button {
   font-size: 45px; /* Ajusta el tamaño de la fuente */
   color: var(--primary-color);
   line-height: 1.2; /* Controla la separación entre líneas  */
-}
-
-
-.reloj {
-  font-size: 24px;
-  font-weight: bold;
 }
 
 /* Estilo del círculo */

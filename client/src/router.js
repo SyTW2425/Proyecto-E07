@@ -10,18 +10,14 @@ import AgendaMedico from './components/AgendaMedico.vue';
 import GestionRecetas from './components/GestionRecetas.vue';
 import ListaFormContacto from './components/ListaFormContacto.vue';
 import ReservarCitas from './components/ReservarCitas.vue';
-import InicioGerencia from './components/InicioGerencia.vue';
 import PaginaError from './components/PaginaError.vue';
 import PaginaInicio from './components/Inicio.vue';
 import PaginaEspecialidades from './components/PaginaEspecialidades.vue';
 import CreacionUsuarios from './components/CreacionUsuarios.vue';
 import GestionDepartamentos from './components/GestionDepartamentos.vue';
 import SaludoUsuario from './components/Saludo.vue';
-import InicioMedico from './components/InicioMedico.vue';
 import PruebasCodigo from './components/PruebasCodigo.vue';
 import GestionEncuestas from './components/GestionEncuestas.vue';
-import InicioPaciente from './components/InicioPaciente.vue';
-import InicioAdmision from './components/InicioAdministracion.vue';
 import '@/assets/styles.css';
 import PerfilUsuario from './components/PerfilUsuario.vue';
 import RecetasPaciente from './components/Recetas.vue';
@@ -52,17 +48,14 @@ const routes = [
 
   { path: '/register', component: UserRegister },
 
-  { path: '/agenda-medico', component: AgendaMedico, meta: { requiresAuth: true, allowedRoles: ['Médico'] }},
+  { path: '/agenda', component: AgendaMedico, meta: { requiresAuth: true, allowedRoles: ['Médico'] }},
 
-  { path: '/iniciogerencia', component: InicioGerencia, meta: { requiresAuth: true, allowedRoles: ['Gerencia'] } },
-  { path: '/iniciomedico', component: InicioMedico, meta: { requiresAuth: true, allowedRoles: ['Médico']} },
-  { path: '/iniciomedico/recetasmedico', component: RecetasMedico, meta: { requiresAuth: true, allowedRoles: ['Médico'] } },
+  { path: '/recetasmedico', component: RecetasMedico, meta: { requiresAuth: true, allowedRoles: ['Médico'] } },
   
-  { path: '/iniciopaciente', component: InicioPaciente, meta: { requiresAuth: true, allowedRoles: ['Paciente'] } },
+  
   { path: '/perfil', component: PerfilUsuario, meta: { requiresAuth: true } },
 
-  { path: '/iniciopaciente/recetaspaciente', component: RecetasPaciente, meta: { requiresAuth: true, allowedRoles: ['Paciente'] } },
-  { path: '/inicioadministracion', component: InicioAdmision, meta: { requiresAuth: true, allowedRoles: ['Administración'] } },
+  { path: '/recetaspaciente', component: RecetasPaciente, meta: { requiresAuth: true, allowedRoles: ['Paciente'] } },
 
   { path: '/aseguradoras', component: GestionAseguradoras, meta: { requiresAuth: true, allowedRoles: ['Gerencia'] } },
   { path: '/inicio', component: InicioWrapper, meta: { requiresAuth: true } },

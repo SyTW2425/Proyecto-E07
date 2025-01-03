@@ -1,42 +1,22 @@
 <template>
   <div class="estilo-pagina">
-    <header class="header">
-      <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
-      <div class="vertical-line"></div>
-      <h1 class="left-align small-text">INTRANET</h1>
-
-      <div class="user-head">
-        <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: #92bdf6;">
-          <path d="M6 36C6 31.0347 17.9925 28 24 28C30.0075 28 42 31.0347 42 36V42H6V36Z" fill="currentColor"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M24 26C29.5228 26 34 21.5228 34 16C34 10.4772 29.5228 6 24 6C18.4772 6 14 10.4772 14 16C14 21.5228 18.4772 26 24 26Z" fill="currentColor"/>
-        </svg>
-        <h1><router-link to="/iniciopaciente/perfil" class="usuario-boton">{{ nombreUsuario }}</router-link></h1>
-      </div>
-      <div class="reloj">
-        <span>{{ horaActual }}</span>
-      </div>
-    </header>
+    <Header/>
     <br>
-    <button class="boton" @click="goBack">
-      <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
-        <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
-      </svg>
-      Volver
-    </button>
+    <div class="barra-fecha" >
+      <span>{{ fechaHora }}</span>
+    
+      <div class="icon-container">
+        {{ departamento.nombre }}
+        <div class="circle" style="background-color: var(--color-azul2); width: 2rem; height: 2rem;">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="var(--primary-color)">
+          <path d="M540-80q-108 0-184-76t-76-184v-23q-86-14-143-80.5T80-600v-240h120v-40h80v160h-80v-40h-40v160q0 66 47 113t113 47q66 0 113-47t47-113v-160h-40v40h-80v-160h80v40h120v240q0 90-57 156.5T360-363v23q0 75 52.5 127.5T540-160q75 0 127.5-52.5T720-340v-67q-35-12-57.5-43T640-520q0-50 35-85t85-35q50 0 85 35t35 85q0 39-22.5 70T800-407v67q0 108-76 184T540-80Zm220-400q17 0 28.5-11.5T800-520q0-17-11.5-28.5T760-560q-17 0-28.5 11.5T720-520q0 17 11.5 28.5T760-480Zm0-40Z"/>
+        </svg></div>
+        
+      </div>
+    </div>
 
-
-    <button class="boton" @click="cerrarSesion">
-      Cerrar sesión
-    </button>
     <br>  
-    <br>
 
-  <div v-if="!esMedico" class="error-cuadro">
-    <svg xmlns="http://www.w3.org/2000/svg" height="50px" viewBox="0 -960 960 960" width="50px" fill="var(--background-color)">
-      <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240ZM330-120 120-330v-300l210-210h300l210 210v300L630-120H330Zm34-80h232l164-164v-232L596-760H364L200-596v232l164 164Zm116-280Z"/>
-    </svg>
-    <strong>Error: </strong>El usuario no es un Médico
-  </div>
   <div class="contenedor-principal">
     
 
@@ -54,19 +34,8 @@
 
       <!-- Formulario para crear una cita médica -->
       <form @submit.prevent="crearCita">
-        <!-- Mostrar el nombre del médico seleccionado -->
-        <label>Médico: <span>{{ medico.nombre }} {{ medico.apellidos }}</span></label>
-        <br>
-        <label>ID Médico: <span>{{ medico._id }}</span></label>
-        <br>
-        <!-- Especialidad (rellenado automáticamente) -->
-        <label>Especialidad:
-          <span>{{ departamento.nombre }}</span>
-        </label>
-        <br>
-        <label>ID Especialidad: <span>{{ departamento._id }}</span></label>
-        <br>
-        <br>
+        
+  
 
         <!-- Selección de Prestación -->
         <label>Prestación:
@@ -78,20 +47,13 @@
           </select>
         </label>
         <br>
-        <label>ID Prestación: <span>{{ nuevaCita.prestacionId }}</span></label>
         <br>
-        <br>
-
 
         <!-- Selección de Fecha -->
         <label>Fecha:
           <input type="date" v-model="nuevaCita.fecha" required />
         </label>
-
-        <br>
-        <label>DATE: <span>{{ nuevaCita.fecha }}</span></label>
-        <br>
-
+        <br><br>
         
         <!-- Mostrar solo si la prestación seleccionada es "Consulta" -->
         <div v-if="esConsulta">
@@ -99,7 +61,7 @@
           <!-- Selección de Hora de Inicio -->
           <label>Hora de Inicio:
             <input type="time" v-model="horaInicio" required />
-          </label>
+          </label><br>
 
           <!-- Selección de Hora Final -->
           <label>Hora Final:
@@ -132,7 +94,7 @@
           <!-- Selección de Hora de Inicio -->
           <label>Hora:
             <input type="time" v-model="nuevaCita.hora" required />
-          </label> 
+          </label> <br>
 
           <!-- Selección de Duración -->
           <label>Duración (minutos):
@@ -159,7 +121,7 @@
         <br>
 
 
-        <button v-if="esMedico" class="boton-crear" type="button" :disabled="cargando" @click="procesarCitas">
+        <button class="boton-crear" type="button" :disabled="cargando" @click="procesarCitas">
           Crear Cita
         </button>
 
@@ -230,12 +192,16 @@
 <script>
 import apiClient from '@/apiClient';
 import { useAuthStore } from '../../store/auth';
+import Header from './Header.vue';
 
 export default {
   name: "AgendaMedico",
+  components: {
+    Header
+  },
   data() {
     return {
-      horaActual: '',
+      fechaHora: '',
       pacientes: [], // Lista de pacientes
       citas: [], // Lista de citas
       departamento: {}, // Datos del departamento del médico seleccionado
@@ -257,31 +223,26 @@ export default {
     };
   },
   methods: {
-    cerrarSesion() {
-      const authStore = useAuthStore();
-      authStore.logout();
-    },
-    goBack() {
-      this.$router.go(-1);
-    },
+   
     datosUsuario() {
       const authStore = useAuthStore();
       this.medico = authStore.getUser ? authStore.getUser : 'Usuario';
       this.nuevaCita.medicoId = this.medico._id;
       this.actualizarEspecialidadYPrestaciones();
     },
-    async verificarAutenticacion() {
-      const authStore = useAuthStore();
-      await authStore.checkAuth();
-    },
-    handleLogout() {
-      const authStore = useAuthStore();
-      authStore.logout();
-    },
-    actualizarHora() {
+    obtenerFechaHoraCanarias() {
+      const opcionesFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const opcionesHora = { hour: '2-digit', minute: '2-digit', hour12: false };
+  
+      // Obtener la hora de Canarias (GMT+0)
       const ahora = new Date();
       const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
-      this.horaActual = horaCanarias.toLocaleTimeString('es-ES', { hour12: false });
+
+      // Formatear la fecha y la hora
+      const fechaFormateada = horaCanarias.toLocaleDateString('es-ES', opcionesFecha);
+      const horaFormateada = horaCanarias.toLocaleTimeString('es-ES', opcionesHora).replace(':', '.');
+
+      return `${fechaFormateada}, ${horaFormateada} h`;
     },
 
     async obtenerPacientes() {
@@ -314,7 +275,6 @@ export default {
     },
     async actualizarEspecialidadYPrestaciones() {
       if (!this.nuevaCita.medicoId) {
-        this.departamento = {};
         this.prestaciones = [];
         return;
       }
@@ -334,11 +294,8 @@ export default {
             : [];
           this.nuevaCita.especialidadId = this.departamento._id;
         } else {
-          this.departamento = {};
           this.prestaciones = [];
         }
-        console.log('Departamento:', this.departamento);
-        console.log('Prestaciones:', this.prestaciones);
 
 
       } catch (error) {
@@ -553,16 +510,17 @@ export default {
     this.obtenerCitas();
   },
   mounted() {
+
     this.obtenerDatos();
     this.intervalId = setInterval(() => {
       this.obtenerCitas();
     }, 60000); // Actualiza cada 1 minuto
     this.obtenerPacientes();
 
-    this.verificarAutenticacion();
-    this.actualizarHora();
+    this.fechaHora = this.obtenerFechaHoraCanarias();
     setInterval(() => {
-      this.actualizarHora();
+      this.fechaHora = this.obtenerFechaHoraCanarias();
+
     }, 1000); // Actualiza la hora cada segundo
     this.datosUsuario();
 
@@ -577,10 +535,6 @@ export default {
     nombreUsuario() {
       const authStore = useAuthStore();
       return authStore.getUser ? `${authStore.getUser.nombre} ${authStore.getUser.apellidos}` : 'Usuario';
-    },
-
-    esMedico() {
-      return this.medico.tipo === 'Médico';
     },
 
     citasFiltradas() {
@@ -690,18 +644,19 @@ export default {
     margin-left: 0.4em;
   }
 
-  .boton {
-    background-color: #cbe3fd;
-    color: #1c1c5a;
+  .barra-fecha {
+    background-color: var(--primary-color);
+    color: white;
     font-size: 1.1rem;
     padding: 10px 20px;
     border: none;
     border-radius: 10px;
-    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+
   }
-  .boton:hover {
-    background-color: #b0d4fc;
-  }
+
 
   .boton-crear {
     background-color: var(--color-verde);
@@ -748,8 +703,8 @@ export default {
   }
   
   select, option {
-    font-weight: bold; /* Aumenta el grosor de la fuente de letra */
-    font-size: 1.6rem; /* Ajusta el tamaño del texto */
+    font-weight: 500; /* Ajuste del grosor de la fuente de letra  */
+
   }
 
 
@@ -759,6 +714,13 @@ export default {
     padding: 10px;
     margin-bottom: 20px;
     border-radius: 5px;
+  }
+
+  .icon-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espacio entre el círculo y el texto */
+    margin-left: auto;
   }
 
 
