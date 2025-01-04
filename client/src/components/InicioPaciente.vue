@@ -52,34 +52,17 @@
         <button class="header-ctitle">Próximas citas</button>
       </div>
       <div class="citas-content">
-        <div class="cita">
+        <div v-for="cita in proximasCitas" :key="cita._id" class="cita">
           <div class="icono"></div>
           <div class="detalles">
-            <span class="fecha">Lunes, 23 de enero de 2025 a las 16:32 h.</span>
-            <span class="especialidad">Neumología</span>
-            <span class="doctor">Dr. Yeray Martín Sosa</span>
-          </div>
-        </div>
-        <div class="cita">
-          <div class="icono"></div>
-          <div class="detalles">
-            <span class="fecha">Lunes, 23 de enero de 2025 a las 16:32 h.</span>
-            <span class="especialidad">Neumología</span>
-            <span class="doctor">Dr. Yeray Martín Sosa</span>
-          </div>
-        </div>
-        <div class="cita">
-          <div class="icono"></div>
-          <div class="detalles">
-            <span class="fecha">Lunes, 23 de enero de 2025 a las 16:32 h.</span>
-            <span class="especialidad">Neumología</span>
-            <span class="doctor">Dr. Yeray Martín Sosa</span>
+            <span class="fecha">{{ formatearFecha(cita.fechaHora) }} a las {{ formatearHora(cita.fechaHora) }}</span>
+            <span class="especialidad">{{ cita.especialidadId.nombre }}</span>
+            <span class="especialidad">{{ cita.prestacionId.nombre }}</span>
+            <span class="doctor">{{ cita.medicoId.nombre }} {{ cita.medicoId.apellidos }}</span>
           </div>
         </div>
       </div>
-      <div class="ver-mas-container">
-        <button class="ver-mas">Ver más</button>
-      </div>
+      <br>
     </div>
 
     <br>
@@ -87,7 +70,7 @@
 
     <!-- Botones de acceso rápido -->
     <div class="button-container">
-      <a href="#" style="text-decoration: none;">
+      <a href="/citas" style="text-decoration: none;">
         <button class="caja-contenido" href="#" >
           <div class="circle">
             <svg
@@ -156,7 +139,7 @@
         </button>
       </a>
 
-      <a href="#" style="text-decoration: none; color: inherit;">
+      <a href="/iniciopaciente/justificantes" style="text-decoration: none; color: inherit;">
         <button class="caja-contenido" href="#">
           <div class="circle">
             <svg
@@ -201,7 +184,8 @@
   
   <script>
   import { useAuthStore } from '../../store/auth';
-  
+  import apiClient from '@/apiClient';
+
   export default {
     name: "InicioPaciente",
     data() {
@@ -209,15 +193,35 @@
         saludo: '',
         icono: '',
         horaActual: '',
+        proximasCitas: []
       };
     },
     computed: {
       nombreUsuario() {
         const authStore = useAuthStore();
         return authStore.getUser ? `${authStore.getUser.nombre} ${authStore.getUser.apellidos}` : 'Usuario';
+      },
+      usuarioId() {
+      const authStore = useAuthStore();
+      return authStore.getUser ? authStore.getUser._id : null;
       }
     },
     methods: {
+      async obtenerProximasCitas() {
+        try {
+          const response = await apiClient.get('/api/citas', {
+            params: { pacienteId: this.usuarioId }
+          });
+          const citas = response.data;
+          const ahora = new Date();
+          this.proximasCitas = citas
+            .filter(cita => new Date(cita.fechaHora) > ahora)
+            .sort((a, b) => new Date(a.fechaHora) - new Date(b.fechaHora))
+            .slice(0, 3);
+        } catch (error) {
+          console.error('Error al obtener las próximas citas:', error);
+        }
+      },
       actualizarSaludo() {
         const ahora = new Date();
         const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
@@ -246,12 +250,26 @@
       handleLogout() {
       const authStore = useAuthStore();
       authStore.logout();
+      },
+      formatearFecha(fechaHora) {
+        const fecha = new Date(fechaHora);
+        const dia = String(fecha.getDate()).padStart(2, '0');
+        const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+        const anio = fecha.getFullYear();
+        return `${dia}/${mes}/${anio}`;
+      },
+      formatearHora(fechaHora) {
+        const fecha = new Date(fechaHora);
+        const horas = String(fecha.getHours()).padStart(2, '0');
+        const minutos = String(fecha.getMinutes()).padStart(2, '0');
+        return `${horas}:${minutos} h`;
       }
     },
     async mounted() {
       await this.verificarAutenticacion();
       this.actualizarSaludo();
       this.actualizarHora();
+      this.obtenerProximasCitas(); // Llamar a la función para obtener las próximas citas
       setInterval(() => {
         this.actualizarHora();
       }, 1000); // Actualiza la hora cada segundo

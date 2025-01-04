@@ -26,6 +26,9 @@ import PerfilUsuario from './components/PerfilUsuario.vue';
 import RecetasPaciente from './components/Recetas.vue';
 import RecetasMedico from './components/RecetasMedico.vue';
 import GestionAseguradoras from './components/GestionAseguradoras.vue';
+import JustificantesPaciente from './components/JustificantesPaciente.vue';
+import ReservarCita from './components/ReservarCita.vue';
+import InformesMedico from './components/InformesMedico.vue';
 
 const routes = [
   { path: '/', component: PaginaInicio },
@@ -46,15 +49,17 @@ const routes = [
   { path: '/iniciogerencia', component: InicioGerencia },
   { path: '/iniciomedico', component: InicioMedico },
   { path: '/iniciomedico/recetasmedico', component: RecetasMedico },
+  { path: '/iniciomedico/informes', component: InformesMedico },
   { path: '/encuestas', component: GestionEncuestas },  
   { path: '/pruebas', component: PruebasCodigo },
   { path: '/iniciopaciente', component: InicioPaciente },
   { path: '/iniciopaciente/perfil', component: PerfilUsuario },
   { path: '/iniciopaciente/recetaspaciente', component: RecetasPaciente },
+  { path: '/iniciopaciente/justificantes', component: JustificantesPaciente },
   { path: '/inicioadministracion', component: InicioAdmision },
   { path: '/:pathMatch(.*)*', component: PaginaError }, 
-  { path: '/aseguradoras', component: GestionAseguradoras },
-
+  { path: '/citas', component: ReservarCita},
+  { path: '/aseguradoras', component: GestionAseguradoras }
 ];
 
 const router = createRouter({

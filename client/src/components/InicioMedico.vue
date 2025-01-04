@@ -4,7 +4,7 @@
       <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
       <div class="vertical-line"></div>
       <h1 class="left-align small-text">INTRANET</h1>
-
+      
       <div class="reloj">
       <span>{{ horaActual }}</span>
     </div>
@@ -62,7 +62,7 @@
 
   <!-- Botones de acceso rápido -->
   <div class="button-container">
-      <a href="#" style="text-decoration: none;">
+      <a href="/agenda-medico" style="text-decoration: none;">
         <button class="caja-contenido" href="#" >
           <div class="circle">
 
@@ -119,7 +119,7 @@
         </button>
       </a>
 
-      <a href="#" style="text-decoration: none; color: inherit;">
+      <a href="/iniciomedico/informes" style="text-decoration: none; color: inherit;">
         <button class="caja-contenido" href="#">
           <div class="circle">
             <svg
@@ -167,6 +167,7 @@
 </template>
   
   <script>
+  import { useAuthStore } from '../../store/auth';
   import '../assets/styles.css';
 
   export default {
@@ -176,7 +177,6 @@
         saludo: '',
         icono: '',
         horaActual: '',
-        nombreUsuario: localStorage.getItem('usuario') || 'Usuario', // Leer el nombre del usuario desde localStorage
       };
     },
     methods: {
@@ -201,14 +201,25 @@
         const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
         this.horaActual = horaCanarias.toLocaleTimeString('es-ES', { hour12: false });
       },
+      async verificarAutenticacion() {
+        const authStore = useAuthStore();
+        await authStore.checkAuth();
+      }
     },
-    mounted() {
+    async mounted() {
+    await this.verificarAutenticacion();
     this.actualizarSaludo();
     this.actualizarHora();
     setInterval(() => {
       this.actualizarHora();
     }, 1000); // Actualiza la hora cada segundo
-  }
+    },
+    computed: {
+      nombreUsuario() {
+        const authStore = useAuthStore();
+        return authStore.getUser ? `${authStore.getUser.nombre} ${authStore.getUser.apellidos}` : 'Usuario';
+      },
+    },
   };
   </script>
   
