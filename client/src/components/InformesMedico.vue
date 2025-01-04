@@ -64,7 +64,7 @@
           <div class="cita-footer">
             
             <div v-if="mostrarFormulario" style="display: flex; gap: 10px;">
-              <button @click="guardarInforme" class="btn">Guardar</button>
+              <button @click="guardarInforme(cita)" class="btn">Guardar</button>
               <button @click="cancelarInforme" class="btn">Cancelar</button>
             </div>
             <div v-else style="display: flex; gap: 10px;">
@@ -72,11 +72,6 @@
               <button @click="descargarInforme(cita)" class="btn"><i class="fas fa-download"></i> Descargar</button>
               <button @click="mostrarFormulario = true" class="btn">Generar informe</button>
             </div>
-          </div>
-          <div v-if="informeGuardado">
-            <h3>Informe Guardado</h3>
-            <p><strong>Diagnóstico:</strong> {{ informeGuardado.diagnostico }}</p>
-            <p><strong>Observaciones:</strong> {{ informeGuardado.observaciones }}</p>
           </div>
         </div>
       </div>
@@ -274,9 +269,13 @@
           doc.save(`Justificante_${this.formatearFecha(cita.fechaHora)}.pdf`);
         };
       },
-      async guardarInforme() {
+      async guardarInforme(cita) {
         try {
-          this.nuevoInforme.medicoId = this.usuarioId;
+          this.nuevoInforme.medicoId = this.usuarioId();
+          this.nuevoInforme.pacienteId = cita.pacienteId;
+          this.nuevoInforme.especialidadId = cita.especialidadId;
+          this.nuevoInforme.prestacionId = cita.prestacionId;
+          this.nuevoInforme.citaId = cita._id;
           const response = await apiClient.post('/Informes', this.nuevoInforme);
           console.log('Informe guardado:', response.data);
           this.informeGuardado = response.data; // Almacenar el informe guardado
