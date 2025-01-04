@@ -10,8 +10,16 @@
       </div>
     </header>
     <br>
+    <button class="boton" @click="goBack">
+      <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
+        <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
+      </svg>
+      Volver
+    </button>
+    
     <br>  
     <br>
+
 
     <!-- Información del Usuario -->
     <div class="user-info">
@@ -166,6 +174,9 @@ export default {
     }
   },
   methods: {
+    goBack() {
+      this.$router.go(-1);
+    },
     handleLogout() {
       const authStore = useAuthStore();
       authStore.logout();
@@ -521,4 +532,19 @@ input, select {
   font-size: 0.8rem;
   margin-top: 0.2rem;
 }
+
+.boton {
+  background-color: #cbe3fd;
+  color: #1c1c5a;
+  font-size: 1.1rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.boton:hover {
+  background-color: #b0d4fc;
+}
+
 </style>

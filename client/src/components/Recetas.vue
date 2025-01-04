@@ -1,14 +1,6 @@
 <template>
   <div>
-    <div class="header-container">
-      <header class="header">
-        <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
-        <div class="header-content">
-          <div class="vertical-line"></div>
-          <h1 class="left-align small-text">PORTAL DEL PACIENTE</h1>
-        </div>
-      </header>
-    </div>
+    <Header/>
     <br/>
 
     <div class="contenedor-principal">
@@ -57,12 +49,16 @@
 </template>
 
 <script>
+import Header from '@/components/Header.vue'; // Ajusta la ruta si es necesario
 import apiClient from '@/apiClient';
 import { useAuthStore } from '../../store/auth';
 import jsPDF from 'jspdf';
 
 export default {
   name: 'RecetasPaciente',
+  components: {
+    Header
+  },
   data() {
     return {
       recetas: [],

@@ -142,17 +142,16 @@ router.put('/usuarios/:id', async (req, res) => {
     const usuarioData = { ...req.body };
 
     // Si se está actualizando la contraseña, encriptarla antes de guardarla
-    if (usuarioData.password) {
+    if (usuarioData.password && usuarioData.password.trim() !== '') {
       const salt = await bcrypt.genSalt(10);
       usuarioData.password = await bcrypt.hash(usuarioData.password, salt);
+    } else {
+      delete usuarioData.password;
     }
 
     if (!usuarioData.departamento) {
       delete usuarioData.departamento;
     }
-
-    console.log('ID del usuario:', req.params.id);
-    console.log('Datos del usuario recibidos:', req.body);
 
     const usuario = await Usuario.findByIdAndUpdate(req.params.id, usuarioData, {
       new: true,
