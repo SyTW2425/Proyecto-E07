@@ -30,18 +30,6 @@
             <router-link class="nav-link" to="/recetas">Recetas</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/iniciogerencia">Gerencia</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/iniciomedico">Médico</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/iniciopaciente">Paciente</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/inicioadministracion">Admisión</router-link>
-          </li>
-          <li class="nav-item">
             <router-link class="nav-link" to="/aseguradoras">Aseguradoras</router-link>
           </li>
         </ul>
