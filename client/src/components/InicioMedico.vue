@@ -151,7 +151,6 @@
   <script>
   import { useAuthStore } from '../../store/auth';
   import '../assets/styles.css';
-  import { useAuthStore } from '../../store/auth';
   import apiClient from '@/apiClient';
   import Header from './Header.vue';
 
