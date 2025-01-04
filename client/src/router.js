@@ -24,7 +24,9 @@ import RecetasPaciente from './components/Recetas.vue';
 import RecetasMedico from './components/RecetasMedico.vue';
 import GestionAseguradoras from './components/GestionAseguradoras.vue';
 import InicioWrapper from './components/InicioWrapper.vue';
+import JustificantesPaciente from './components/JustificantesPaciente.vue';
 import ReservarCita from './components/ReservarCita.vue';
+import InformesMedico from './components/InformesMedico.vue';
 
 const routes = [
   { path: '/', component: PaginaInicio },
@@ -32,7 +34,9 @@ const routes = [
   { path: '/saludo', component: SaludoUsuario},
   { path: '/departamentos', component: GestionDepartamentos},
   { path: '/prestaciones', component: GestionPrestaciones},
+  
   { path: '/recetas', component: GestionRecetas},
+  
   { path: '/lista_contacto', component: ListaFormContacto},
   { path: '/reservarcitas', component: ReservarCitas},
   { path: '/encuestas', component: GestionEncuestas},
@@ -51,17 +55,32 @@ const routes = [
   { path: '/agenda', component: AgendaMedico, meta: { requiresAuth: true, allowedRoles: ['Médico'] }},
 
   { path: '/recetasmedico', component: RecetasMedico, meta: { requiresAuth: true, allowedRoles: ['Médico'] } },
-  
+  { path: '/recetaspaciente', component: RecetasPaciente, meta: { requiresAuth: true, allowedRoles: ['Paciente'] } },
+
   
   { path: '/perfil', component: PerfilUsuario, meta: { requiresAuth: true } },
 
-  { path: '/recetaspaciente', component: RecetasPaciente, meta: { requiresAuth: true, allowedRoles: ['Paciente'] } },
 
   { path: '/aseguradoras', component: GestionAseguradoras, meta: { requiresAuth: true, allowedRoles: ['Gerencia'] } },
   { path: '/inicio', component: InicioWrapper, meta: { requiresAuth: true } },
 
   { path: '/citas', component: ReservarCita, meta: { requiresAuth: true, allowedRoles: ['Paciente'] } },
   { path: '/:pathMatch(.*)*', component: PaginaError }, // Página de error 404
+
+  
+  { path: '/prestaciones', component: GestionPrestaciones },
+  { path: '/recetas', component: GestionRecetas },
+  { path: '/lista_contacto', component: ListaFormContacto },
+  
+  { path: '/iniciomedico/informes', component: InformesMedico },
+    
+  { path: '/encuestas', component: GestionEncuestas },  
+  { path: '/pruebas', component: PruebasCodigo },
+  { path: '/iniciopaciente/perfil', component: PerfilUsuario },
+  { path: '/iniciopaciente/recetaspaciente', component: RecetasPaciente },
+  { path: '/justificantes', component: JustificantesPaciente },
+
+  { path: '/:pathMatch(.*)*', component: PaginaError }, 
 ];
 
 
@@ -82,10 +101,8 @@ router.beforeEach(async (to, from, next) => {
   // Rutas que requieren autenticación
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next('/login'); // Redirige al login si no está autenticado
-  } else if (to.path === '/login' && authStore.isAuthenticated && authStore.user?.tipo === 'Paciente') {  
+  } else if ((to.path === '/login' || to.path === '/intranet') && authStore.isAuthenticated) {  
     // Evitar que usuarios autenticados accedan al login
-    next('/inicio');
-  } else if (to.path === '/intranet' && authStore.isAuthenticated && authStore.user?.tipo !== 'Paciente') {
     next('/inicio');
   } else if (to.meta.allowedRoles && !to.meta.allowedRoles.includes(authStore.user?.tipo)) {
     next('/inicio');

@@ -1,6 +1,7 @@
 <template>
   <div class="estilo-pagina">
     <Header/>
+
     <br>
     <br>  
     <br>
@@ -100,7 +101,7 @@
         </button>
       </a>
 
-      <a href="#" style="text-decoration: none; color: inherit;">
+      <a href="/iniciomedico/informes" style="text-decoration: none; color: inherit;">
         <button class="caja-contenido" href="#">
           <div class="circle">
             <svg
@@ -148,6 +149,7 @@
 </template>
   
   <script>
+  import { useAuthStore } from '../../store/auth';
   import '../assets/styles.css';
   import { useAuthStore } from '../../store/auth';
   import apiClient from '@/apiClient';
@@ -165,7 +167,6 @@
         departamento: '',
         usuario: '',
         horaActual: '',
-        nombreUsuario: localStorage.getItem('usuario') || 'Usuario', // Leer el nombre del usuario desde localStorage
       };
     },
     methods: {
@@ -211,6 +212,10 @@
         const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
         this.horaActual = horaCanarias.toLocaleTimeString('es-ES', { hour12: false });
       },
+      async verificarAutenticacion() {
+        const authStore = useAuthStore();
+        await authStore.checkAuth();
+      }
     },
     async mounted() {
     await this.datosUsuario();
@@ -220,7 +225,13 @@
     setInterval(() => {
       this.actualizarHora();
     }, 1000); // Actualiza la hora cada segundo
-  }
+    },
+    computed: {
+      nombreUsuario() {
+        const authStore = useAuthStore();
+        return authStore.getUser ? `${authStore.getUser.nombre} ${authStore.getUser.apellidos}` : 'Usuario';
+      },
+    },
   };
   </script>
   

@@ -7,7 +7,6 @@ const informeSchema = new mongoose.Schema({
   especialidadId: { type: mongoose.Schema.Types.ObjectId, ref: 'Departamento', required: true },
   prestacionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Prestacion', required: true },
   citaId: { type: mongoose.Schema.Types.ObjectId, ref: 'Cita', required: true },
-  autorizacionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Autorizacion', required: true },
   fecha: { 
     type: Date, 
     required: true,
@@ -17,7 +16,9 @@ const informeSchema = new mongoose.Schema({
       }
     }
   },
-  tipo: { type: String, required: true }, // falta por confirmar los posibles valores
+  diagnostico: { type: String, required: true },
+  observaciones: { type: String, },
+  recetaId: { type: mongoose.Schema.Types.ObjectId, ref: 'Receta' },
 });
 
 module.exports = mongoose.model('Informe', informeSchema);

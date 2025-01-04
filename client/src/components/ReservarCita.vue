@@ -1,5 +1,4 @@
-<template>
-    
+<template>    
     <div class="estilo-pagina">
     <Header/>
     <br>
@@ -86,6 +85,7 @@
               <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
                 <path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z"/>
               </svg></span>
+
               {{ formatearHora(cita.fechaHora) }} ({{ cita.duracion }} minutos)
             </p>
             <br>
@@ -132,7 +132,6 @@
               {{ cita.medicoId.nombre }} {{ cita.medicoId.apellidos }}
             </p>  
             
-
             <p class="icono-texto">
               <span class="circle-elementos">
               <svg xmlns="http://www.w3.org/2000/svg" height="21px" viewBox="0 -960 960 960" width="21px" fill="var(--primary-color)">
@@ -177,10 +176,8 @@
           <p>No hay citas reservadas.</p>
         </div>
       </div>
-
     </div>
     </div>
-
   </template>
     
     
@@ -255,7 +252,6 @@
             this.citasConsulta = citas
             .filter(cita => new Date(cita.fechaHora) > ahora)
             .sort((a, b) => new Date(a.fechaHora) - new Date(b.fechaHora))
-
           } catch (error) {
               console.error('Error al obtener citas de consulta:', error);
           }
@@ -297,8 +293,6 @@
           this.citasDisponibles = citas
           .filter(cita => new Date(cita.fechaHora) > ahora)
           .sort((a, b) => new Date(a.fechaHora) - new Date(b.fechaHora))
-
-
         } catch (error) {
           console.error('Error al obtener citas:', error);
         }
@@ -554,10 +548,8 @@
     margin-bottom: 10px;
     border-radius: 5px;
     color: var(--primary-color); /* Texto blanco para mejor contraste */
-
     background-color: #f4f9ff;
     border: 1px solid #d2e4fd;
-
   }
 
   .cita-item p {
@@ -582,7 +574,6 @@
     margin-bottom: 10px;
     border-radius: 5px;
     color: var(--primary-color); /* Texto blanco para mejor contraste */
-
     background-color: #f4f9ff;
     border: 1px solid #d2e4fd;
   }
@@ -634,10 +625,6 @@
     left: 0; /* Esto asegura que esté alineado con el borde izquierdo del círculo */
 
   }
-
-
-
-
 
   .dropdown-menu ul {
     list-style: none;
@@ -709,8 +696,6 @@
     margin-right: 10px; 
 
   }
-
-
 
 
   </style>
