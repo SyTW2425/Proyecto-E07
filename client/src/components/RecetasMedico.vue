@@ -56,6 +56,7 @@
         ></v-textarea>
         <v-btn :disabled="!valid" color="success" @click="crearReceta">Crear Receta</v-btn>
       </v-form>
+      <br/>
       <v-alert v-if="mensaje" type="success" dismissible>{{ mensaje }}</v-alert>
       <v-alert v-if="error" type="error" dismissible>{{ error }}</v-alert>
     </div>
@@ -111,9 +112,15 @@ export default {
       }
     },
     async crearReceta() {
+      const authStore = useAuthStore();
+      await authStore.checkAuth();
+      const usuario = authStore.getUser;
+      if (!usuario || !usuario._id) {
+        throw new Error('Usuario no autenticado');
+      }
+      this.receta.medicoId = usuario._id; 
       if (this.$refs.form.validate()) {
         try {
-          console.log(this.receta);
           await apiClient.post('/api/recetas', this.receta);
           this.mensaje = 'Receta creada exitosamente';
           this.error = '';
