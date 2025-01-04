@@ -52,13 +52,32 @@
           <div class="cita-body">
             <p><strong>Especialidad:</strong> {{ cita.especialidadId.nombre }}</p>
             <p><strong>Prestacion:</strong> {{ cita.prestacionId.nombre }}</p>
+            <div v-if="mostrarFormulario">
+              <form @submit.prevent="guardarInforme">
+                <p><strong><label for="diagnostico">Diagnóstico:</label></strong></p>
+                <textarea v-model="nuevoInforme.diagnostico" required class="text-box"></textarea>
+                <p><strong><label for="observaciones">Observaciones:</label></strong></p>
+                <textarea v-model="nuevoInforme.observaciones" class="text-box"></textarea>
+              </form>
+            </div>
           </div>
           <div class="cita-footer">
-            <a href="#" class="btn-imprimir" style="text-decoration: none;"> Generar informe</a>
-            <button @click="imprimirInforme(cita)" class="btn-imprimir"><i class="fas fa-print"></i> Imprimir</button>
-            <button @click="descargarInforme(cita)" class="btn-descargar"><i class="fas fa-download"></i> Descargar</button>
+            
+            <div v-if="mostrarFormulario" style="display: flex; gap: 10px;">
+              <button @click="guardarInforme" class="btn">Guardar</button>
+              <button @click="cancelarInforme" class="btn">Cancelar</button>
+            </div>
+            <div v-else style="display: flex; gap: 10px;">
+              <button @click="imprimirInforme(cita)" class="btn"><i class="fas fa-print"></i> Imprimir</button>
+              <button @click="descargarInforme(cita)" class="btn"><i class="fas fa-download"></i> Descargar</button>
+              <button @click="mostrarFormulario = true" class="btn">Generar informe</button>
+            </div>
           </div>
-          
+          <div v-if="informeGuardado">
+            <h3>Informe Guardado</h3>
+            <p><strong>Diagnóstico:</strong> {{ informeGuardado.diagnostico }}</p>
+            <p><strong>Observaciones:</strong> {{ informeGuardado.observaciones }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -79,7 +98,19 @@
         horaActual: '',
         cargando: false,
         errorServidor: false,
-        citasPasadas: []
+        citasPasadas: [],
+        mostrarFormulario: false,
+        nuevoInforme: {
+          medicoId: '',
+          pacienteId: '',
+          especialidadId: '',
+          prestacionId: '',
+          citaId: '',
+          diagnostico: '',
+          observaciones: '',
+          recetaId: ''
+        }, 
+        informeGuardado: ''
       };
     },
     computed: {
@@ -156,6 +187,7 @@
         const minutos = String(fecha.getMinutes()).padStart(2, '0');
         return `${horas}:${minutos} h`;
       },
+      
       imprimirInforme(cita) {
         const doc = new jsPDF();
 
@@ -240,6 +272,24 @@
         
           // Descargar el PDF
           doc.save(`Justificante_${this.formatearFecha(cita.fechaHora)}.pdf`);
+        };
+      },
+      async guardarInforme() {
+        try {
+          this.nuevoInforme.medicoId = this.usuarioId;
+          const response = await apiClient.post('/Informes', this.nuevoInforme);
+          console.log('Informe guardado:', response.data);
+          this.informeGuardado = response.data; // Almacenar el informe guardado
+          this.mostrarFormulario = false;
+        } catch (error) {
+          console.error('Error al guardar el informe:', error);
+        }
+      },
+      cancelarInforme() {
+        this.mostrarFormulario = false;
+        this.nuevoInforme = {
+          diagnostico: '',
+          observaciones: ''
         };
       }
     },
@@ -454,7 +504,7 @@ button {
   margin-top: 10px;
 }
 
-.btn-imprimir, .btn-descargar {
+.btn {
   background-color: #92bdf6;
   color: rgb(0, 0, 0);
   border: none;
@@ -477,6 +527,13 @@ button {
 .alert-text {
   margin-left: 20px;
   font-size: 1.2rem; /* Aumentar el tamaño de la fuente */
+}
+
+.text-box{
+  height: 8rem;
+  width: 50rem; 
+  background-color: #92bdf6; 
+  border-radius: 0.5rem;
 }
 </style>
   

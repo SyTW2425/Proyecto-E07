@@ -62,9 +62,7 @@
           </div>
         </div>
       </div>
-      <div class="ver-mas-container">
-        <button class="ver-mas">Ver más</button>
-      </div>
+      <br>
     </div>
 
     <br>
