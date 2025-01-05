@@ -1,24 +1,10 @@
 <template>
   <div class="estilo-pagina">
-    <header class="header">
-      <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
-      <div class="vertical-line"></div>
-      <h1 class="left-align small-text">PORTAL DEL PACIENTE</h1>
-      <div class="user-head">
-        <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: #92bdf6;">
-          <path d="M6 36C6 31.0347 17.9925 28 24 28C30.0075 28 42 31.0347 42 36V42H6V36Z" fill="currentColor"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M24 26C29.5228 26 34 21.5228 34 16C34 10.4772 29.5228 6 24 6C18.4772 6 14 10.4772 14 16C14 21.5228 18.4772 26 24 26Z" fill="currentColor"/>
-        </svg>
-        <h1><router-link to="/iniciopaciente/perfil" class="usuario-boton">{{ nombreUsuario }}</router-link></h1>
-      </div>
-      <div class="reloj">
-        <span>{{ horaActual }}</span>
-      </div>
-    </header>
+    <Header/>
     <br>
     <br>  
 
-    <div class="contenedor-principal">
+    <div class="contenedor-body">
       <h2 class="titulo">Citas anteriores - Justificantes</h2>
       <br/>
       <!-- Indicador de error y carga -->
@@ -66,10 +52,14 @@
   <script>
   import { useAuthStore } from '../../store/auth';
   import apiClient from '@/apiClient';
+  import Header from './Header.vue';
   import jsPDF from 'jspdf';
 
   export default {
     name: "JustificantesPaciente",
+      components: {
+      Header
+    },
     data() {
       return {
         saludo: '',
@@ -365,7 +355,7 @@ button {
   font-weight: bold;
 }
 
-.contenedor-principal {
+.contenedor-body {
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 15px;

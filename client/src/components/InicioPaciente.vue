@@ -92,7 +92,7 @@
         </button>
       </a>
 
-      <a href="/iniciopaciente/justificantes" style="text-decoration: none; color: inherit;">
+      <a href="/justificantes" style="text-decoration: none; color: inherit;">
         <button class="caja-contenido" href="#">
           <div class="circle">
             <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="white">
