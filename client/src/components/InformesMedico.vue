@@ -1,510 +1,575 @@
 <template>
   <div class="estilo-pagina">
-    <header class="header">
-      <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
-      <div class="vertical-line"></div>
-      <h1 class="left-align small-text">INTRANET</h1>
-      <div class="user-head">
-        <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: #92bdf6;">
-          <path d="M6 36C6 31.0347 17.9925 28 24 28C30.0075 28 42 31.0347 42 36V42H6V36Z" fill="currentColor"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M24 26C29.5228 26 34 21.5228 34 16C34 10.4772 29.5228 6 24 6C18.4772 6 14 10.4772 14 16C14 21.5228 18.4772 26 24 26Z" fill="currentColor"/>
-        </svg>
-        <h1><router-link to="#" class="usuario-boton">{{ nombreUsuario }}</router-link></h1>
-      </div>
-      <div class="reloj">
-        <span>{{ horaActual }}</span>
-      </div>
-    </header>
+    <Header/>
     <br>
-    <br>  
-
-    <div class="contenedor-principal">
-      <h2 class="titulo">Citas disponibles - Informes</h2>
-      <br/>
-      <!-- Indicador de error y carga -->
-      <v-alert
-        v-if="errorServidor"
-        type="error"
-        class="alerta-error"
-        prominent
-        color="red lighten-3"
-      >
-        <span class="alert-text">Fallo de comunicación con el servidor</span>
-      </v-alert>
-      <div v-if="cargando && !errorServidor" class="text-center">
-        <v-progress-circular
-          :size="70"
-          :width="7"
-          color="#17195e"
-          indeterminate
-        ></v-progress-circular>
-      </div>
-      <div v-if="!cargando && !errorServidor && citasPasadas.length === 0" class="texto-centrado">
-        <p>No tienes citas disponibles.</p>
-      </div>
-      <!-- Lista de citasPasadas -->
-      <div v-if="citasPasadas.length !== 0" class="citas-container">
-        <div class="cita" v-for="cita in citasPasadas" :key="cita._id">
-          <div class="cita-header">
-            <h3><i class="fas fa-user-md"></i> <span class="medico-label">Paciente:</span> <span class="medico-nombre">{{ cita.pacienteId?.nombre }} {{ cita.pacienteId?.apellidos }}</span></h3>
-            <p><i class="fas fa-calendar-alt"></i> {{ formatearFecha(cita.fechaHora) }} - <i class="fas fa-clock"></i> {{ formatearHora(cita.fechaHora) }}</p>
-          </div>
-          <div class="cita-body">
-            <p><strong>Especialidad:</strong> {{ cita.especialidadId.nombre }}</p>
-            <p><strong>Prestacion:</strong> {{ cita.prestacionId.nombre }}</p>
-            <div v-if="mostrarFormulario">
-              <form @submit.prevent="guardarInforme">
-                <p><strong><label for="diagnostico">Diagnóstico:</label></strong></p>
-                <textarea v-model="nuevoInforme.diagnostico" required class="text-box"></textarea>
-                <p><strong><label for="observaciones">Observaciones:</label></strong></p>
-                <textarea v-model="nuevoInforme.observaciones" class="text-box"></textarea>
-              </form>
-            </div>
-          </div>
-          <div class="cita-footer">
-            
-            <div v-if="mostrarFormulario" style="display: flex; gap: 10px;">
-              <button @click="guardarInforme(cita)" class="btn">Guardar</button>
-              <button @click="cancelarInforme" class="btn">Cancelar</button>
-            </div>
-            <div v-else style="display: flex; gap: 10px;">
-              <button @click="imprimirInforme(cita)" class="btn"><i class="fas fa-print"></i> Imprimir</button>
-              <button @click="descargarInforme(cita)" class="btn"><i class="fas fa-download"></i> Descargar</button>
-              <button @click="mostrarFormulario = true" class="btn">Generar informe</button>
-            </div>
-          </div>
-        </div>
+    <div class="barra-fecha" >
+      <span>{{ fechaHora }}</span>
+    
+      <div class="icon-container">
+        {{ departamento.nombre }}
+        <div class="circle" style="background-color: var(--color-azul2); width: 2rem; height: 2rem;">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="var(--primary-color)">
+          <path d="M540-80q-108 0-184-76t-76-184v-23q-86-14-143-80.5T80-600v-240h120v-40h80v160h-80v-40h-40v160q0 66 47 113t113 47q66 0 113-47t47-113v-160h-40v40h-80v-160h80v40h120v240q0 90-57 156.5T360-363v23q0 75 52.5 127.5T540-160q75 0 127.5-52.5T720-340v-67q-35-12-57.5-43T640-520q0-50 35-85t85-35q50 0 85 35t35 85q0 39-22.5 70T800-407v67q0 108-76 184T540-80Zm220-400q17 0 28.5-11.5T800-520q0-17-11.5-28.5T760-560q-17 0-28.5 11.5T720-520q0 17 11.5 28.5T760-480Zm0-40Z"/>
+        </svg></div>
+        
       </div>
     </div>
-  </div>
-  </template>
-  
-  <script>
-  import { useAuthStore } from '../../store/auth';
-  import apiClient from '@/apiClient';
-  import jsPDF from 'jspdf';
 
-  export default {
-    name: "JustificantesPaciente",
-    data() {
-      return {
-        saludo: '',
-        icono: '',
-        horaActual: '',
-        cargando: false,
-        errorServidor: false,
-        citasPasadas: [],
-        mostrarFormulario: false,
-        nuevoInforme: {
-          medicoId: '',
-          pacienteId: '',
-          especialidadId: '',
-          prestacionId: '',
-          citaId: '',
-          diagnostico: '',
-          observaciones: '',
-          recetaId: ''
-        }, 
-        informeGuardado: ''
+    <br>  
+
+  <div class="contenedor-principal">
+    
+    <!-- Columna izquierda: Formulario de creación de citas médicas -->
+    <div class="columna-formulario">
+      <div class="alinear-elementos">
+          <div class="circle">
+            <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="var(--primary-color)">
+              <path d="M680-80v-120H560v-80h120v-120h80v120h120v80H760v120h-80Zm-480-80q-33 0-56.5-23.5T120-240v-480q0-33 23.5-56.5T200-800h40v-80h80v80h240v-80h80v80h40q33 0 56.5 23.5T760-720v244q-20-3-40-3t-40 3v-84H200v320h280q0 20 3 40t11 40H200Zm0-480h480v-80H200v80Zm0 0v-80 80Z"/>
+            </svg>
+          </div>
+          <h2 style="color: var(--primary-color);">Generar nuevo informe</h2>
+        </div>
+        <br>
+
+      <!-- Formulario para crear un informe -->
+      <div v-if="mostrarGenerarInforme">
+        <form @submit.prevent="crearInforme">
+          <!-- Selección de Prestación -->
+          <label>Prestación:
+            <p class="small-box">{{ nuevoInforme.prestacionId.nombre }}</p>
+          </label>
+          <br>
+          <br>
+
+          <!-- Selección de Fecha -->
+          <label>Fecha:
+            <br>
+            <p class="small-box">{{ formatearFecha(nuevoInforme.fecha)}}</p>
+          </label>
+          <br><br>
+
+          <!-- Selección de Paciente -->
+          <label>Paciente:
+            <p class="small-box">{{ nuevoInforme.pacienteId.nombre }} {{ nuevoInforme.pacienteId.apellidos }}</p>
+          </label>
+          <br><br>
+
+          <!-- Diagnóstico -->
+          <label>Diagnóstico:
+            <br>
+            <textarea v-model="nuevoInforme.diagnostico" class="text-box"></textarea>
+          </label>
+          <br><br>
+
+          <!-- Observaciones -->
+          <label>Observaciones:
+            <br>
+            <textarea v-model="nuevoInforme.observaciones" class="text-box"></textarea>
+          </label>
+          <br><br>
+
+          <button type="submit" class="btn">Crear informe</button>
+          <button class="btn" @click="resetFormulario">Cancelar</button>
+        </form>
+
+      </div>
+      
+
+
+    </div>
+
+    <!-- Columna derecha: Listado de citas -->
+    <div class="columna-citas">
+      <div class="alinear-elementos">
+       
+       <div class="circle">
+         <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="var(--primary-color)">
+           <path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm280 240q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-160 0q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm320 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-160 0q-17 0-28.5-11.5T280-280q0-17 11.5-28.5T320-320q17 0 28.5 11.5T360-280q0 17-11.5 28.5T320-240Zm320 0q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"/>
+         </svg>
+       </div>
+       <h2 style="color: var(--primary-color);">Citas pasadas</h2>
+     </div>
+
+
+      <!-- Mensaje de error de comunicación -->
+      <v-alert v-if="errorServidor" type="error" class="alerta-error" prominent color="red lighten-3">
+        <span class="alert-text">Fallo de comunicación con el servidor</span>
+      </v-alert>
+
+      <div v-if="cargando && !errorServidor" class="text-center">
+        <v-progress-circular :size="70" :width="7" color="#17195e" indeterminate></v-progress-circular>
+      </div>
+
+      <div v-if="!cargando && !errorServidor && citas.length === 0" class="texto-centrado">
+        <p>No tienes citas pasadas</p>
+      </div>
+
+      <!-- Tabla de citas -->
+      <table v-if="!cargando && !errorServidor && citasFiltradas.length > 0" class="citas-table">
+
+        <thead>
+          <tr>
+            <th></th>
+            <th>Prestación</th>
+            <th>Fecha</th>
+            <th>Paciente</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="cita in citasFiltradas" :key="cita._id">
+            <td class="citas-actions" >
+              <button class="btn" @click="generarInforme(cita)">
+                Generar informe
+              </button>
+              <button class="btn">
+                Ver informe
+              </button>
+            </td>
+            <td>{{ cita.prestacionId?.nombre }}</td>
+            <td>{{ formatearFecha(cita.fechaHora) }}</td>
+            <td>{{cita.pacienteId.nombre + ' ' + cita.pacienteId.apellidos }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  </div>
+</template>
+
+<script>
+import apiClient from '@/apiClient';
+import { useAuthStore } from '../../store/auth';
+import Header from './Header.vue';
+
+export default {
+  name: "AgendaMedico",
+  components: {
+    Header
+  },
+  data() {
+    return {
+      fechaHora: '',
+      citas: [], // Lista de citas
+      departamento: {}, // Datos del departamento del médico seleccionado
+      prestaciones: [], // Prestaciones del departamento
+      medico: {}, // Datos del médico seleccionado
+      recetas: [], // Recetas del médico
+      mostrarGenerarInforme: false,
+      nuevoInforme: {
+        medicoId: '',
+        pacienteId: '',
+        especialidadId: '',
+        prestacionId: '',
+        citaId: '',
+        fecha: '',
+        diagnostico: '',
+        observaciones: ''
+      },
+      cargando: false,
+      errorServidor: false
+    };
+  },
+  methods: {
+    
+    datosUsuario() {
+      const authStore = useAuthStore();
+      this.medico = authStore.getUser ? authStore.getUser : 'Usuario';
+      this.nuevoInforme.medicoId = this.medico._id;
+      this.actualizarEspecialidadYPrestaciones();
+    },
+    obtenerFechaHoraCanarias() {
+      const opcionesFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const opcionesHora = { hour: '2-digit', minute: '2-digit', hour12: false };
+  
+      // Obtener la hora de Canarias (GMT+0)
+      const ahora = new Date();
+      const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
+
+      // Formatear la fecha y la hora
+      const fechaFormateada = horaCanarias.toLocaleDateString('es-ES', opcionesFecha);
+      const horaFormateada = horaCanarias.toLocaleTimeString('es-ES', opcionesHora).replace(':', '.');
+
+      return `${fechaFormateada}, ${horaFormateada} h`;
+    },
+
+    async obtenerCitasPasadas() {
+      this.cargando = true;
+      try {
+        const response = await apiClient.get('/api/citas', {
+          params: {
+            medicoId: this.medico._id
+          }
+        });
+
+        const citas = response.data;
+        const ahora = new Date();
+
+        this.citas = citas
+          .filter(cita => new Date(cita.fechaHora) < ahora && cita.pacienteId !== null)
+          .sort((a, b) => new Date(a.fechaHora) - new Date(b.fechaHora))
+      } catch (error) {
+        console.error('Error al obtener citas:', error);
+        this.errorServidor = true;
+      } finally {
+        this.cargando = false;
+      }
+    },
+    async obtenerRecetas() {
+      this.cargando = true;
+      try {
+        const response = await apiClient.get('/api/recetas', {
+          params: {
+            medicoId: this.medico._id
+          }
+        });
+
+        this.recetas = response.data;
+      } catch (error) {
+        console.error('Error al obtener recetas:', error);
+        this.errorServidor = true;
+      } finally {
+        this.cargando = false;
+      }
+    },
+    async actualizarEspecialidadYPrestaciones() {
+      if (!this.medico._id) {
+        this.prestaciones = [];
+        return;
+      }
+
+      this.cargando = true;
+      try {
+        const medicoResponse = await apiClient.get(`/api/usuarios/${this.medico._id}`);
+        this.medico = medicoResponse.data; // Guardar datos del médico
+
+        if (this.medico.departamento) {
+          const departamentoResponse = await apiClient.get(`/api/departamentos/${this.medico.departamento}`);
+          this.departamento = departamentoResponse.data;
+
+          // Asegúrate de que las prestaciones existan y sean válidas
+          this.prestaciones = Array.isArray(this.departamento.prestaciones)
+            ? this.departamento.prestaciones
+            : [];
+          this.medico.especialidadId = this.departamento._id;
+        } else {
+          this.prestaciones = [];
+        }
+      } catch (error) {
+        console.error('Error al obtener especialidad y prestaciones:', error);
+      } finally {
+        this.cargando = false;
+      }
+    },
+    generarInforme(cita) {
+      this.mostrarGenerarInforme = true;
+      this.nuevoInforme.prestacionId = cita.prestacionId || '';
+      this.nuevoInforme.fecha = cita.fechaHora;
+      this.nuevoInforme.pacienteId = cita.pacienteId;
+    },
+    formatearFecha(fechaHora) {
+      const fecha = new Date(fechaHora);
+      const dia = String(fecha.getDate()).padStart(2, '0');
+      const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+      const anio = fecha.getFullYear();
+      return `${dia}/${mes}/${anio}`;
+    },
+    formatearHora(fechaHora) {
+      const fecha = new Date(fechaHora);
+      const horas = String(fecha.getHours()).padStart(2, '0');
+      const minutos = String(fecha.getMinutes()).padStart(2, '0');
+      return `${horas}:${minutos} h`;
+    },
+    resetFormulario() {
+      this.mostrarGenerarInforme = false;
+      this.nuevoInforme = {
+        medicoId: '',
+        pacienteId: '',
+        especialidadId: '',
+        prestacionId: '',
+        citaId: '',
+        fecha: '',
+        diagnostico: '',
+        observaciones: ''
       };
     },
-    computed: {
-      nombreUsuario() {
-        const authStore = useAuthStore();
-        return authStore.getUser ? `${authStore.getUser.nombre} ${authStore.getUser.apellidos}` : 'Usuario';
-      },
-      usuarioId() {
-      const authStore = useAuthStore();
-      return authStore.getUser ? authStore.getUser._id : null;
-      }
+    async obtenerDatos() {
+      // Obtener todas las citas, especialidades y médicos al montar el componente
+      await Promise.all([this.obtenerCitasPasadas()]);
     },
-    methods: {
-      async obtenerCitasPasadas() {
-        this.cargando = true;
-        this.errorServidor = false;
-        try {
-            const authStore = useAuthStore();
-            await authStore.checkAuth(); // Verifica la autenticación
-            if (!this.usuarioId) {
-              throw new Error('Usuario no autenticado');
-            }
-            const response = await apiClient.get('/api/citas', {
-              params: { medicoId: this.usuarioId }
-            });
-            const citas = response.data;
-            const ahora = new Date();
-            this.citasPasadas = citas.filter(cita => new Date(cita.fechaHora) < ahora && cita.pacienteId !== null);
-          } catch (error) {
-            this.errorServidor = true;
-          } finally {
-            this.cargando = false;
-          }
-        },
-      actualizarSaludo() {
-        const ahora = new Date();
-        const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
-        const hora = horaCanarias.getHours();
-  
-        if (hora >= 6 && hora < 12) {
-          this.saludo = "Buenos días";
-          this.icono = require('@/assets/icons/buenos_dias.png');
-        } else if (hora >= 13 && hora < 20) {
-          this.saludo = "Buenas tardes";
-          this.icono = require('@/assets/icons/buenas_tardes.png');
-        } else {
-          this.saludo = "Buenas noches";
-          this.icono = require('@/assets/icons/buenas_noches.png');
-        }
-      },
-      actualizarHora() {
-        const ahora = new Date();
-        const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
-        this.horaActual = horaCanarias.toLocaleTimeString('es-ES', { hour12: false });
-      },
-      async verificarAutenticacion() {
-        const authStore = useAuthStore();
-        await authStore.checkAuth();
-      },
-      handleLogout() {
+
+  },
+  validarFormulario() {
+    //if (!this.nuevaCita.medicoId) {
+    //  alert('Debe seleccionar un médico.');
+    //  return false;
+    //}
+    //if (!this.nuevaCita.fecha) {
+    //  alert('Debe seleccionar una fecha.');
+    //  return false;
+    //}
+    //if (!this.nuevaCita.hora) {
+    //  alert('Debe seleccionar una hora.');
+    //  return false;
+    //}
+    return true;
+  },
+  mounted() {
+    this.obtenerDatos();
+    this.fechaHora = this.obtenerFechaHoraCanarias();
+    setInterval(() => {
+      this.fechaHora = this.obtenerFechaHoraCanarias();
+    }, 1000); // Actualiza la hora cada segundo
+    this.datosUsuario();
+  },
+  computed: {
+    nombreUsuario() {
       const authStore = useAuthStore();
-      authStore.logout();
-      },
-      formatearFecha(fechaHora) {
-        const fecha = new Date(fechaHora);
-        const dia = String(fecha.getDate()).padStart(2, '0');
-        const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-        const anio = fecha.getFullYear();
-        return `${dia}/${mes}/${anio}`;
-      },
-      formatearHora(fechaHora) {
-        const fecha = new Date(fechaHora);
-        const horas = String(fecha.getHours()).padStart(2, '0');
-        const minutos = String(fecha.getMinutes()).padStart(2, '0');
-        return `${horas}:${minutos} h`;
-      },
-      
-      imprimirInforme(cita) {
-        const doc = new jsPDF();
-
-        // Agregar logo
-        const logo = new Image();
-        logo.src = require('@/assets/logo.png');
-        logo.onload = () => {
-          doc.addImage(logo, 'PNG', 10, 10, 60, 15);
-
-          // Agregar contenido del justificante
-          doc.setFontSize(16);
-          doc.setFont('helvetica', 'bold');
-          doc.text('Justificante de cita', 105, 60, null, null, 'center');
-          doc.setFontSize(12);
-          doc.text('Paciente:', 30, 70);
-          doc.setFont('helvetica', 'normal');
-          doc.text(`${cita.pacienteId?.nombre} ${cita.pacienteId?.apellidos}`, 70, 70);
-          doc.setFont('helvetica', 'bold');
-          doc.text('Médico:', 30, 80);
-          doc.setFont('helvetica', 'normal');
-          doc.text(`${cita.medicoId?.nombre} ${cita.medicoId?.apellidos}`, 70, 80);
-          doc.setFont('helvetica', 'bold');
-          doc.text('Fecha:', 30, 90);
-          doc.setFont('helvetica', 'normal');
-          doc.text(`${this.formatearFecha(cita.fechaHora)}`, 70, 90);
-          doc.setFont('helvetica', 'bold');
-          doc.text('Hora:', 30, 100);
-          doc.setFont('helvetica', 'normal');
-          doc.text(`${this.formatearHora(cita.fechaHora)}`, 70, 100);
-          doc.setFont('helvetica', 'bold');
-          doc.text('Especialidad:', 30, 110);
-          doc.setFont('helvetica', 'normal');
-          doc.text(`${cita.especialidadId?.nombre}`, 70, 110);
-          doc.setFont('helvetica', 'bold');
-          doc.text('Prestación:', 30, 120);
-          doc.setFont('helvetica', 'normal');
-          doc.text(`${cita.prestacionId?.nombre}`, 70, 120);
-        
-
-          // Abrir el PDF en una nueva pestaña y luego imprimir
-          const pdfData = doc.output('bloburl');
-          window.open(pdfData, '_blank');
-        };
-      },
-      async descargarInforme(cita) {
-        const doc = new jsPDF();
-
-        // Agregar logo
-        const logo = new Image();
-        logo.src = require('@/assets/logo.png');
-        logo.onload = () => {
-          doc.addImage(logo, 'PNG', 10, 10, 60, 15);
-
-          // Agregar contenido del justificante
-          doc.setFontSize(16);
-          doc.setFont('helvetica', 'bold');
-          doc.text('Justificante de cita', 105, 60, null, null, 'center');
-          doc.setFontSize(12);
-          doc.text('Paciente:', 30, 70);
-          doc.setFont('helvetica', 'normal');
-          doc.text(`${cita.pacienteId?.nombre} ${cita.pacienteId?.apellidos}`, 70, 70);
-          doc.setFont('helvetica', 'bold');
-          doc.text('Médico:', 30, 80);
-          doc.setFont('helvetica', 'normal');
-          doc.text(`${cita.medicoId?.nombre} ${cita.medicoId?.apellidos}`, 70, 80);
-          doc.setFont('helvetica', 'bold');
-          doc.text('Fecha:', 30, 90);
-          doc.setFont('helvetica', 'normal');
-          doc.text(`${this.formatearFecha(cita.fechaHora)}`, 70, 90);
-          doc.setFont('helvetica', 'bold');
-          doc.text('Hora:', 30, 100);
-          doc.setFont('helvetica', 'normal');
-          doc.text(`${this.formatearHora(cita.fechaHora)}`, 70, 100);
-          doc.setFont('helvetica', 'bold');
-          doc.text('Especialidad:', 30, 110);
-          doc.setFont('helvetica', 'normal');
-          doc.text(`${cita.especialidadId?.nombre}`, 70, 110);
-          doc.setFont('helvetica', 'bold');
-          doc.text('Prestación:', 30, 120);
-          doc.setFont('helvetica', 'normal');
-          doc.text(`${cita.prestacionId?.nombre}`, 70, 120);
-        
-          // Descargar el PDF
-          doc.save(`Justificante_${this.formatearFecha(cita.fechaHora)}.pdf`);
-        };
-      },
-      async guardarInforme(cita) {
-        try {
-          this.nuevoInforme.medicoId = this.usuarioId();
-          this.nuevoInforme.pacienteId = cita.pacienteId;
-          this.nuevoInforme.especialidadId = cita.especialidadId;
-          this.nuevoInforme.prestacionId = cita.prestacionId;
-          this.nuevoInforme.citaId = cita._id;
-          const response = await apiClient.post('/Informes', this.nuevoInforme);
-          console.log('Informe guardado:', response.data);
-          this.informeGuardado = response.data; // Almacenar el informe guardado
-          this.mostrarFormulario = false;
-        } catch (error) {
-          console.error('Error al guardar el informe:', error);
-        }
-      },
-      cancelarInforme() {
-        this.mostrarFormulario = false;
-        this.nuevoInforme = {
-          diagnostico: '',
-          observaciones: ''
-        };
-      }
+      return authStore.getUser ? `${authStore.getUser.nombre} ${authStore.getUser.apellidos}` : 'Usuario';
     },
-    async mounted() {
-      await this.verificarAutenticacion();
-      this.actualizarSaludo();
-      this.actualizarHora();
-      this.obtenerCitasPasadas(); // Llamar a la función para obtener las citas pasadas
-      setInterval(() => {
-        this.actualizarHora();
-      }, 1000); // Actualiza la hora cada segundo
-    }
-  };
+
+    citasFiltradas() {
+      let citasFiltradas = this.citas;
+
+      if (this.filtroEspecialidad) {
+        citasFiltradas = citasFiltradas.filter(cita => cita.especialidad._id === this.filtroEspecialidad);
+      }
+
+      if (this.filtroMedico) {
+        citasFiltradas = citasFiltradas.filter(cita => cita.medico._id === this.filtroMedico);
+      }
+
+      return citasFiltradas;
+    },
+  },
+
+};
 </script>
 
-<style src="@/assets/styles.css"></style>
+
 <style scoped>
-
-.header span {
-  color: var(--primary-color);
-}
-
-.departamento-info p {
-  margin: 5px 0;
-}
-
-.usuario-boton {
-color: #007bff;
-text-decoration: none;
-cursor: pointer;
-font-size: 0.8em;
-margin-left: 0.4em;
-}
-  
-  button:hover {
-    background: var(--color-azul);
+  .contenedor-principal {
+    display: flex;
+    justify-content: space-between;
   }
-button {
-  background: #007bff;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  width: calc(100% - 0rem); 
-  background-color: #e1e1e1;
-  
-  padding: 1rem;
-  text-align: left;
-  display: flex;
-
-  align-items: left;
-  justify-content: left;
-
-  gap: 10px;
-  border-radius: 15px; 
-}
-
-
-.estilo-pagina {  
-  margin-left: 2rem; 
-  margin-right: 2rem;
-}
-.header img.logo {
-  width: 200px;
-  height: auto; 
-}
-.header h1.left-align {
-  text-align: left;
-  margin-left: 10px; 
-}
-.header h1.small-text {
-  font-size: 20px; 
-  color: var(--primary-color);
-  font-weight: 300;
-}
-.vertical-line {
-  width: 4px;
-  height: 70px;
-  background-color: #92bdf6; 
-}
-
-.reloj {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-
-.small-text {
-  font-size: 14px;
-  margin: 0;
-  color: var(--color-azul2);
-}
-
-.user-head {
-  position: relative;
-  align-items: center;
-  display: flex;
-  margin-left: 2rem;
-  justify-content: center;
-}
-
-
-.icono {
-  width: 40px;
-  height: 40px;
-  background-color: var(--color-azul2);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.icono::before {
-  content: '+';
-  color: var(--primary-color);
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.contenedor-principal {
+  .contenedor-body {
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 80rem; /* Limitar el ancho máximo */
-  margin: 0 auto; /* Centrar el contenedor */
+  max-width: 600px;
+  margin: 0 auto;
 }
+  
+  .columna-formulario {
+    width: 40%;
+  }
+  .columna-citas {
+    width: 65%;
+  }
+  
+  button {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
 
-.titulo {
-  text-align: center;
-  color: #1c1c5a;
-  font-size: 2.5rem; /* Aumentar el tamaño de la fuente */
-  margin-bottom: 20px;
-}
 
-.texto-centrado {
-  text-align: center;
-  font-size: 1.5rem; /* Aumentar el tamaño de la fuente */
-}
+  .estilo-pagina {  
+    margin-left: 2rem; 
+    margin-right: 2rem;
+  }
 
-.citas-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
 
-.cita {
-  background-color: white;
-  border: 1px solid #ddd; /* Reducir el contraste */
-  border-radius: 10px;
-  padding: 20px; /* Aumentar el padding */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+  .header span {
+    color: var(--primary-color);
+  }
 
-.cita-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #ddd; /* Reducir el contraste */
-  padding-bottom: 10px;
-  margin-bottom: 10px;
-}
+  .header img.logo {
+    width: 200px;
+    height: auto; 
+  }
 
-.cita-header h3 {
-  margin: 0;
-  color: #333; /* Cambiar a un color más neutro */
-  font-size: 1.8rem; /* Aumentar el tamaño de la fuente */
-}
+  .header h1.left-align {
+    text-align: left;
+    margin-left: 10px; 
+  }
 
-.cita-header .medico-label {
-  color: #1c1c5a; /* Azul para la etiqueta "Médico" */
-}
+  .header h1.small-text {
+    font-size: 20px; 
+    color: var(--primary-color);
+    font-weight: 300;
+  }
 
-.cita-header .medico-nombre {
-  color: #333; /* Color neutro para el nombre del médico */
-}
+  .vertical-line {
+    width: 4px;
+    height: 70px;
+    background-color: #92bdf6; 
+  }
 
-.cita-header p {
-  margin: 0;
-  color: #555;
-  font-size: 1.2rem; /* Aumentar el tamaño de la fuente */
-}
+  .user-head {
+    position: relative;
+    align-items: center;
+    display: flex;
+    margin-left: 2rem;
+    justify-content: center;
+  }
 
-.cita-header .fecha-hora {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+  .usuario-boton {
+    color: var(--primary-color);
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 0.8em;
+    margin-left: 0.4em;
+  }
 
-.cita-body p {
-  margin: 10px 0; /* Aumentar el margen */
-  color: #333;
-  font-size: 1.2rem; /* Aumentar el tamaño de la fuente */
-}
+  .barra-fecha {
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
 
-.cita-body p strong {
-  color: #1c1c5a;
-}
+    display: flex;
+    align-items: center;
 
-.cita-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 10px;
-}
+  }
 
-.btn {
-  background-color: #92bdf6;
+  .boton-crear {
+    background-color: var(--color-verde);
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .boton-crear:hover {
+    background-color: #00e682;
+  }
+
+  /* Estilo del círculo */
+  .circle {
+    width: 5rem; /* Tamaño del círculo */
+    height: 5rem;
+    border-radius: 50%; /* Hace que sea un círculo */
+    background-color: var(--color-azul); /* Usa el color definido */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.5rem;
+    margin: 0.5rem;
+    margin-right: 20px; 
+
+  }
+
+  .alinear-elementos {
+    display: flex;
+    align-items: center;
+  }
+
+
+  .informacion {
+    font-weight: bold; /* Aumenta el grosor de la fuente de letra */
+    font-size: 1.6rem; /* Ajusta el tamaño del texto de nombreUsuario */
+  }
+  
+  select, option {
+    font-weight: 500; /* Ajuste del grosor de la fuente de letra  */
+
+  }
+
+
+  .error-cuadro {
+    background-color: var(--error-color);
+    color: white;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+  }
+
+  .icon-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espacio entre el círculo y el texto */
+    margin-left: auto;
+  }
+
+
+  
+  .citas-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  .citas-table th,
+  .citas-table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+    vertical-align: top; /* Asegura que el contenido se alinee en la parte superior */
+    
+  }
+
+  .citas-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+
+  }
+
+  .citas-table td {
+    background-color: white;
+    
+  }
+
+  .citas-actions {
+    width: auto; /* Ajusta el ancho según el contenido */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn:hover {
+    background-color: var(--color-azul); /* Cambia el color al pasar el ratón */
+  }
+
+  /* Estilo para los campos de entrada de texto, email y el selector */
+  input[type="text"],
+  input[type="date"],
+  input[type="time"],
+  input[type="number"],
+  select {
+    background-color: #C6DEFD; /* Color de fondo del campo */
+    padding: 8px;
+    border-radius: 5px;
+    outline: none;
+    font-family: 'Outfit', sans-serif; /* Asegura que la fuente sea uniforme */
+  }
+
+  /* Cambia el color del borde y añade un efecto cuando el campo está enfocado */
+  input[type="text"]:focus,
+  select:focus {
+    border-color: var(--color-azul); /* Cambia el color del borde al hacer foco */
+    box-shadow: 0 0 5px var(--color-azul); /* Añade sombra al hacer foco */
+    background-color: #C6DEFD; /* Mantiene el color de fondo al hacer foco */
+  }
+
+  label {
+    text-align: left; /* Alinea los labels a la izquierda para mejor legibilidad */
+    font-weight: bold; /* Resalta los labels */
+  } 
+
+  .btn {
+  background-color: var(--color-azul2);
   color: rgb(0, 0, 0);
   border: none;
   padding: 10px 20px;
@@ -512,27 +577,34 @@ button {
   cursor: pointer;
   font-size: 1rem;
 }
-
-.btn-imprimir:hover, .btn-descargar:hover {
-  background-color: #1c1c5a;
-  color: white;
-}
-
-.alerta-error {
-  background-color: #f44336 !important;
-  color: white !important;
-}
-
-.alert-text {
-  margin-left: 20px;
-  font-size: 1.2rem; /* Aumentar el tamaño de la fuente */
-}
-
 .text-box{
+
   height: 8rem;
-  width: 50rem; 
+  width: 25em; 
   background-color: #92bdf6; 
   border-radius: 0.5rem;
 }
-</style>
+.small-box{
+  height: 2rem;
+  width: 25em; 
+  background-color: #92bdf6; 
+  border-radius: 0.5rem;
+}
+  .btn:hover {
+    background-color: #1c1c5a;
+    color: white;
+  }
+
+  .texto-centrado {
+    text-align: center;
+  }
+
+  .alerta-error {
+    margin-bottom: 20px;
+  }
+
+  .text-center {
+    text-align: center;
+}
+  </style>
   

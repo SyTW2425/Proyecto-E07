@@ -18,7 +18,6 @@ const informeSchema = new mongoose.Schema({
   },
   diagnostico: { type: String, required: true },
   observaciones: { type: String, },
-  recetaId: { type: mongoose.Schema.Types.ObjectId, ref: 'Receta' },
 });
 
 module.exports = mongoose.model('Informe', informeSchema);

@@ -44,7 +44,7 @@
           <tbody>
             <tr v-for="form in form_contacto" :key="form.numero">
               <td>{{ form.nombre }}</td>
-              <td>{{ form.email }}</td>
+              <td>{{ form.correo }}</td>
               <td>{{ form.asunto }}</td>
               <td>{{ form.mensaje }}</td>
             </tr>

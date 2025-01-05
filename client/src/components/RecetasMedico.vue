@@ -11,7 +11,7 @@
     </div>
     <br/>
 
-    <div class="contenedor-principal">
+    <div class="contenedor-body">
       <h2 class="titulo">Crear Receta</h2>
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-autocomplete
@@ -183,7 +183,7 @@ export default {
   font-size: 20px;
 }
 
-.contenedor-principal {
+.contenedor-body {
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 15px;

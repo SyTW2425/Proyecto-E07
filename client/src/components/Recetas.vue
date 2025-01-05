@@ -3,8 +3,9 @@
     <Header/>
     <br/>
 
-    <div class="contenedor-principal">
+    <div class="contenedor-body">
       <h2 class="titulo">Mis Recetas</h2>
+      <br/>
       <br/>
       <!-- Indicador de error y carga -->
       <v-alert
@@ -221,7 +222,7 @@ export default {
   font-size: 20px;
 }
 
-.contenedor-principal {
+.contenedor-body {
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 15px;
