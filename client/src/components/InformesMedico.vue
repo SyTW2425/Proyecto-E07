@@ -57,7 +57,7 @@
           <!-- Diagnóstico -->
           <label>Diagnóstico:
             <br>
-            <textarea v-model="nuevoInforme.diagnostico" class="text-box"></textarea>
+            <textarea v-model="nuevoInforme.diagnostico" required class="text-box"></textarea>
           </label>
           <br><br>
 
@@ -74,7 +74,47 @@
 
       </div>
       
+      <div v-if="mostrarEditarInforme">
+        <form @submit.prevent="guardarInforme">
+          <!-- Selección de Prestación -->
+          <label>Prestación:
+            <p class="small-box">{{ mostrarPrestacion(nuevoInforme.prestacionId) }}</p>
+          </label>
+          <br>
+          <br>
 
+          <!-- Selección de Fecha -->
+          <label>Fecha:
+            <br>
+            <p class="small-box">{{ formatearFecha(nuevoInforme.fecha)}}</p>
+          </label>
+          <br><br>
+
+          <!-- Selección de Paciente -->
+          <label>Paciente:
+            <p class="small-box">{{ mostrarPaciente(nuevoInforme.pacienteId) }}</p>
+          </label>
+          <br><br>
+
+          <!-- Diagnóstico -->
+          <label>Diagnóstico:
+            <br>
+            <textarea v-model="nuevoInforme.diagnostico" required class="text-box"></textarea>
+          </label>
+          <br><br>
+
+          <!-- Observaciones -->
+          <label>Observaciones:
+            <br>
+            <textarea v-model="nuevoInforme.observaciones" class="text-box"></textarea>
+          </label>
+          <br><br>
+
+          <button type="submit" class="btn">Guardar</button>
+          <button class="btn" @click="resetFormulario">Cancelar</button>
+        </form>
+
+      </div>
 
     </div>
 
@@ -105,7 +145,7 @@
       </div>
 
       <!-- Tabla de citas -->
-      <table v-if="!cargando && !errorServidor && citasFiltradas.length > 0" class="citas-table">
+      <table v-if="!cargando && !errorServidor && citas.length > 0" class="citas-table">
 
         <thead>
           <tr>
@@ -116,13 +156,18 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="cita in citasFiltradas" :key="cita._id">
-            <td class="citas-actions" >
+          <tr v-for="cita in citas" :key="cita._id">
+            <td v-if="comprobarExisteInforme(cita)" class="citas-actions" >
+              <button class="btn" @click="editarInforme(cita)">
+                Editar informe
+              </button>
+              <button class="btn" @click="verInforme(cita)">
+                Ver informe
+              </button>
+            </td>
+            <td v-else class="citas-actions" >
               <button class="btn" @click="generarInforme(cita)">
                 Generar informe
-              </button>
-              <button class="btn">
-                Ver informe
               </button>
             </td>
             <td>{{ cita.prestacionId?.nombre }}</td>
@@ -140,9 +185,10 @@
 import apiClient from '@/apiClient';
 import { useAuthStore } from '../../store/auth';
 import Header from './Header.vue';
+import jsPDF from 'jspdf';
 
 export default {
-  name: "AgendaMedico",
+  name: "InformesMedico",
   components: {
     Header
   },
@@ -153,8 +199,10 @@ export default {
       departamento: {}, // Datos del departamento del médico seleccionado
       prestaciones: [], // Prestaciones del departamento
       medico: {}, // Datos del médico seleccionado
-      recetas: [], // Recetas del médico
+      pacientes: [], // Lista de pacientes
+      informes: [], // Informes del médico
       mostrarGenerarInforme: false,
+      mostrarEditarInforme: false,
       nuevoInforme: {
         medicoId: '',
         pacienteId: '',
@@ -166,7 +214,7 @@ export default {
         observaciones: ''
       },
       cargando: false,
-      errorServidor: false
+      errorServidor: false,
     };
   },
   methods: {
@@ -191,16 +239,24 @@ export default {
 
       return `${fechaFormateada}, ${horaFormateada} h`;
     },
-
+    comprobarExisteInforme(cita) {
+      // Comprobar si ya existe un informe para la cita seleccionada
+      for (const informe of this.informes) {
+        if (informe.citaId === cita._id) {
+          return true;
+        }
+      }
+    },
     async obtenerCitasPasadas() {
       this.cargando = true;
       try {
         const response = await apiClient.get('/api/citas', {
           params: {
-            medicoId: this.medico._id
+            medicoId: this.medico._id,
+            especialidadId: this.departamento._id
           }
         });
-
+        
         const citas = response.data;
         const ahora = new Date();
 
@@ -231,6 +287,33 @@ export default {
         this.cargando = false;
       }
     },
+    async obtenerInformes() {
+      this.cargando = true;
+      try {
+        const response = await apiClient.get('/api/informes', {
+          params: {
+            medicoId: this.medico._id
+          }
+        });
+
+        this.informes = response.data;
+      } catch (error) {
+        console.error('Error al obtener informes:', error);
+        this.errorServidor = true;
+      } finally {
+        this.cargando = false;
+      }
+    },
+    obtenerPacientes() {
+      apiClient.get('/api/usuarios/pacientes')
+        .then(response => {
+          this.pacientes = response.data;
+        })
+        .catch(error => {
+          console.error('Error al obtener pacientes:', error);
+          this.errorServidor = true;
+        });
+    },
     async actualizarEspecialidadYPrestaciones() {
       if (!this.medico._id) {
         this.prestaciones = [];
@@ -260,11 +343,52 @@ export default {
         this.cargando = false;
       }
     },
+    mostrarPrestacion(prestacionId) {
+      const prestacion = this.prestaciones.find(prestacion => prestacion._id === prestacionId);
+      return prestacion ? prestacion.nombre : '';
+    },
+    mostrarPaciente(pacienteId) {
+      const paciente = this.pacientes.find(paciente => paciente._id === pacienteId);
+      return paciente ? `${paciente.nombre} ${paciente.apellidos}` : '';
+    },
+    
+    editarInforme(cita) {
+      const informe = this.informes.find(informe => informe.citaId === cita._id);
+      if (informe) {
+        this.nuevoInforme = {
+          _id: informe._id,
+          medicoId: informe.medicoId,
+          pacienteId: informe.pacienteId,
+          especialidadId: informe.especialidadId,
+          prestacionId: informe.prestacionId,
+          citaId: informe.citaId,
+          fecha: new Date(informe.fecha),
+          diagnostico: informe.diagnostico,
+          observaciones: informe.observaciones
+        };
+        this.mostrarEditarInforme = true;
+      }
+    },
+    guardarInforme() {
+      // Guardar el informe editado
+      apiClient.put(`/api/informes/${this.nuevoInforme._id}`, this.nuevoInforme)
+        .then(() => {
+          this.resetFormulario();
+          this.obtenerCitasPasadas();
+          this.obtenerInformes();
+        })
+        .catch(error => {
+          console.error('Error al guardar informe:', error);
+          this.errorServidor = true;
+        });
+    },
     generarInforme(cita) {
       this.mostrarGenerarInforme = true;
-      this.nuevoInforme.prestacionId = cita.prestacionId || '';
-      this.nuevoInforme.fecha = cita.fechaHora;
+      this.nuevoInforme.especialidadId = cita.especialidadId._id;
+      this.nuevoInforme.prestacionId = cita.prestacionId;
+      this.nuevoInforme.fecha = new Date(cita.fechaHora);
       this.nuevoInforme.pacienteId = cita.pacienteId;
+      this.nuevoInforme.citaId = cita._id;
     },
     formatearFecha(fechaHora) {
       const fecha = new Date(fechaHora);
@@ -281,8 +405,8 @@ export default {
     },
     resetFormulario() {
       this.mostrarGenerarInforme = false;
+      this.mostrarEditarInforme = false;
       this.nuevoInforme = {
-        medicoId: '',
         pacienteId: '',
         especialidadId: '',
         prestacionId: '',
@@ -295,31 +419,95 @@ export default {
     async obtenerDatos() {
       // Obtener todas las citas, especialidades y médicos al montar el componente
       await Promise.all([this.obtenerCitasPasadas()]);
+      this.obtenerInformes();
+      this.obtenerPacientes();
+    },
+    async buscarNombreMedico(medicoId) {
+      const response = await apiClient.get(`/api/usuarios/${medicoId}`);
+      const Medico = response.data;
+      console.log(Medico);
+      return Medico.nombre + ' ' + Medico.apellidos;
     },
 
+    async crearInforme() {
+        try {
+          // Verificar que todos los campos requeridos estén presentes
+          if (!this.nuevoInforme.medicoId || !this.nuevoInforme.pacienteId || !this.nuevoInforme.especialidadId || !this.nuevoInforme.prestacionId || !this.nuevoInforme.citaId || !this.nuevoInforme.fecha || !this.nuevoInforme.diagnostico) {
+            throw new Error('Todos los campos requeridos deben estar presentes');
+          }
+          const Informe = {
+            medicoId: this.nuevoInforme.medicoId,
+            pacienteId: this.nuevoInforme.pacienteId._id,
+            especialidadId: this.nuevoInforme.especialidadId,
+            prestacionId: this.nuevoInforme.prestacionId._id,
+            citaId: this.nuevoInforme.citaId,
+            fecha: this.nuevoInforme.fecha,
+            diagnostico: this.nuevoInforme.diagnostico,
+            observaciones: this.nuevoInforme.observaciones
+          }
+
+          await apiClient.post('/api/informes', Informe);
+          this.resetFormulario();
+          this.obtenerCitasPasadas();
+          location.reload();
+        } catch (error) {
+          console.error('Error al crear informe:', error);
+          throw error; // Relanzar el error para manejarlo en procesarCitas
+        }
+      },
+
+      async verInforme(cita) {
+      const informe = this.informes.find(Informe => Informe.citaId === cita._id);
+      const nombreMedico = await this.buscarNombreMedico(informe.medicoId);
+      const doc = new jsPDF();
+      // Agregar logo
+      const logo = new Image();
+      logo.src = require('@/assets/logo.png');
+      logo.onload = () => {
+        doc.addImage(logo, 'PNG', 10, 10, 60, 15);
+
+        // Agregar contenido del informe
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Informe Médico', 105, 60, null, null, 'center');
+        doc.setFontSize(12);
+        doc.text('Médico:', 15, 80);
+        doc.setFont('helvetica', 'normal');
+        doc.text(` ${nombreMedico} `, 40, 80);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Fecha:', 15, 90);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`${this.formatearFecha(informe.fecha)}`, 40, 90);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Paciente:', 15, 100);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`${this.mostrarPaciente(informe.pacienteId)}`, 40, 100);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Diagnóstico:', 15, 110);
+        doc.rect(15, 115, 180, 30);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`${informe.diagnostico}`, 17, 121);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Observaciones:', 15, 160);
+        doc.rect(15, 165, 180, 30);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`${informe.observaciones}`, 17, 171);
+
+
+        // Abrir el PDF en una nueva pestaña y luego imprimir
+        const pdfData = doc.output('bloburl');
+        window.open(pdfData, '_blank');
+      };
+    },
   },
-  validarFormulario() {
-    //if (!this.nuevaCita.medicoId) {
-    //  alert('Debe seleccionar un médico.');
-    //  return false;
-    //}
-    //if (!this.nuevaCita.fecha) {
-    //  alert('Debe seleccionar una fecha.');
-    //  return false;
-    //}
-    //if (!this.nuevaCita.hora) {
-    //  alert('Debe seleccionar una hora.');
-    //  return false;
-    //}
-    return true;
-  },
+  
   mounted() {
+    this.datosUsuario();
     this.obtenerDatos();
     this.fechaHora = this.obtenerFechaHoraCanarias();
     setInterval(() => {
       this.fechaHora = this.obtenerFechaHoraCanarias();
     }, 1000); // Actualiza la hora cada segundo
-    this.datosUsuario();
   },
   computed: {
     nombreUsuario() {
@@ -327,19 +515,6 @@ export default {
       return authStore.getUser ? `${authStore.getUser.nombre} ${authStore.getUser.apellidos}` : 'Usuario';
     },
 
-    citasFiltradas() {
-      let citasFiltradas = this.citas;
-
-      if (this.filtroEspecialidad) {
-        citasFiltradas = citasFiltradas.filter(cita => cita.especialidad._id === this.filtroEspecialidad);
-      }
-
-      if (this.filtroMedico) {
-        citasFiltradas = citasFiltradas.filter(cita => cita.medico._id === this.filtroMedico);
-      }
-
-      return citasFiltradas;
-    },
   },
 
 };

@@ -10,14 +10,9 @@ const informeSchema = new mongoose.Schema({
   fecha: { 
     type: Date, 
     required: true,
-    validate(value) {
-      if (!validator.isDate(value.toString())) {
-        throw new Error('Fecha inválida.');
-      }
-    }
   },
   diagnostico: { type: String, required: true },
-  observaciones: { type: String, },
+  observaciones: { type: String},
 });
 
 module.exports = mongoose.model('Informe', informeSchema);
