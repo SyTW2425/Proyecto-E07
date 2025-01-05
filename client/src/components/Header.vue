@@ -4,7 +4,15 @@
         <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
       </router-link>
       <div class="vertical-line"></div>
-      <h1 class="left-align small-text">PORTAL DEL PACIENTE</h1>
+      
+      
+      <div v-if="tipoUsuario === 'Paciente'">
+        <h1 class="left-align small-text">PORTAL DEL PACIENTE</h1>
+      </div>
+      <div v-else>
+        <h1 class="left-align small-text">INTRANET</h1>
+      </div>
+
 
       <div class="header-right">
         <div style="margin-right: 0.5rem; font-size: 1.4rem; color: var(--primary-color); font-weight: 500;">
@@ -140,15 +148,17 @@ export default {
 </script>
 
 <style>
-  .contenedor-principal {
+
+  .header {
     display: flex;
     justify-content: space-between;
+    max-width: calc(100% - 4rem); /* O elimina esta línea si no es necesaria */
+    margin-left: 2rem;
+    margin-right: 2rem;
+    box-sizing: border-box; /* Asegura que los márgenes se respeten correctamente */
   }
 
-  .estilo-pagina {  
-    margin-left: 2rem; 
-    margin-right: 2rem;
-  }
+
 
 
   .header span {

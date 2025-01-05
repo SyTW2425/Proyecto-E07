@@ -1,9 +1,9 @@
 <template>
-  <div class="estilo-pagina">
+  <div>
     <Header/>
     <br>  
     <br>
-
+    <div class="estilo-pagina">
     
     
     <!-- Saludo y banner fraudes -->
@@ -71,7 +71,7 @@
 
     <!-- Botones de acceso rápido -->
     <div class="button-container">
-      <a href="#" style="text-decoration: none;">
+      <a href="/pacientes" style="text-decoration: none;">
         <button class="caja-contenido" href="#" >
           <div class="circle">
             <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="white">
@@ -144,6 +144,7 @@
       <button class="btn-encuestas">Ver resultados</button>
     </div>
   
+  </div>
   </div>
 
  </template>  

@@ -1,7 +1,8 @@
 <template>
-  <div class="estilo-pagina">
+  <div>
     <!-- Importa el header -->
     <Header/>
+    <div class="estilo-pagina">
     <br>
     <br>  
     <br>
@@ -122,6 +123,7 @@
       <button class="btn-encuestas">Ver encuestas</button>
     </div>
   </div>
+</div>
   </template>
   
   <script>

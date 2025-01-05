@@ -1,25 +1,10 @@
 <template>
+  <div>
+  <Header/>
   <div class="estilo-pagina" @click.self="cancelEdit">
-    <header class="header">
-      <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
-      <div class="vertical-line"></div>
-      <h1 class="left-align small-text">PORTAL DEL PACIENTE</h1>
-
-      <div class="button-container">
-        <button type="button" class="logout-button" @click="handleLogout">Cerrar sesión</button>
-      </div>
-    </header>
-    <br>
-    <button class="boton" @click="goBack">
-      <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
-        <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
-      </svg>
-      Volver
-    </button>
-    
+  
     <br>  
     <br>
-
 
     <!-- Información del Usuario -->
     <div class="user-info">
@@ -127,14 +112,19 @@
         </ul>
     </div>
   </div>
+</div>
 </template>
 
 <script>
 import { useAuthStore } from '../../store/auth';
 import apiClient from '@/apiClient';
+import Header from './Header.vue';
 
 export default {
   name: "PerfilUsuario",
+  components: {
+    Header
+  },
   data() {
     return {
       editMode: false,

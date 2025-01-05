@@ -1,6 +1,7 @@
 <template>
-  <div class="estilo-pagina">
+  <div>
     <Header/>
+    <div class="estilo-pagina">
     <br>
     <div class="barra-fecha" >
       <span>{{ fechaHora }}</span>
@@ -186,6 +187,7 @@
     </div>
   </div>
   </div>
+</div>
 </template>
 
 <script>

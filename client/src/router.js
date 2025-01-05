@@ -27,6 +27,7 @@ import InicioWrapper from './components/InicioWrapper.vue';
 import JustificantesPaciente from './components/JustificantesPaciente.vue';
 import ReservarCita from './components/ReservarCita.vue';
 import InformesMedico from './components/InformesMedico.vue';
+import GestionPacientesAdmin from './components/GestionPacientesAdmin.vue';
 
 const routes = [
   { path: '/', component: PaginaInicio },
@@ -56,6 +57,7 @@ const routes = [
 
   { path: '/recetasmedico', component: RecetasMedico, meta: { requiresAuth: true, allowedRoles: ['Médico'] } },
   { path: '/recetaspaciente', component: RecetasPaciente, meta: { requiresAuth: true, allowedRoles: ['Paciente'] } },
+  { path: '/pacientes', component: GestionPacientesAdmin, meta: { requiresAuth: true, allowedRoles: ['Administración'] } },
 
   
   { path: '/perfil', component: PerfilUsuario, meta: { requiresAuth: true } },
