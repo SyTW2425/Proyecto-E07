@@ -71,7 +71,7 @@
     <!-- Antecedentes -->
     <div class="antecedentes">
       <div class="header-datos">
-        <button class="header-ctitle">Antecedentes</button>
+        <button class="header-ctitle">Antecedentes médicos</button>
       </div>
       <div class="datos-content">
         <div class="detalle">
