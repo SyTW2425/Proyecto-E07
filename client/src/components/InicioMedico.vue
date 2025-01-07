@@ -45,7 +45,7 @@
 
   <!-- Botones de acceso rápido -->
   <div class="button-container">
-      <a href="/agenda-medico" style="text-decoration: none;">
+      <a href="/agenda" style="text-decoration: none;">
         <button class="caja-contenido" href="#" >
           <div class="circle">
 
@@ -64,7 +64,7 @@
         </button>
       </a>
   
-      <a href="/iniciomedico/recetasmedico" style="text-decoration: none; color: inherit;">
+      <a href="/recetasmedico" style="text-decoration: none; color: inherit;">
         <button class="caja-contenido" href="#">
           <div class="circle">
             <svg

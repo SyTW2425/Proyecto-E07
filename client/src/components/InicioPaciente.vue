@@ -93,7 +93,7 @@
         </button>
       </a>
 
-      <a href="/iniciopaciente/justificantes" style="text-decoration: none; color: inherit;">
+      <a href="/justificantes" style="text-decoration: none; color: inherit;">
         <button class="caja-contenido" href="#">
           <div class="circle">
             <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="white">
@@ -102,6 +102,17 @@
           </div>
           <br>
           <span class="button-text">Justificantes</span>
+        </button>
+      </a>
+      <a href="/iniciopaciente/informes" style="text-decoration: none; color: inherit;">
+        <button class="caja-contenido" href="#">
+          <div class="circle">
+            <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="white">
+              <path d="M200-200h560v-367L567-760H200v560Zm0 80q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h400l240 240v400q0 33-23.5 56.5T760-120H200Zm80-160h400v-80H280v80Zm0-160h400v-80H280v80Zm0-160h280v-80H280v80Zm-80 400v-560 560Z"/>
+            </svg>
+          </div>
+          <br>
+          <span class="button-text">Informes</span>
         </button>
       </a>
     </div>
