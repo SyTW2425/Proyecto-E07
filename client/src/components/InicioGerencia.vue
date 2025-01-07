@@ -1,6 +1,7 @@
 <template>
-  <div class="estilo-pagina">
+    <div>
     <Header/>
+    <div class="estilo-pagina">
     <br>  
     <br>
     
@@ -254,7 +255,7 @@
 
 
 
-</div>
+</div></div>
 </template>
   
 <script>
@@ -294,7 +295,7 @@ export default {
       if (hora >= 6 && hora < 12) {
         this.saludo = "Buenos días";
         this.icono = require('@/assets/icons/buenos_dias.png');
-      } else if (hora >= 13 && hora < 20) {
+      } else if (hora < 20) {
         this.saludo = "Buenas tardes";
         this.icono = require('@/assets/icons/buenas_tardes.png');
       } else {

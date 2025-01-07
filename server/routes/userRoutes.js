@@ -104,7 +104,6 @@ router.get('/usuarios', async (req, res) => {
     res.status(500).json({ message: 'Error al obtener usuarios', error });
   }
 });
-
 // Ruta para crear un usuario, incluyendo la carga de imagen
 router.post('/usuarios', validateRegister, async (req, res) => {
   try {
@@ -112,7 +111,15 @@ router.post('/usuarios', validateRegister, async (req, res) => {
       req.body.departamento = null;
     }
 
-    req.body.username = await generarUsername(req.body.nombre, req.body.apellidos);
+    if (!req.body.username || req.body.username.trim() === '') {
+      req.body.username = await generarUsername(req.body.nombre, req.body.apellidos);
+    }
+
+    const existingUser = await Usuario.findOne({ username: req.body.username });
+    if (existingUser) {
+      return res.status(409).json({ message: 'El nombre de usuario ya está en uso' });
+    }
+
     const usuarioData = { ...req.body };
     const usuario = new Usuario(usuarioData);
     await usuario.save();

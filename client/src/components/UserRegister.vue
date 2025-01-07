@@ -95,6 +95,8 @@ export default {
         if (error.response) {
           if (error.response.status === 400) {
             this.errorMessage = 'Solicitud incorrecta. Por favor, verifica los datos ingresados.';
+          } else if (error.response.status === 409) {
+            this.errorMessage = 'El nombre de usuario ya está en uso. Por favor, elige otro.';
           } else {
             this.errorMessage = 'Error del servidor. Por favor, intenta nuevamente más tarde.';
           }
