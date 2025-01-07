@@ -29,7 +29,68 @@
             <h2 style="color: var(--primary-color);">Asignar cita</h2>
           </div>
           <br>
-  
+
+          <div v-if="citaSeleccionada" class="citas-disponibles-item">
+            
+            <p class="icono-texto">
+              <span class="circle-citas-disponibles">
+              <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="var(--primary-color)">
+                <path d="M680-320q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm0-80q17 0 28.5-11.5T720-440q0-17-11.5-28.5T680-480q-17 0-28.5 11.5T640-440q0 17 11.5 28.5T680-400ZM440-40v-116q0-21 10-39.5t28-29.5q32-19 67.5-31.5T618-275l62 75 62-75q37 6 72 18.5t67 31.5q18 11 28.5 29.5T920-156v116H440Zm79-80h123l-54-66q-18 5-35 13t-34 17v36Zm199 0h122v-36q-16-10-33-17.5T772-186l-54 66Zm-76 0Zm76 0Zm-518 0q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v200q-16-20-35-38t-45-24v-138H200v560h166q-3 11-4.5 22t-1.5 22v36H200Zm80-480h280q26-20 57-30t63-10v-40H280v80Zm0 160h200q0-21 4.5-41t12.5-39H280v80Zm0 160h138q11-9 23.5-16t25.5-13v-51H280v80Zm-80 80v-560 137-17 440Zm480-240Z"/>
+              </svg></span>
+              {{ citaSeleccionada.medicoId.nombre }} {{ citaSeleccionada.medicoId.apellidos }}
+            </p>  
+
+            <p class="icono-texto">
+              <span class="circle-citas-disponibles">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
+                <path d="M540-80q-108 0-184-76t-76-184v-23q-86-14-143-80.5T80-600v-240h120v-40h80v160h-80v-40h-40v160q0 66 47 113t113 47q66 0 113-47t47-113v-160h-40v40h-80v-160h80v40h120v240q0 90-57 156.5T360-363v23q0 75 52.5 127.5T540-160q75 0 127.5-52.5T720-340v-67q-35-12-57.5-43T640-520q0-50 35-85t85-35q50 0 85 35t35 85q0 39-22.5 70T800-407v67q0 108-76 184T540-80Zm220-400q17 0 28.5-11.5T800-520q0-17-11.5-28.5T760-560q-17 0-28.5 11.5T720-520q0 17 11.5 28.5T760-480Zm0-40Z"/>
+              </svg></span>
+              {{ citaSeleccionada.especialidadId ? citaSeleccionada.especialidadId.nombre : 'No asignada' }}
+            </p>
+
+            <p class="icono-texto">
+              <span class="circle-citas-disponibles">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
+                <path d="M480-254 330-104q-23 23-56 23t-56-23L104-218q-23-23-23-56t23-56l150-150-150-150q-23-23-23-56t23-56l114-114q23-23 56-23t56 23l150 150 150-150q23-23 56-23t56 23l114 114q23 23 23 56t-23 56L706-480l150 150q23 23 23 56t-23 56L742-104q-23 23-56 23t-56-23L480-254Zm0-266q17 0 28.5-11.5T520-560q0-17-11.5-28.5T480-600q-17 0-28.5 11.5T440-560q0 17 11.5 28.5T480-520Zm-170-16 114-114-150-150-114 114 150 150Zm90 96q17 0 28.5-11.5T440-480q0-17-11.5-28.5T400-520q-17 0-28.5 11.5T360-480q0 17 11.5 28.5T400-440Zm80 80q17 0 28.5-11.5T520-400q0-17-11.5-28.5T480-440q-17 0-28.5 11.5T440-400q0 17 11.5 28.5T480-360Zm80-80q17 0 28.5-11.5T600-480q0-17-11.5-28.5T560-520q-17 0-28.5 11.5T520-480q0 17 11.5 28.5T560-440Zm-24 130 150 150 114-114-150-150-114 114ZM339-621Zm282 282Z"/>
+              </svg></span>
+             {{ citaSeleccionada.prestacionId ? citaSeleccionada.prestacionId.nombre : 'No asignada' }}
+            </p>
+
+            <p class="icono-texto">
+              <span class="circle-citas-disponibles">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
+                <path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm280 240q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-160 0q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm320 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-160 0q-17 0-28.5-11.5T280-280q0-17 11.5-28.5T320-320q17 0 28.5 11.5T360-280q0 17-11.5 28.5T320-240Zm320 0q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"/>
+              </svg></span>
+              {{ formatearFecha(citaSeleccionada.fechaHora) }}
+            </p>
+
+            <p class="icono-texto">
+              <span class="circle-citas-disponibles">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
+                <path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z"/>
+              </svg></span>
+
+              {{ formatearHora(citaSeleccionada.fechaHora) }} ({{ citaSeleccionada.duracion }} minutos)
+            </p>
+            </div>
+
+            <div v-if="citaSeleccionada">
+              <!-- Selector de Pacientes -->
+              <label>Paciente:<br>
+              <select v-model="pacienteSeleccionado">
+                <option value="">Seleccione un paciente</option>
+                <option v-for="paciente in pacientes" :key="paciente._id" :value="paciente._id">
+                    {{ paciente.nombre }} {{ paciente.apellidos }}
+                </option>
+              </select>
+              </label>
+            
+                <button v-if="pacienteSeleccionado.length > 0" @click="confirmarAsignacion()" class="boton-crear" style="color: var(--primary-color); background-color: (--color-verde);">
+                Asignar cita
+                </button>
+            </div>
+
+
         
       </div>
   
@@ -164,7 +225,7 @@
                 <button 
                   v-else 
                   class="boton-crear" 
-                  @click="confirmarAsignacion(cita._id)" 
+                  @click="botonAsignarCita(cita)" 
                   style="background-color: var(--color-verde); color: var(--primary-color); width: 100%;">
                   Asignar
                 </button>
@@ -207,8 +268,7 @@ export default {
             especialidadSeleccionada: '', // Datos del departamento del médico seleccionado
             prestaciones: '', // Prestaciones de la especialidad seleccionada
             prestacionSeleccionada: '',
-            medico: {}, // Datos del médico seleccionado
-            paciente: '', // Datos del paciente seleccionado
+            pacienteSeleccionado: '', // Datos del paciente seleccionado
             fechaFinalSeleccionada: '',
             fechaInicioSeleccionada: '',
             citaSeleccionada: '',
@@ -332,9 +392,6 @@ export default {
             return `${horas}:${minutos} h`;
         },
         
-        resetFormulario() {
-            this.citaSeleccionada = '';
-        },
 
         confirmarDesasignacion(id) {
             const confirmacion = window.confirm(`¿Está seguro de que desea desasignar la cita?`);
@@ -342,10 +399,10 @@ export default {
                 this.desasignarCita(id);
             }
         },
-        confirmarAsignacion(id) {
+        confirmarAsignacion() {
             const confirmacion = window.confirm(`¿Está seguro de que desea asignar la cita?`);
             if (confirmacion) {
-                this.asignarCita(id);
+                this.asignarCita(this.citaSeleccionada._id);
             }
         },
 
@@ -387,7 +444,7 @@ export default {
 
                 // Realizar la petición PUT para reservar la cita
                 const response = await apiClient.put(`/api/citas/${citaId}`, {
-                    pacienteId: this.paciente // Se asigna el paciente seleccionado
+                    pacienteId: this.pacienteSeleccionado // Se asigna el paciente seleccionado
                 });
 
                 // Manejar la respuesta de éxito
@@ -395,6 +452,7 @@ export default {
                     alert('Cita asignada con éxito');
                     // Actualizar el estado de la lista de citas disponibles y las citas de consulta
                     this.obtenerCitas();
+                    this.restaurarValores();
                 } else {
                     console.error('Error al reservar la cita', response);
                     alert('Hubo un error al reservar la cita');
@@ -437,6 +495,12 @@ export default {
           this.fechaFinalSeleccionada = '';
           this.tipoCitaSeleccionada = '';
           this.searchQuery = '';
+          this.citaSeleccionada = '';
+          this.pacienteSeleccionado = '';
+          this.filtrado = false;
+        },
+        botonAsignarCita(citaId) {
+          this.citaSeleccionada = citaId;
         },
 
 
@@ -709,6 +773,39 @@ export default {
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       
     }
+
+    .citas-disponibles-item {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      color: var(--primary-color); /* Texto blanco para mejor contraste */
+      background-color: #f4f9ff;
+      border: 1px solid #d2e4fd;
+    }
+
+    .citas-disponibles-item p {
+      margin: 5px 0; /* Espaciado entre párrafos */
+    }
+
+    .icono-texto {
+      display: flex;
+      align-items: center;
+    }
+
+    /* Estilo del círculo */
+  .circle-citas-disponibles {
+    width: 2rem; /* Tamaño del círculo */
+    height: 2rem;
+    border-radius: 50%; /* Hace que sea un círculo */
+    background-color: var(--color-azul2); /* Usa el color definido */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.5rem;
+    margin: 0.1rem;
+    margin-right: 10px; 
+
+  }
   
   
     </style>
