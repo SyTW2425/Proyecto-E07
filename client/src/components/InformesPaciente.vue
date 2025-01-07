@@ -5,7 +5,7 @@
     <br>  
 
     <div class="contenedor-body">
-      <h2 class="titulo">Citas anteriores - Justificantes</h2>
+      <h2 class="titulo">Citas anteriores - Informes</h2>
       <br/>
       <!-- Indicador de error y carga -->
       <v-alert
@@ -40,8 +40,8 @@
             <p><strong>Prestacion:</strong> {{ cita.prestacionId.nombre }}</p>
           </div>
           <div class="cita-footer">
-            <button @click="imprimirReceta(cita)" class="btn-imprimir"><i class="fas fa-print"></i> Imprimir</button>
-            <button @click="descargarReceta(cita)" class="btn-descargar"><i class="fas fa-download"></i> Descargar</button>
+            <button @click="imprimirInforme(cita)" class="btn-imprimir"><i class="fas fa-print"></i> Imprimir</button>
+            <button @click="descargarInforme(cita)" class="btn-descargar"><i class="fas fa-download"></i> Descargar</button>
           </div>
         </div>
       </div>
@@ -56,7 +56,7 @@
   import jsPDF from 'jspdf';
 
   export default {
-    name: "JustificantesPaciente",
+    name: "InformesPaciente",
       components: {
       Header
     },
@@ -67,7 +67,8 @@
         horaActual: '',
         cargando: false,
         errorServidor: false,
-        citasPasadas: []
+        citasPasadas: [],
+        informes: []
       };
     },
     computed: {
@@ -102,6 +103,20 @@
             this.cargando = false;
           }
         },
+      async obtenerInformes () {
+        this.cargando = true;
+        this.errorServidor = false;
+        try {
+          const response = await apiClient.get('/api/informes', {
+            params: { pacienteId: this.usuarioId }
+          });
+          this.informes = response.data;
+        } catch (error) {
+          this.errorServidor = true;
+        } finally {
+          this.cargando = false;
+        }
+      },
       actualizarSaludo() {
         const ahora = new Date();
         const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
@@ -144,51 +159,63 @@
         const minutos = String(fecha.getMinutes()).padStart(2, '0');
         return `${horas}:${minutos} h`;
       },
-      imprimirReceta(cita) {
+      async buscarNombreMedico(medicoId) {
+        const response = await apiClient.get(`/api/usuarios/${medicoId}`);
+        const Medico = response.data;
+        console.log(Medico);
+        return Medico.nombre + ' ' + Medico.apellidos;
+      },
+      async mostrarPaciente(pacienteId) {
+        const response = await apiClient.get(`/api/usuarios/${pacienteId}`);
+        const Paciente = response.data;
+        console.log(Paciente);
+        return Paciente.nombre + ' ' + Paciente.apellidos;
+      },
+      async imprimirInforme(cita) {
+        const informe = this.informes.find(Informe => Informe.citaId === cita._id);
+        const nombreMedico = await this.buscarNombreMedico(informe.medicoId);
+        const nombrePaciente = await this.mostrarPaciente(informe.pacienteId);
         const doc = new jsPDF();
-
         // Agregar logo
         const logo = new Image();
         logo.src = require('@/assets/logo.png');
         logo.onload = () => {
           doc.addImage(logo, 'PNG', 10, 10, 60, 15);
-
-          // Agregar contenido del justificante
+        
+          // Agregar contenido del informe
           doc.setFontSize(16);
           doc.setFont('helvetica', 'bold');
-          doc.text('Justificante de cita', 105, 60, null, null, 'center');
+          doc.text('Informe Médico', 105, 60, null, null, 'center');
           doc.setFontSize(12);
-          doc.text('Paciente:', 30, 70);
+          doc.text('Médico:', 15, 80);
           doc.setFont('helvetica', 'normal');
-          doc.text(`${cita.pacienteId?.nombre} ${cita.pacienteId?.apellidos}`, 70, 70);
+          doc.text(` ${nombreMedico} `, 40, 80);
           doc.setFont('helvetica', 'bold');
-          doc.text('Médico:', 30, 80);
+          doc.text('Fecha:', 15, 90);
           doc.setFont('helvetica', 'normal');
-          doc.text(`${cita.medicoId?.nombre} ${cita.medicoId?.apellidos}`, 70, 80);
+          doc.text(`${this.formatearFecha(informe.fecha)}`, 40, 90);
           doc.setFont('helvetica', 'bold');
-          doc.text('Fecha:', 30, 90);
+          doc.text('Paciente:', 15, 100);
           doc.setFont('helvetica', 'normal');
-          doc.text(`${this.formatearFecha(cita.fechaHora)}`, 70, 90);
+          doc.text(`${nombrePaciente}`, 40, 100);
           doc.setFont('helvetica', 'bold');
-          doc.text('Hora:', 30, 100);
+          doc.text('Diagnóstico:', 15, 110);
+          doc.rect(15, 115, 180, 30);
           doc.setFont('helvetica', 'normal');
-          doc.text(`${this.formatearHora(cita.fechaHora)}`, 70, 100);
+          doc.text(`${informe.diagnostico}`, 17, 121);
           doc.setFont('helvetica', 'bold');
-          doc.text('Especialidad:', 30, 110);
+          doc.text('Observaciones:', 15, 160);
+          doc.rect(15, 165, 180, 30);
           doc.setFont('helvetica', 'normal');
-          doc.text(`${cita.especialidadId?.nombre}`, 70, 110);
-          doc.setFont('helvetica', 'bold');
-          doc.text('Prestación:', 30, 120);
-          doc.setFont('helvetica', 'normal');
-          doc.text(`${cita.prestacionId?.nombre}`, 70, 120);
+          doc.text(`${informe.observaciones}`, 17, 171);
         
-
+        
           // Abrir el PDF en una nueva pestaña y luego imprimir
           const pdfData = doc.output('bloburl');
           window.open(pdfData, '_blank');
         };
       },
-      async descargarReceta(cita) {
+      async descargarInforme(cita) {
         const doc = new jsPDF();
 
         // Agregar logo
@@ -197,7 +224,7 @@
         logo.onload = () => {
           doc.addImage(logo, 'PNG', 10, 10, 60, 15);
 
-          // Agregar contenido del justificante
+          // Agregar contenido del informe
           doc.setFontSize(16);
           doc.setFont('helvetica', 'bold');
           doc.text('Justificante de cita', 105, 60, null, null, 'center');
@@ -236,6 +263,7 @@
       this.actualizarSaludo();
       this.actualizarHora();
       this.obtenerCitasPasadas(); // Llamar a la función para obtener las citas pasadas
+      this.obtenerInformes();
       setInterval(() => {
         this.actualizarHora();
       }, 1000); // Actualiza la hora cada segundo
