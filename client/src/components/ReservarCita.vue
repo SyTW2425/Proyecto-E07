@@ -1,6 +1,8 @@
 <template>    
-    <div class="estilo-pagina">
+  <div>
+    
     <Header/>
+    <div class="estilo-pagina">
     <br>
     <br>  
     <br>
@@ -22,7 +24,7 @@
         <!-- Mostrar el nombre del paciente seleccionado -->
   
         <!-- Selector de Especialidad -->
-        <label>Especialidad:
+        <label>Especialidad:<br>
           <select v-model="selectedEspecialidad" @change="cargarMedicos">
             <option value="">Seleccione una especialidad</option>
             <option v-for="especialidad in especialidades" :key="especialidad._id" :value="especialidad._id">
@@ -31,10 +33,9 @@
           </select>
         </label>
         <br>
-        <br>
   
         <!-- Selector de Médico -->
-        <label>Médico:
+        <label>Médico:<br>
           <select v-model="selectedMedico" @change="cargarCitasDisponibles">
             <option value="">Cualquiera</option>
             <option v-for="medico in medicos" :key="medico._id" :value="medico._id">
@@ -178,6 +179,7 @@
       </div>
     </div>
     </div>
+  </div>
   </template>
     
     
@@ -516,8 +518,8 @@
     background-color: #C6DEFD; /* Color de fondo del campo */
     padding: 8px;
     border-radius: 5px;
-    outline: none;
-    font-family: 'Outfit', sans-serif; /* Asegura que la fuente sea uniforme */
+    width: 100%;
+    font-weight: 400;
   }
 
   /* Cambia el color del borde y añade un efecto cuando el campo está enfocado */
@@ -532,6 +534,8 @@
     margin-bottom: 10px;
     text-align: left; /* Alinea los labels a la izquierda para mejor legibilidad */
     font-weight: bold; /* Resalta los labels */
+    width: 100%;
+
   } 
 
   .informacion {
@@ -541,6 +545,7 @@
   
   select, option {
     font-weight: 500; /* Ajuste del grosor de la fuente de letra  */
+    font-weight: 400;
   }
 
   .cita-item {
@@ -557,8 +562,8 @@
   }
 
   .cita-item button {
-    background-color: #dc3545; /* Fondo rojo para el botón */
-    color: white; /* Texto blanco */
+    background-color: var(--color-rojo); /* Fondo rojo para el botón */
+    color: var(--primary-color); /* Texto blanco */
     border: none;
     padding: 5px 10px;
     border-radius: 3px;
@@ -566,7 +571,8 @@
   }
 
   .cita-item button:hover {
-   background-color: #c82333; /* Fondo rojo más oscuro al pasar el ratón */
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px var(--color-rojo);
   }
 
   .citas-disponibles-item {
@@ -583,15 +589,16 @@
   }
 
   .citas-disponibles-item button {
-    background-color: var(--success-color);
-    color: white;
+    background-color: var(--color-verde);
+    color: var(--primary-color);
     border: none;
     padding: 5px 10px;
     border-radius: 3px;
     cursor: pointer;
   }
   .citas-disponibles-item button:hover {
-    background-color: #22953d;
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px var(--color-verde);
   }
 
   .aviso-cuadro {

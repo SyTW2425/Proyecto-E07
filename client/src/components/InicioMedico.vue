@@ -1,7 +1,8 @@
 <template>
-  <div class="estilo-pagina">
+  <div>
+  
     <Header/>
-
+    <div class="estilo-pagina">
     <br>
     <br>  
     <br>
@@ -146,6 +147,7 @@
     </div>
     
     </div>
+  </div>
 </template>
   
   <script>

@@ -4,7 +4,15 @@
         <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
       </router-link>
       <div class="vertical-line"></div>
-      <h1 class="left-align small-text">PORTAL DEL PACIENTE</h1>
+      
+      
+      <div v-if="tipoUsuario === 'Paciente'">
+        <h1 class="left-align small-text">PORTAL DEL PACIENTE</h1>
+      </div>
+      <div v-else>
+        <h1 class="left-align small-text">INTRANET</h1>
+      </div>
+
 
       <div class="header-right">
         <div style="margin-right: 0.5rem; font-size: 1.4rem; color: var(--primary-color); font-weight: 500;">
@@ -66,7 +74,7 @@
                 </svg>
                 Mis datos
               </li>
-              <li @click="cerrarSesion">
+              <li @click="cerrarSesion" style="background-color: var(--color-azul); color: var(--primary-color); margin-bottom: 0; padding-bottom: 10px;">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
                   <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/>
                 </svg>
@@ -140,15 +148,17 @@ export default {
 </script>
 
 <style>
-  .contenedor-principal {
+
+  .header {
     display: flex;
     justify-content: space-between;
+    max-width: calc(100% - 4rem); /* O elimina esta línea si no es necesaria */
+    margin-left: 2rem;
+    margin-right: 2rem;
+    box-sizing: border-box; /* Asegura que los márgenes se respeten correctamente */
   }
 
-  .estilo-pagina {  
-    margin-left: 2rem; 
-    margin-right: 2rem;
-  }
+
 
 
   .header span {

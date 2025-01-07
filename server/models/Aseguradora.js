@@ -28,6 +28,10 @@ const aseguradoraSchema = new mongoose.Schema({
           }
         },
       },
+      foto: {
+        type: String,
+        default: null,
+      },
     },
   ],
 });

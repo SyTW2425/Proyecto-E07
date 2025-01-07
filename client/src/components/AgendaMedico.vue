@@ -1,6 +1,7 @@
 <template>
-  <div class="estilo-pagina">
+  <div>
     <Header/>
+    <div class="estilo-pagina">
     <br>
     <div class="barra-fecha" >
       <span>{{ fechaHora }}</span>
@@ -47,13 +48,12 @@
           </select>
         </label>
         <br>
-        <br>
 
         <!-- Selección de Fecha -->
         <label>Fecha:
           <input type="date" v-model="nuevaCita.fecha" required />
         </label>
-        <br><br>
+        <br>
         
         <!-- Mostrar solo si la prestación seleccionada es "Consulta" -->
         <div v-if="esConsulta">
@@ -116,7 +116,6 @@
 
         </div>
 
-        <br>
         <br>
 
 
@@ -186,6 +185,7 @@
     </div>
   </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -580,7 +580,7 @@ export default {
   }
   
   .columna-formulario {
-    width: 40%;
+    width: 30%;
   }
   .columna-citas {
     width: 65%;
@@ -782,7 +782,8 @@ export default {
     padding: 8px;
     border-radius: 5px;
     outline: none;
-    font-family: 'Outfit', sans-serif; /* Asegura que la fuente sea uniforme */
+    width: 100%;
+    font-weight: 400;
   }
 
   /* Cambia el color del borde y añade un efecto cuando el campo está enfocado */
@@ -797,6 +798,8 @@ export default {
     margin-bottom: 10px;
     text-align: left; /* Alinea los labels a la izquierda para mejor legibilidad */
     font-weight: bold; /* Resalta los labels */
+    width: 100%;
+
   } 
 
 
