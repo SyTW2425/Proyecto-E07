@@ -25,9 +25,9 @@ import RecetasMedico from './components/RecetasMedico.vue';
 import GestionAseguradoras from './components/GestionAseguradoras.vue';
 import InicioWrapper from './components/InicioWrapper.vue';
 import JustificantesPaciente from './components/JustificantesPaciente.vue';
-import ReservarCita from './components/ReservarCita.vue';
 import InformesMedico from './components/InformesMedico.vue';
 import GestionPacientesAdmin from './components/GestionPacientesAdmin.vue';
+import CitasWrapper from './components/CitasWrapper.vue';
 
 const routes = [
   { path: '/', component: PaginaInicio },
@@ -66,7 +66,7 @@ const routes = [
   { path: '/aseguradoras', component: GestionAseguradoras, meta: { requiresAuth: true, allowedRoles: ['Gerencia'] } },
   { path: '/inicio', component: InicioWrapper, meta: { requiresAuth: true } },
 
-  { path: '/citas', component: ReservarCita, meta: { requiresAuth: true, allowedRoles: ['Paciente'] } },
+  { path: '/citas', component: CitasWrapper, meta: { requiresAuth: true, allowedRoles: ['Paciente', 'Administración'] } },
   { path: '/:pathMatch(.*)*', component: PaginaError }, // Página de error 404
 
   
