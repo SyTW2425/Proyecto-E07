@@ -66,7 +66,7 @@ const authRoutes = require('./routes/authRoutes.js');
 app.use(authRoutes);
 
 // Conexión a MongoDB Atlas
-const dbUri = process.env.NODE_ENV === 'test' ? process.env.MONGODB_URI_TEST : process.env.MONGODB_URI;
+const dbUri = process.env.NODE_ENV === 'test' ? process.env.MONGODB_TEST_URI : process.env.MONGODB_URI;
 mongoose.connect(dbUri)
   .then(() => console.log('Conectado a MongoDB Atlas'))
   .catch((error) => console.error('Error al conectar a MongoDB Atlas:', error));

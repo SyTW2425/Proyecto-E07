@@ -20,12 +20,15 @@ const citaSchema = new mongoose.Schema({
   fechaHora: { 
     type: Date, 
     required: true,
-    validate(value) {
-      if (isNaN(value.getTime())) {
-        throw new Error('Fecha y hora inválidas.');
+    validate: {
+      validator: function(value) {
+        if (isNaN(Date.parse(value))) {
+          throw new Error('Fecha y hora inválidas.');
+        }
+        return true;
       }
     }
-  }, 
+  },
   duracion: { 
     type: Number, 
     required: true,
