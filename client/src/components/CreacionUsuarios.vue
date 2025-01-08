@@ -21,7 +21,7 @@
       <form @submit.prevent="crearUsuario">
         <img v-if="fotoPreview" :src="fotoPreview" alt="Previsualización de Foto de Perfil" class="foto-preview"/>
 
-        <label>Nombre:<br>
+        <label>Nombre*:<br>
           <input
             type="text"
             v-model="nuevoUsuario.nombre"
@@ -116,7 +116,7 @@
         </button>
         <button class="boton-crear" type="button" v-if="editarUsuarioId" @click="actualizarUsuario">
           Guardar Cambios
-        </button> <br>
+        </button>
         <button class="boton-crear" type="button" v-if="editarUsuarioId" @click="cancelarEdicion" style="background-color: var(--color-rojo);">
           Cancelar
         </button>
@@ -125,8 +125,7 @@
 
     <!-- Columna derecha: Lista de usuarios -->
     <div class="columna-lista">
-      <div class="alinear-elementos">
-         
+      <div class="alinear-elementos">  
          <div class="circle">
           <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M18 16.5C18 18.9862 15.9862 21 13.5 21C11.0138 21 9 18.9862 9 16.5C9 14.0138 11.0138 12 13.5 12C15.9862 12 18 14.0138 18 16.5Z" fill="var(--primary-color)"/>
@@ -528,6 +527,7 @@ label {
 
 /* Botones estilizados */
 .boton-crear {
+      margin-top: 6px;
       background-color: var(--color-verde);
       color: var(--primary-color);
       font-size: 1.1rem;
