@@ -491,7 +491,7 @@ export default {
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  padding: 20px;
+  padding: 30px;
 }
 
 /* Columna para el formulario de creación de usuarios */
