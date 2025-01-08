@@ -234,6 +234,7 @@ export default {
         };
         reader.readAsDataURL(file);
       }
+      location.reload();
     },
     handlePasswordChange(key) {
       if (key === 'password') {

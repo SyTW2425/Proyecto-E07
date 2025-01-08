@@ -282,20 +282,21 @@ button {
 
 .big-buttons {
   position: relative;
-  display: flex;
   flex-wrap: wrap;
   gap: 45px;
   margin: 0 auto;
-  }
+  padding-bottom: 10px;
+  padding-top: 0;
+}
 
 .big-button-blue {
   position: relative;
+  flex: auto;
   width: 320px;
   height: 465px;
   background: #c6ddfc;
   border-radius: 60px;
   margin: 0 auto;
-
 }
 
 .img-section {
@@ -323,19 +324,18 @@ button {
 .buttons-text-eq-med {
   position: relative;
   color: #17195e;
-  top: 150px;
   font-family: Outfit, var(--default-font-family);
   font-size: 2rem;
   font-weight: 600;
   line-height: 46px;
   text-align: center;
   text-transform: capitalize;
+  bottom: 0;
 }
 
 .buttons-text-eq-med-dep {
   position: relative;
   color: #17195e;
-  top: 160px;
   font-family: Outfit, var(--default-font-family);
   font-size: 1.4rem;
   line-height: 46px;

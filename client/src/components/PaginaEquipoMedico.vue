@@ -1,5 +1,6 @@
 
 <template>
+  <div class="contenedor-principal">
     <div class="equipo_medico">
       <header class="header">
         <nav class="navbar navbar-expand-lg">
@@ -57,8 +58,15 @@
 
         <div class="big-buttons" v-for="usuario in usuariosFiltro" :key="usuario._id">
           <button class="big-button-blue" v-if="usuario.index % 2 !== 0">
-            <img src="@/assets/estados/perfil_defecto.png" alt="consultas_externas" class="img-section">
+            
             <div v-if="usuario.genero === 'Masculino'">
+              
+              <div style="display: flex; justify-content: center;">
+                <div style="display: flex; justify-content: center; align-items: top; background-color: var(--color-azul2); border-radius: 60px; width: 320px; height: 300px;">
+                  <img v-if="usuario.foto" :src="usuario.foto" alt="Foto de perfil" class="foto-preview"/>
+                  <img v-else :src="fotoPreview" alt="Previsualización de Foto de Perfil" class="foto-preview"/>
+                </div>
+              </div>
               <span class="buttons-text-eq-med-dep"> {{ getDepartamentoName(usuario.departamento) }}</span>
               <br>
               <span class="buttons-text-eq-med" > Dr. {{ usuario.nombre }} {{ usuario.apellidos }}</span>
@@ -71,7 +79,12 @@
           </button>
 
           <button class="big-button-green" v-if="usuario.index % 2 === 0">
-            <img src="@/assets/estados/perfil_defecto.png" alt="consultas_externas" class="img-section">
+            <div style="display: flex; justify-content: center;">
+                <div style="display: flex; justify-content: center; align-items: top; background-color: var(--color-azul2); border-radius: 60px; width: 320px; height: 300px;">
+                  <img v-if="usuario.foto" :src="usuario.foto" alt="Foto de perfil" class="foto-preview"/>
+                  <img v-else :src="fotoPreview" alt="Previsualización de Foto de Perfil" class="foto-preview"/>
+                </div>
+              </div>
             <div v-if="usuario.genero === 'Masculino'">
               <span class="buttons-text-eq-med-dep"> {{ getDepartamentoName(usuario.departamento) }}</span>
               <br>
@@ -96,6 +109,7 @@
   
   
     </div>
+  </div>
   </template>
   
   <style src="@/assets/styles.css"></style>
@@ -113,7 +127,8 @@
         index: [],
         cargando: false,
         errorServidor: false,
-        filtroTipo: "Médico"
+        filtroTipo: "Médico",
+        fotoPreview: require('@/assets/estados/perfil_defecto.png'),
       };
     },
     computed: {
@@ -186,4 +201,15 @@
   </script>
     
     
-  
+  <style scoped>
+  .foto-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  .foto-preview {
+    width: 320px;
+    border-radius: 60px;
+  }
+</style>
