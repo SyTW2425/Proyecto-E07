@@ -1,6 +1,6 @@
 <template>
   <div id="inicio">
-
+    
   
     <!-- Hero Section (Sección principal) -->
     <section class="hero" role="region" aria-labelledby="hero-heading">
@@ -51,19 +51,14 @@
   
     <!-- Personal Health Section (Área personal de salud) -->
     <section class="personal-health" role="region" aria-labelledby="personal-health-heading">
-      <h2 id="personal-health-heading" tabindex="0">Área personal de salud</h2>
-      <p tabindex="0">Accede a cualquier hora del día para cuidar tu salud. En el Portal del Paciente tienes tu espacio personal privado y seguro en el que puedes solicitar y gestionar tus citas o consultar tus informes clínicos.</p>
-      <div class="d-grid gap-2 d-md-block">
-        <router-link to="/register" class="btn btn-primary" color="white" type="button"> Regístrate ahora</router-link>
-      </div>
+      <img :src="require('@/assets/general/banner-area-personal-salud.png')" alt="Banner Área Personal de Salud" class="personal-health-banner" tabindex="0">
     </section>
   
-   
+    
   </div>
 </template>
   
 <script>
-import { useAuthStore } from '../../store/auth';
 
 export default {
   name: 'PaginaInicio',
@@ -74,16 +69,8 @@ export default {
   },
   methods: {
     redirectToLogin() {
-      const authStore = useAuthStore(); 
-      if (authStore.isAuthenticated) {
-        this.$router.push('/inicio'); 
-      } else {
-        this.$router.push('/login'); 
-      }
+      this.$router.push('/login'); 
     },
-    scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
   },
 };
 </script>
@@ -395,5 +382,12 @@ export default {
 
 :focus {
   outline: 2px solid #92bdf6; /* Color del contorno al enfocar con tabulación */
+}
+
+.personal-health-banner {
+  width: 84%;
+  height: auto;
+  margin-top: 1rem; /* Solo margen superior */
+  margin-bottom: 0; /* Sin margen inferior */
 }
 </style>
