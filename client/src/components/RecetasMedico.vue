@@ -14,7 +14,7 @@
         
       </div>
     </div>
-
+    <br>
    <div class="contenedor-principal">
      <!-- Columna izquierda: Formulario de creación de recetas -->
      <div class="columna-formulario">
@@ -319,8 +319,7 @@ export default {
   .contenedor-principal {
     display: flex;
     justify-content: space-between;
-    gap: 20px;
-    padding: 20px;
+
   }
   
   
@@ -511,10 +510,7 @@ select:focus {
   background-color: #C6DEFD; /* Mantiene el color de fondo al hacer foco */
 }
 
-.contenedor-principal {
-    display: flex;
-    justify-content: space-between;
-  }
+
   .contenedor-body {
   padding: 20px;
   background-color: #f9f9f9;
