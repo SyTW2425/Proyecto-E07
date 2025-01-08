@@ -16,7 +16,7 @@ router.get('/auth/google/callback',
       sameSite: 'Strict',
       maxAge: 3600000 
     });
-    res.redirect('http://localhost:8080/iniciopaciente');
+    res.redirect('http://localhost:8080/inicio');
   }
 );
 
