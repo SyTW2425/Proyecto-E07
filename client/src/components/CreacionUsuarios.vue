@@ -352,7 +352,6 @@ export default {
     async actualizarUsuario() {
       // Crear una copia del objeto nuevoUsuario
       const usuarioActualizado = { ...this.nuevoUsuario };
-      console.log("Actualizando usuario:", usuarioActualizado);
 
       // Solo incluir la contraseña si ha sido modificada
       if (!this.passwordChanged || !usuarioActualizado.password.trim()) {
