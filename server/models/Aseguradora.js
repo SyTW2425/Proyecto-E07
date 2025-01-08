@@ -28,12 +28,13 @@ const aseguradoraSchema = new mongoose.Schema({
           }
         },
       },
-      foto: {
-        type: String,
-        default: null,
-      },
+      
     },
   ],
+  foto: {
+    type: String,
+    default: null,
+  },
 });
 
 module.exports = mongoose.model('Aseguradora', aseguradoraSchema);

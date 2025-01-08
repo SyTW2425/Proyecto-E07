@@ -44,9 +44,9 @@ router.get('/aseguradoras/:id', async (req, res) => {
 // Ruta para crear una nueva aseguradora
 router.post('/aseguradoras', async (req, res) => {
   try {
-    const { nombre, cobertura } = req.body;
+    const { nombre, cobertura, foto } = req.body;
 
-    const nuevaAseguradora = await Aseguradora.create({ nombre, cobertura });
+    const nuevaAseguradora = await Aseguradora.create({ nombre, cobertura, foto });
 
     res.status(201).json(nuevaAseguradora);
   } catch (error) {
@@ -63,7 +63,7 @@ router.post('/aseguradoras', async (req, res) => {
 router.put('/aseguradoras/:id', async (req, res) => {
   try {
     const aseguradoraId = req.params.id;
-    const { nombre, cobertura } = req.body;
+    const { nombre, cobertura, foto } = req.body;
 
     const aseguradora = await Aseguradora.findById(aseguradoraId);
 
@@ -73,6 +73,7 @@ router.put('/aseguradoras/:id', async (req, res) => {
 
     if (nombre) aseguradora.nombre = nombre;
     if (cobertura) aseguradora.cobertura = cobertura;
+    if (foto) aseguradora.foto = foto;
 
     const aseguradoraActualizada = await aseguradora.save();
 

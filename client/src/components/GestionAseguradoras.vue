@@ -1,7 +1,7 @@
 <template>
   <div>
 
-  <Header/>
+  <Header></Header>
   <div class="contenedor-principal">
     <!-- Columna izquierda: Formulario de creación de aseguradoras -->
     <div class="columna-formulario">
@@ -17,6 +17,17 @@
 
       <!-- Formulario para crear o editar una aseguradora -->
       <form @submit.prevent="editarAseguradoraId ? actualizarAseguradora() : crearAseguradora()">
+        <div class="user-info">
+          <div class="foto-container" @click="triggerFileInput">
+            <img v-if="nuevaAseguradora.foto" :src="nuevaAseguradora.foto" alt="Foto de perfil" class="foto-preview">
+            <img v-else :src="fotoPreview" alt="Previsualización de Foto de Perfil" class="foto-preview"/>
+            <div class="overlay">
+              <i class="fas fa-edit"></i>
+            </div>
+          </div>
+          <input type="file" ref="fileInput" @change="onFileChange" style="display: none;" />
+        </div>
+        
         <!-- Campo de Nombre -->
         <label>Nombre:
           <input
@@ -135,7 +146,8 @@
         <tbody>
           <tr v-for="aseguradora in aseguradoras" :key="aseguradora._id">
             <td class="department-actions">
-                      <!-- Modificar Aseguradora -->
+
+  <!-- Modificar Aseguradora -->
   <button class="boton-crear" style="background-color: #e7c9b2; padding: 5px 25px;" @click="cargarAseguradora(aseguradora)">
     <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="var(--primary-color)">
       <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
@@ -149,10 +161,6 @@
   </svg>
   </button>
             </td>
-
-
-
-
             <td>{{ aseguradora.nombre }}</td>
             <td>
               <ul>
@@ -186,10 +194,12 @@
         especialidades: [],
         prestaciones: [],
         nuevaAseguradora: {
+          foto: '',
           nombre: '',
           cobertura: [], // Contendrá especialidades, prestaciones y tarifas
         },
         especialidadTemp: '',
+        fotoPreview: require('@/assets/estados/perfil_defecto.png'),
         prestacionTemp: { id: '', tarifa: '' },
         editarAseguradoraId: null,
         cargando: false,
@@ -213,6 +223,19 @@
           this.errorServidor = true;
         } finally {
           this.cargando = false;
+        }
+      },
+      triggerFileInput() {
+        this.$refs.fileInput.click();
+      },
+      async onFileChange(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = e => {
+            this.nuevaAseguradora.foto = e.target.result;
+          };
+          reader.readAsDataURL(file);
         }
       },
       async obtenerEspecialidades() {
@@ -331,8 +354,9 @@
         }
       },
       resetFormulario() {
-        this.nuevaAseguradora = { nombre: '', cobertura: [] };
+        this.nuevaAseguradora = { foto: '', nombre: '', cobertura: [] };
         this.editarAseguradoraId = null;
+        this.fotoPreview = require('@/assets/estados/perfil_defecto.png');
       },
     },
     mounted() {
@@ -352,7 +376,35 @@
     gap: 20px;
     padding: 30px;
   }
+  .user-info {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
   
+  .foto-container {
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .overlay {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 120px;
+    height: 120px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .foto-container:hover .overlay {
+    opacity: 1;
+  }
   /* Columna para el formulario de creación de departamentos */
   .columna-formulario {
     flex: 1;
