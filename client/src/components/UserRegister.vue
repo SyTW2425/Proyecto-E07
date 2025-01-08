@@ -1,10 +1,6 @@
 <template>
   <div class="login-page">
-    <header class="header">
-      <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
-      <div class="vertical-line"></div>
-      <h1 class="left-align small-text">PORTAL<br>DEL PACIENTE</h1>
-    </header>
+
     
     <main class="content">
       <section class="welcome-section">

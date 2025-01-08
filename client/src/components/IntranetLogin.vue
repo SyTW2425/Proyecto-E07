@@ -1,10 +1,6 @@
 <template>
   <div class="login-page">
-    <header class="header">
-      <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
-      <div class="vertical-line"></div>
-      <h1 class="left-align small-text">INTRANET</h1>
-    </header>
+
     
     <main class="content">
       <section class="welcome-section">
@@ -23,7 +19,6 @@
           <label for="password">Contraseña:</label>
           <input type="password" id="password" v-model="password" required />
           
-          <a href="#" class="forgot-password">¿Has olvidado tu contraseña?</a>
           
           <button type="submit" class="login-button">Entrar</button>
         </form>
@@ -82,6 +77,7 @@ export default {
   align-items: center;
   margin: 0;
   padding: 0;
+  min-height: 80vh;
   box-sizing: border-box;
   font-family: 'Outfit', sans-serif;
 }
@@ -189,7 +185,7 @@ export default {
 }
 
 .login-button {
-  margin-top: 1rem;
+  margin-top: 2rem;
   width: 100%;
   padding: 0.75rem;
   background-color: #17195e;
