@@ -671,9 +671,7 @@ export default {
     border-radius: 10px;
     cursor: pointer;
   }
-  .boton-crear:hover {
-    background-color: #00e682;
-  }
+  
 
   /* Estilo del círculo */
   .circle {
@@ -760,7 +758,7 @@ export default {
 
 
   .boton-eliminar {
-    background-color: #dc3545; /* Fondo rojo para el botón */
+    background-color: var(--color-rojo); /* Fondo rojo para el botón */
     color: white; /* Texto blanco */
     border: none;
     padding: 5px 10px;
@@ -768,9 +766,6 @@ export default {
     cursor: pointer;
   }
 
-  .boton-eliminar:hover {
-    background-color: #c82333; /* Cambia el color al pasar el ratón */
-  }
 
   /* Estilo para los campos de entrada de texto, email y el selector */
   input[type="text"],

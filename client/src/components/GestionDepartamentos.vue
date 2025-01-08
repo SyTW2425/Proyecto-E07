@@ -1,12 +1,21 @@
 <template>
+  <div> <Header/>
   <div class="contenedor-principal">
     <!-- Columna izquierda: Formulario de creación de departamentos -->
     <div class="columna-formulario">
-      <h2>Gestión de Departamentos / Especialidades</h2>
+      <div class="alinear-elementos">
+            <div class="circle">
+              <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="var(--primary-color)">
+                <path d="M480-340q33 0 56.5-23.5T560-420q0-33-23.5-56.5T480-500q-33 0-56.5 23.5T400-420q0 33 23.5 56.5T480-340ZM160-120q-33 0-56.5-23.5T80-200v-440q0-33 23.5-56.5T160-720h160v-80q0-33 23.5-56.5T400-880h160q33 0 56.5 23.5T640-800v80h160q33 0 56.5 23.5T880-640v440q0 33-23.5 56.5T800-120H160Zm0-80h640v-440H160v440Zm240-520h160v-80H400v80ZM160-200v-440 440Z"/>
+              </svg>
+            </div>
+            <h2 style="color: var(--primary-color);">Gestión de Departamentos</h2>
+          </div>
+          <br>
 
       <!-- Formulario para crear o editar un departamento -->
       <form @submit.prevent="editarDepartamentoId ? actualizarDepartamento() : crearDepartamento()">
-        <img v-if="fotoPreview" :src="fotoPreview" alt="Previsualización de Foto de Perfil" class="foto-preview"/>
+        <img v-if="fotoPreview" :src="fotoPreview" alt="Previsualización de Foto de Perfil" class="foto-preview"/><br>
 
         <!-- Campo de Nombre -->
         <label>Nombre:
@@ -50,31 +59,38 @@
 
 
         <!-- Botones de acción para crear o actualizar el departamento -->
-        <v-btn class="ma-2 boton-crear" type="submit" v-if="!editarDepartamentoId">
+        <button class="boton-crear" type="submit" v-if="!editarDepartamentoId">
           Crear Departamento
-        </v-btn>
-        <v-btn class="ma-2 boton-guardar" type="button" v-if="editarDepartamentoId" @click="actualizarDepartamento">
+        </button>
+        <button class="boton-crear" type="button" v-if="editarDepartamentoId" @click="actualizarDepartamento">
           Guardar Cambios
-        </v-btn>
-        <v-btn class="ma-2 boton-cancelar" type="button" v-if="editarDepartamentoId" @click="cancelarEdicion">
+        </button>
+        <button class="boton-crear" type="button" v-if="editarDepartamentoId" @click="cancelarEdicion" style="background-color: var(--color-rojo);">
           Cancelar
-        </v-btn>
+        </button>
       </form>
     </div>
 
     <!-- Columna derecha: Lista de departamentos -->
     <div class="columna-lista">
-      <h3>Listado</h3>
+      <div class="alinear-elementos">  
+         <div class="circle">
+          <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="var(--primary-color)">
+                  <path d="M480-340q33 0 56.5-23.5T560-420q0-33-23.5-56.5T480-500q-33 0-56.5 23.5T400-420q0 33 23.5 56.5T480-340ZM160-120q-33 0-56.5-23.5T80-200v-440q0-33 23.5-56.5T160-720h160v-80q0-33 23.5-56.5T400-880h160q33 0 56.5 23.5T640-800v80h160q33 0 56.5 23.5T880-640v440q0 33-23.5 56.5T800-120H160Zm0-80h640v-440H160v440Zm240-520h160v-80H400v80ZM160-200v-440 440Z"/>
+                </svg>
+         </div>
+         <h2 style="color: var(--primary-color);">Listado de Departamentos</h2>
+       </div>
 
       <!-- Filtro por tipo de departamento -->
-    <div class="filtro-tipo-departamento">
+      <div class="buscador" style="height: 60px; margin-right: 1px; padding-right: 1px;">
       <label for="filtroTipo">Filtrar por tipo:</label>
       <select v-model="filtroTipo">
         <option value="">Todos</option>
         <option value="Especialidad médica">Especialidad médica</option>
         <option value="Administración">Administración</option>
       </select>
-    </div>
+    </div><br>
 
       <!-- Indicador de error y carga -->
       <v-alert
@@ -113,16 +129,25 @@
 </thead>
 <tbody>
   <tr v-for="departamento in departamentosFiltrados" :key="departamento._id">
+
     <td class="department-actions">
-      <div class="action-buttons">
-        <v-btn class="boton-modificar" @click="cargarDepartamento(departamento)">
-          <i class="bi bi-pencil-square"></i>
-        </v-btn>
-        <v-btn class="boton-eliminar" @click="confirmarEliminacion(departamento._id, departamento.tipo, departamento.nombre)">
-          <i class="bi bi-trash"></i>
-        </v-btn>
-      </div>
+
+<!-- Modificar Usuario -->
+  <button class="boton-crear" style="background-color: #e7c9b2; padding: 5px 25px;" @click="cargarDepartamento(departamento)">
+    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="var(--primary-color)">
+      <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+    </svg>
+  </button>
+
+<!-- Eliminar Usuario -->
+  <button class="boton-crear" style="background-color: var(--color-rojo); padding: 5px 25px;" @click="confirmarEliminacion(departamento._id, departamento.tipo, departamento.nombre)">
+    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="var(--primary-color)">
+      <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
+  </svg>
+  </button>
     </td>
+
+
     <td>{{ departamento.nombre }}</td>
     <td>{{ departamento.tipo }}</td>
     <td>{{ departamento.prestaciones.map(id => obtenerNombrePrestacion(id)).join(', ') }}</td>
@@ -132,14 +157,18 @@
 
 
     </div>
-  </div>
+  </div></div>
 </template>
 
 <script>
 import apiClient from '@/apiClient';
+import Header from '@/components/Header.vue';
 
 export default {
   name: 'GestionDepartamentos',
+  components: {
+    Header
+  },
 data() {
   return {
     departamentos: [],
@@ -295,13 +324,13 @@ data() {
 /* Columna para el formulario de creación de departamentos */
 .columna-formulario {
   flex: 1;
-  max-width: 40%; /* Controla el ancho de la columna del formulario */
+  max-width: 30%; /* Controla el ancho de la columna del formulario */
 }
 
 /* Columna para la lista de departamentos */
 .columna-lista {
   flex: 2;
-  max-width: 60%; /* Controla el ancho de la columna de la lista */
+  max-width: 65%; /* Controla el ancho de la columna de la lista */
 }
 
 form {
@@ -310,20 +339,7 @@ form {
   margin-bottom: 20px;
 }
 
-label {
-  margin-bottom: 10px;
-  text-align: left; /* Alinea los labels a la izquierda para mejor legibilidad */
-  font-weight: bold; /* Resalta los labels */
-}
 
-/* Botones estilizados */
-.boton-crear {
-  background-color: var(--primary-color) !important; /* Azul corporativo */
-  color: white !important;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: bold;
-}
 
 .boton-agregar {
   background-color: var(--success-color) !important; /* Verde */
@@ -399,25 +415,7 @@ margin-bottom: 30px;
 align-self: center;
 }
 
-/* Estilo para los campos de entrada de texto, email y el selector */
-input[type="text"],
-input[type="email"],
-select {
-background-color: #C6DEFD; /* Color de fondo del campo */
-padding: 8px;
-border-radius: 5px;
-outline: none;
-font-family: 'Outfit', sans-serif; /* Asegura que la fuente sea uniforme */
-}
 
-/* Cambia el color del borde y añade un efecto cuando el campo está enfocado */
-input[type="text"]:focus,
-input[type="email"]:focus,
-select:focus {
-border-color: var(--color-azul); /* Cambia el color del borde al hacer foco */
-box-shadow: 0 0 5px var(--color-azul); /* Añade sombra al hacer foco */
-background-color: #C6DEFD; /* Mantiene el color de fondo al hacer foco */
-}
 
 /* Tabla de departamentos con diseño similar a "Prestaciones" */
 .department-table {
@@ -478,6 +476,82 @@ align-items: center;
 justify-content: center;
 border-radius: 8px;
 }
+
+
+/* Estilos añadidos */
+
+.alinear-elementos {
+  display: flex;
+  align-items: center;
+}
+
+/* Estilo del círculo */
+.circle {
+      width: 5rem; /* Tamaño del círculo */
+      height: 5rem;
+      border-radius: 50%; /* Hace que sea un círculo */
+      background-color: var(--color-azul); /* Usa el color definido */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.5rem;
+      margin: 0.5rem;
+      margin-right: 20px; 
+  
+    }
+
+    .buscador {
+      margin-top: 20px;
+      margin-bottom: 5px;
+      padding: 10px;
+      width: 100%;
+      max-width: 24%;
+      border-radius: 5px;
+      color: var(--primary-color);
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
+    input[type="number"],
+    input[type="email"],
+    input[type="password"],
+    select {
+      background-color: #C6DEFD; /* Color de fondo del campo */
+      padding: 8px;
+      border-radius: 5px;
+      outline: none;
+      width: 100%;
+      font-weight: 400;
+    }
+  
+    /* Cambia el color del borde y añade un efecto cuando el campo está enfocado */
+    input[type="text"]:focus,
+    select:focus {
+      border-color: var(--color-azul); /* Cambia el color del borde al hacer foco */
+      box-shadow: 0 0 5px var(--color-azul); /* Añade sombra al hacer foco */
+      background-color: #C6DEFD; /* Mantiene el color de fondo al hacer foco */
+    }
+
+    label {
+  margin-bottom: 10px;
+  text-align: left; /* Alinea los labels a la izquierda para mejor legibilidad */
+  font-weight: bold; /* Resalta los labels */
+  width: 100%;
+
+}
+
+/* Botones estilizados */
+.boton-crear {
+      margin-top: 6px;
+      background-color: var(--color-verde);
+      color: var(--primary-color);
+      font-size: 1.1rem;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
 
 
 

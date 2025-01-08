@@ -29,10 +29,12 @@ import RecetasWrapper from './components/RecetasWrapper.vue';
 
 const routes = [
   { path: '/', component: PaginaInicio },
-  { path: '/usuarios', component: CreacionUsuarios},
+  { path: '/usuarios', component: CreacionUsuarios, meta: { requiresAuth: true, allowedRoles: ['Gerencia'] }},
+  { path: '/departamentos', component: GestionDepartamentos, meta: { requiresAuth: true, allowedRoles: ['Gerencia'] }},
+  { path: '/aseguradoras', component: GestionAseguradoras, meta: { requiresAuth: true, allowedRoles: ['Gerencia'] }},
+  { path: '/prestaciones', component: GestionPrestaciones, meta: { requiresAuth: true, allowedRoles: ['Gerencia'] }},
+
   { path: '/saludo', component: SaludoUsuario},
-  { path: '/departamentos', component: GestionDepartamentos},
-  { path: '/prestaciones', component: GestionPrestaciones},
   
   
   { path: '/lista-contacto', component: ListaFormContacto},
@@ -57,7 +59,6 @@ const routes = [
   { path: '/perfil', component: PerfilUsuario, meta: { requiresAuth: true } },
 
 
-  { path: '/aseguradoras', component: GestionAseguradoras, meta: { requiresAuth: true, allowedRoles: ['Gerencia'] } },
   { path: '/inicio', component: InicioWrapper, meta: { requiresAuth: true } },
 
   { path: '/citas', component: CitasWrapper, meta: { requiresAuth: true, allowedRoles: ['Paciente', 'Administración'] } },

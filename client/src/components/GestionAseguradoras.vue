@@ -1,8 +1,19 @@
 <template>
+  <div>
+
+  <Header/>
   <div class="contenedor-principal">
     <!-- Columna izquierda: Formulario de creación de aseguradoras -->
     <div class="columna-formulario">
-      <h2>Gestión de Aseguradoras</h2>
+      <div class="alinear-elementos">
+            <div class="circle">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="var(--primary-color)" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M21.671 6.80092C23.4182 5.73302 25.6603 5.73303 27.4076 6.80092L29.4455 8.04646C32.3025 9.79264 35.5581 10.1824 38.8277 10.5739C39.8847 10.7005 40.9432 10.8272 41.9901 11C41.9901 11 42.0132 12.8335 41.9889 13.6659L41.78 20.817C41.6008 26.9498 38.8735 32.7654 34.1951 36.991C31.988 38.9844 29.7054 40.7851 27.0825 42.2813C25.5274 43.1684 23.6035 43.2387 21.9814 42.4676C18.953 41.028 16.271 39.2023 13.8227 36.991C9.14422 32.7654 6.41696 26.9498 6.23778 20.817L6.02952 13.6887C6.00485 12.8445 6.02952 11 6.02952 11C6.8795 10.8996 7.74583 10.8173 8.61872 10.7344C12.4722 10.3682 16.4534 9.98986 19.7195 7.99367L21.671 6.80092ZM21.9998 22V15H25.9998V22H32.9998V26H25.9998V33H21.9998V26H14.9998V22H21.9998Z" fill="var(--primary-color)"/>
+              </svg>
+            </div>
+            <h2 style="color: var(--primary-color);">Gestión de Aseguradoras</h2>
+          </div>
+          <br>
 
       <!-- Formulario para crear o editar una aseguradora -->
       <form @submit.prevent="editarAseguradoraId ? actualizarAseguradora() : crearAseguradora()">
@@ -60,26 +71,33 @@
             {{ obtenerNombreEspecialidad(cobertura.especialidad) }}:
             {{ obtenerNombrePrestacion(cobertura.prestacion) }} -
             <strong>{{ cobertura.tarifa }} €</strong>
-            <button @click.prevent="eliminarPrestacion(index)" class="boton-eliminar-operacion">Eliminar</button>
+            <button @click.prevent="eliminarPrestacion(index)" class="boton-crear" style="background-color: var(--color-rojo);">Eliminar</button>
           </li>
         </ul>
 
         <!-- Botones de acción -->
-        <v-btn class="ma-2 boton-crear" type="submit" v-if="!editarAseguradoraId">
+        <button class="boton-crear" type="submit" v-if="!editarAseguradoraId">
           Crear Aseguradora
-        </v-btn>
-        <v-btn class="ma-2 boton-guardar" type="button" v-if="editarAseguradoraId" @click="actualizarAseguradora">
+        </button>
+        <button class="boton-crear" type="button" v-if="editarAseguradoraId" @click="actualizarAseguradora">
           Guardar Cambios
-        </v-btn>
-        <v-btn class="ma-2 boton-cancelar" type="button" v-if="editarAseguradoraId" @click="cancelarEdicion">
+        </button>
+        <button class="boton-crear" type="button" v-if="editarAseguradoraId" @click="cancelarEdicion" style="background-color: var(--color-rojo);">
           Cancelar
-        </v-btn>
+        </button>
       </form>
     </div>
 
     <!-- Columna derecha: Lista de aseguradoras -->
     <div class="columna-lista">
-      <h3>Listado de Aseguradoras</h3>
+      <div class="alinear-elementos">
+            <div class="circle">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="var(--primary-color)" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M21.671 6.80092C23.4182 5.73302 25.6603 5.73303 27.4076 6.80092L29.4455 8.04646C32.3025 9.79264 35.5581 10.1824 38.8277 10.5739C39.8847 10.7005 40.9432 10.8272 41.9901 11C41.9901 11 42.0132 12.8335 41.9889 13.6659L41.78 20.817C41.6008 26.9498 38.8735 32.7654 34.1951 36.991C31.988 38.9844 29.7054 40.7851 27.0825 42.2813C25.5274 43.1684 23.6035 43.2387 21.9814 42.4676C18.953 41.028 16.271 39.2023 13.8227 36.991C9.14422 32.7654 6.41696 26.9498 6.23778 20.817L6.02952 13.6887C6.00485 12.8445 6.02952 11 6.02952 11C6.8795 10.8996 7.74583 10.8173 8.61872 10.7344C12.4722 10.3682 16.4534 9.98986 19.7195 7.99367L21.671 6.80092ZM21.9998 22V15H25.9998V22H32.9998V26H25.9998V33H21.9998V26H14.9998V22H21.9998Z" fill="var(--primary-color)"/>
+              </svg>
+            </div>
+            <h2 style="color: var(--primary-color);">Listado de Aseguradoras</h2>
+          </div>
 
       <!-- Indicador de error y carga -->
       <v-alert
@@ -117,13 +135,24 @@
         <tbody>
           <tr v-for="aseguradora in aseguradoras" :key="aseguradora._id">
             <td class="department-actions">
-              <v-btn class="boton-modificar" @click="cargarAseguradora(aseguradora)">
-                <i class="bi bi-pencil-square"></i>
-              </v-btn>
-              <v-btn class="boton-eliminar" @click="confirmarEliminacion(aseguradora._id)">
-                <i class="bi bi-trash"></i>
-              </v-btn>
+                      <!-- Modificar Aseguradora -->
+  <button class="boton-crear" style="background-color: #e7c9b2; padding: 5px 25px;" @click="cargarAseguradora(aseguradora)">
+    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="var(--primary-color)">
+      <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+    </svg>
+  </button>
+
+<!-- Eliminar Aseguradora -->
+  <button class="boton-crear" style="background-color: var(--color-rojo); padding: 5px 25px;" @click="confirmarEliminacion(aseguradora._id)">
+    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="var(--primary-color)">
+      <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
+  </svg>
+  </button>
             </td>
+
+
+
+
             <td>{{ aseguradora.nombre }}</td>
             <td>
               <ul>
@@ -136,14 +165,18 @@
         </tbody>
       </table>
     </div>
-  </div>
+  </div></div>
 </template>
   
   <script>
   import apiClient from '@/apiClient';
+  import Header from './Header.vue';
   
   export default {
     name: 'GestionAseguradoras',
+    components: {
+      Header,
+    },
     data() {
       return {
         especialidad:'',
@@ -280,6 +313,9 @@
           console.error('Error al actualizar aseguradora:', error);
         }
       },
+      cancelarEdicion() {
+        this.resetFormulario();
+      },
       async confirmarEliminacion(id) {
         const confirmacion = window.confirm('¿Está seguro de que desea eliminar esta aseguradora?');
         if (confirmacion) {
@@ -314,7 +350,7 @@
     display: flex;
     justify-content: space-between;
     gap: 20px;
-    padding: 20px;
+    padding: 30px;
   }
   
   /* Columna para el formulario de creación de departamentos */
@@ -335,21 +371,7 @@
     margin-bottom: 20px;
   }
   
-  label {
-    margin-bottom: 10px;
-    text-align: left; /* Alinea los labels a la izquierda para mejor legibilidad */
-    font-weight: bold; /* Resalta los labels */
-  }
-  
-  /* Botones estilizados */
-  .boton-crear {
-    background-color: var(--primary-color) !important; /* Azul corporativo */
-    color: white !important;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: bold;
-  }
-  
+ 
   .boton-agregar {
     background-color: var(--success-color) !important; /* Verde */
     color: white !important;
@@ -423,26 +445,7 @@
   margin-bottom: 30px;
   align-self: center;
   }
-  
-  /* Estilo para los campos de entrada de texto, email y el selector */
-  input[type="text"],
-  input[type="email"],
-  select {
-  background-color: #C6DEFD; /* Color de fondo del campo */
-  padding: 8px;
-  border-radius: 5px;
-  outline: none;
-  font-family: 'Outfit', sans-serif; /* Asegura que la fuente sea uniforme */
-  }
-  
-  /* Cambia el color del borde y añade un efecto cuando el campo está enfocado */
-  input[type="text"]:focus,
-  input[type="email"]:focus,
-  select:focus {
-  border-color: var(--color-azul); /* Cambia el color del borde al hacer foco */
-  box-shadow: 0 0 5px var(--color-azul); /* Añade sombra al hacer foco */
-  background-color: #C6DEFD; /* Mantiene el color de fondo al hacer foco */
-  }
+
   
   /* Tabla de departamentos con diseño similar a "Prestaciones" */
   .department-table {
@@ -503,6 +506,83 @@
   justify-content: center;
   border-radius: 8px;
   }
+
+  .alinear-elementos {
+  display: flex;
+  align-items: center;
+}
+
+/* Estilo del círculo */
+.circle {
+      width: 5rem; /* Tamaño del círculo */
+      height: 5rem;
+      border-radius: 50%; /* Hace que sea un círculo */
+      background-color: var(--color-azul); /* Usa el color definido */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.5rem;
+      margin: 0.5rem;
+      margin-right: 20px; 
+  
+    }
+
+    .buscador {
+      margin-top: 20px;
+      margin-bottom: 5px;
+      padding: 10px;
+      width: 100%;
+      max-width: 24%;
+      border-radius: 5px;
+      color: var(--primary-color);
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
+    input[type="number"],
+    input[type="email"],
+    input[type="password"],
+    select {
+      background-color: #C6DEFD; /* Color de fondo del campo */
+      padding: 8px;
+      border-radius: 5px;
+      outline: none;
+      width: 100%;
+      font-weight: 400;
+    }
+  
+    /* Cambia el color del borde y añade un efecto cuando el campo está enfocado */
+    input[type="text"]:focus,
+    select:focus {
+      border-color: var(--color-azul); /* Cambia el color del borde al hacer foco */
+      box-shadow: 0 0 5px var(--color-azul); /* Añade sombra al hacer foco */
+      background-color: #C6DEFD; /* Mantiene el color de fondo al hacer foco */
+    }
+
+    label {
+  margin-bottom: 10px;
+  text-align: left; /* Alinea los labels a la izquierda para mejor legibilidad */
+  font-weight: bold; /* Resalta los labels */
+  width: 100%;
+
+}
+
+/* Botones estilizados */
+.boton-crear {
+      margin-top: 6px;
+      background-color: var(--color-verde);
+      color: var(--primary-color);
+      font-size: 1.1rem;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+
+
+
   
   
   
