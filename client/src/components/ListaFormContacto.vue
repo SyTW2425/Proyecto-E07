@@ -5,6 +5,7 @@
       <div class="contenedor-body">
         <br>
         <h2 class="titulo">Listado de Formularios de contacto</h2>
+        <br>
         
         <!-- Indicador de error y carga -->
         <v-alert

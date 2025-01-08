@@ -39,7 +39,7 @@ const routes = [
   
   { path: '/recetas', component: GestionRecetas},
   
-  { path: '/lista_contacto', component: ListaFormContacto},
+  { path: '/lista-contacto', component: ListaFormContacto},
   { path: '/reservarcitas', component: ReservarCitas},
   { path: '/encuestas', component: GestionEncuestas},
   { path: '/pruebas', component: PruebasCodigo },
