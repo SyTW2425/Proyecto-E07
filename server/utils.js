@@ -19,6 +19,17 @@ async function generarUsername(nombre, apellidos) {
   return username;
 }
 
+// Función para generar un número de póliza aleatorio
+function generarNumeroPoliza() {
+  const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let numeroPoliza = '';
+  for (let i = 0; i < 10; i++) {
+    numeroPoliza += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+  }
+  return numeroPoliza;
+}
+
 module.exports = {
-  generarUsername
+  generarUsername,
+  generarNumeroPoliza
 };

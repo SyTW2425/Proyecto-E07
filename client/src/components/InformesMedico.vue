@@ -36,6 +36,7 @@
       <div v-if="mostrarGenerarInforme">
         <form @submit.prevent="crearInforme">
           <!-- Selección de Prestación -->
+          
           <label>Prestación:
             <p class="small-box">{{ nuevoInforme.prestacionId.nombre }}</p>
           </label>
@@ -78,41 +79,41 @@
       <div v-if="mostrarEditarInforme">
         <form @submit.prevent="guardarInforme">
           <!-- Selección de Prestación -->
-          <label>Prestación:
+          <label><strong>Prestación:</strong> 
             <p class="small-box">{{ mostrarPrestacion(nuevoInforme.prestacionId) }}</p>
           </label>
           <br>
-          <br>
 
           <!-- Selección de Fecha -->
-          <label>Fecha:
+          <label><strong>Fecha:</strong>
             <br>
             <p class="small-box">{{ formatearFecha(nuevoInforme.fecha)}}</p>
           </label>
-          <br><br>
+          <br>
 
           <!-- Selección de Paciente -->
-          <label>Paciente:
+          <label><strong>Paciente:</strong>
             <p class="small-box">{{ mostrarPaciente(nuevoInforme.pacienteId) }}</p>
           </label>
-          <br><br>
+          <br>
 
           <!-- Diagnóstico -->
-          <label>Diagnóstico:
+          <label><strong>Diagnóstico:</strong>
             <br>
-            <textarea v-model="nuevoInforme.diagnostico" required class="text-box"></textarea>
+            <textarea v-model="nuevoInforme.diagnostico" required class="small-box" style="height: 8rem;"></textarea>
           </label>
-          <br><br>
+          <br>
 
           <!-- Observaciones -->
-          <label>Observaciones:
+          <label><strong>Observaciones:</strong>
             <br>
-            <textarea v-model="nuevoInforme.observaciones" class="text-box"></textarea>
+            <textarea v-model="nuevoInforme.observaciones" class="small-box" style="height: 8rem;"></textarea>
           </label>
-          <br><br>
+          <br>
 
-          <button type="submit" class="btn">Guardar</button>
-          <button class="btn" @click="resetFormulario">Cancelar</button>
+          <button type="submit" class="btn" style="background-color: var(--color-verde); color: var(--primary-color)">Guardar</button>
+          <button class="btn" style="background-color: var(--color-rojo); color: var(--primary-color)" @click="resetFormulario">Cancelar</button>
+          <br><br><br>
         </form>
 
       </div>
@@ -538,7 +539,7 @@ export default {
 }
   
   .columna-formulario {
-    width: 40%;
+    width: 30%;
   }
   .columna-citas {
     width: 65%;
@@ -742,10 +743,12 @@ export default {
 
   label {
     text-align: left; /* Alinea los labels a la izquierda para mejor legibilidad */
-    font-weight: bold; /* Resalta los labels */
+    font-weight: 500; /* Ajuste del grosor de la fuente de letra  */
+    width: 100%; /* Ajusta el ancho al 100% del contenedor */
   } 
 
   .btn {
+    margin-top: 10px;
   background-color: var(--color-azul2);
   color: rgb(0, 0, 0);
   border: none;
@@ -760,12 +763,18 @@ export default {
   width: 25em; 
   background-color: #92bdf6; 
   border-radius: 0.5rem;
+  font-weight: 500; /* Ajuste del grosor de la fuente de letra  */
+
 }
 .small-box{
-  height: 2rem;
-  width: 25em; 
-  background-color: #92bdf6; 
-  border-radius: 0.5rem;
+  width: 100%;             /* Ocupa el ancho completo del contenedor */
+  height: 40px;           /* Ajusta la altura según tus necesidades */
+  background-color: #C6DEFD; /* Color de fondo azul */
+  padding: 10px;           /* Espacio interior */
+  border-radius: 5px;      /* Bordes redondeados */
+  font-family: 'Outfit', sans-serif; /* Asegura uniformidad de la fuente */
+  resize: vertical;        /* Permite cambiar la altura, pero no el ancho */
+  outline: none;           /* Remueve el borde de enfoque */
 }
   .btn:hover {
     background-color: #1c1c5a;

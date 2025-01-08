@@ -9,7 +9,7 @@
       <div v-if="tipoUsuario === 'Paciente'">
         <h1 class="left-align small-text">PORTAL DEL PACIENTE</h1>
       </div>
-      <div v-else>
+      <div v-if="tipoUsuario === 'Administración' || tipoUsuario === 'Gerencia' || tipoUsuario === 'Médico'">
         <h1 class="left-align small-text">INTRANET</h1>
       </div>
 
@@ -185,6 +185,7 @@ export default {
         console.log('cerrarSesion');
         const authStore = useAuthStore();
         await authStore.logout();
+        this.$router.push('/login');
       }
     },
     irAgendaCitas() {
@@ -330,7 +331,7 @@ export default {
     justify-content: center;
     margin-top: 0.5rem;
     margin: 0.5rem;
-    margin-right: 20px;
+    margin-right: 0.1rem;
     position: relative; /* Agregado */
     cursor: pointer;
   }

@@ -1,29 +1,24 @@
 <template>
-    <div>
-      <Header/>
-      <div class="estilo-pagina">
+  <div>
+    <Header/>
+    <div class="estilo-pagina">
       <br>
-      <div class="barra-fecha" >
+      <div class="barra-fecha">
         <span>{{ fechaHora }}</span>
-      
         <div class="icon-container">
           {{ departamento.nombre }}
           <div class="circle" style="background-color: var(--color-azul2); width: 2rem; height: 2rem;">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
-                <path d="M480-340q33 0 56.5-23.5T560-420q0-33-23.5-56.5T480-500q-33 0-56.5 23.5T400-420q0 33 23.5 56.5T480-340ZM160-120q-33 0-56.5-23.5T80-200v-440q0-33 23.5-56.5T160-720h160v-80q0-33 23.5-56.5T400-880h160q33 0 56.5 23.5T640-800v80h160q33 0 56.5 23.5T880-640v440q0 33-23.5 56.5T800-120H160Zm0-80h640v-440H160v440Zm240-520h160v-80H400v80ZM160-200v-440 440Z"/>
-            </svg></div>
-          
+              <path d="M480-340q33 0 56.5-23.5T560-420q0-33-23.5-56.5T480-500q-33 0-56.5 23.5T400-420q0 33 23.5 56.5T480-340ZM160-120q-33 0-56.5-23.5T80-200v-440q0-33 23.5-56.5T160-720h160v-80q0-33 23.5-56.5T400-880h160q33 0 56.5 23.5T640-800v80h160q33 0 56.5 23.5T880-640v440q0 33-23.5 56.5T800-120H160Zm0-80h640v-440H160v440Zm240-520h160v-80H400v80ZM160-200v-440 440Z"/>
+            </svg>
+          </div>
         </div>
       </div>
-  
-      <br>  
-  
-    <div class="contenedor-principal">
-      
-  
-      <!-- Columna izquierda: Formulario de creación de citas médicas -->
-      <div class="columna-formulario">
-        <div class="alinear-elementos">
+      <br>
+      <div class="contenedor-principal">
+        <!-- Columna izquierda: Formulario de creación de citas médicas -->
+        <div class="columna-formulario">
+          <div class="alinear-elementos">
             <div class="circle">
               <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="var(--primary-color)">
                 <path d="M720-400v-120H600v-80h120v-120h80v120h120v80H800v120h-80Zm-360-80q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm80-80h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z"/>
@@ -31,186 +26,176 @@
             </div>
             <h2 style="color: var(--primary-color);">Crear nuevo paciente</h2>
           </div>
-
-        <!-- Formulario para crear un paciente -->
-      <form @submit.prevent="crearPaciente">
-        <div class="user-info">
-          <div class="foto-container" @click="triggerFileInput">
-            <img v-if="nuevoPaciente.foto" :src="nuevoPaciente.foto" alt="Foto de perfil" class="foto-preview">
-            <img v-else :src="fotoPreview" alt="Previsualización de Foto de Perfil" class="foto-preview"/>
-            <div class="overlay">
-              <i class="fas fa-edit"></i>
+          <!-- Formulario para crear un paciente -->
+          <form @submit.prevent="crearPaciente">
+            <div class="user-info">
+              <div class="foto-container" @click="triggerFileInput">
+                <img v-if="nuevoPaciente.foto" :src="nuevoPaciente.foto" alt="Foto de perfil" class="foto-preview">
+                <img v-else :src="fotoPreview" alt="Previsualización de Foto de Perfil" class="foto-preview"/>
+                <div class="overlay">
+                  <i class="fas fa-edit"></i>
+                </div>
+              </div>
+              <input type="file" ref="fileInput" @change="onFileChange" style="display: none;" />
             </div>
-          </div>
-          <input type="file" ref="fileInput" @change="onFileChange" style="display: none;" />
+
+            <label>Nombre:<br>
+              <input
+                type="text"
+                v-model="nuevoPaciente.nombre"
+                required
+                pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
+                @input="validateNombre"
+                @blur="validateRequired($event, 'El nombre solo puede contener letras.')"
+                @invalid="setCustomMessage($event, 'El nombre solo puede contener letras.')"
+              />
+            </label> <br>
+            <label>Apellidos:<br>
+              <input
+                type="text"
+                v-model="nuevoPaciente.apellidos"
+                required
+                pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
+                @input="validateApellidos"
+                @blur="validateRequired($event, 'Los apellidos solo pueden contener letras.')"
+                @invalid="setCustomMessage($event, 'Los apellidos solo pueden contener letras.')"
+              />
+            </label><br>
+            <label>Contraseña:<br>
+              <input
+                type="password"
+                v-model="nuevoPaciente.password"
+                required
+                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$"
+                @input="handlePasswordChange"
+                @blur="validateRequired($event, 'Debe tener al menos 6 caracteres, incluyendo 1 mayúscula, 1 minúscula y 1 número.')"
+                @invalid="setCustomMessage($event, 'Debe tener al menos 6 caracteres, incluyendo 1 mayúscula, 1 minúscula y 1 número.')"
+              />
+            </label><br>
+            <!-- Campos opcionales -->
+            <label>DNI:<br>
+              <input
+                type="text"
+                v-model="nuevoPaciente.dni"
+                pattern="^\d{8}[A-Za-z]$"
+                @input="validateDni"
+                @blur="validateDni"
+                @invalid="setCustomMessage($event, 'El DNI debe tener 8 números seguidos de una letra.')"
+              />
+            </label><br>
+            <label>Fecha de Nacimiento:<br>
+              <input type="date" v-model="nuevoPaciente.fechaNacimiento" />
+            </label><br>
+            <label>Género:<br>
+              <select v-model="nuevoPaciente.genero" required>
+                <option value="" disabled selected>Seleccione género</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+              </select>
+            </label><br>
+            <label>Dirección:<br>
+              <input type="text" v-model="nuevoPaciente.direccion" />
+            </label><br>
+            <label>Teléfono:<br>
+              <input
+                type="text"
+                v-model="nuevoPaciente.telefono"
+                pattern="^\d{9}$"
+                @input="validateTelefono"
+                @blur="validateRequired($event, 'El teléfono debe contener exactamente 9 dígitos.')"
+                @invalid="setCustomMessage($event, 'El teléfono debe contener exactamente 9 dígitos.')"
+              />
+            </label><br>
+            <label>Correo Electrónico:<br>
+              <input type="email" v-model="nuevoPaciente.email"/>
+            </label><br>
+            <!-- Desplegable para asignar aseguradora -->
+            <label>Aseguradora:<br>
+              <select v-model="nuevoPaciente.aseguradora">
+                <option value="" disabled selected>Seleccione una aseguradora</option>
+                <option v-for="aseguradora in aseguradoras" :key="aseguradora._id" :value="aseguradora._id">
+                  {{ aseguradora.nombre }}
+                </option>
+              </select>
+            </label><br><br>
+            <button class="boton-crear" type="submit" v-if="!editarUsuarioId">
+              Crear paciente
+            </button>
+            <button class="boton-crear" type="button" v-if="editarUsuarioId" @click="actualizarPaciente">
+              Guardar Cambios
+            </button>
+            <button class="boton-crear" style="background-color: var(--color-rojo);" type="button" v-if="editarUsuarioId" @click="cancelarEdicion">
+              Cancelar
+            </button>
+          </form>
+          <br>
+          <br>
+          <br>
+          <br>
         </div>
-
-        <label>Nombre:<br>
-          <input
-            type="text"
-            v-model="nuevoPaciente.nombre"
-            required
-            pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
-            @input="validateNombre"
-            @blur="validateRequired($event, 'El nombre solo puede contener letras.')"
-            @invalid="setCustomMessage($event, 'El nombre solo puede contener letras.')"
-          />
-        </label> <br>
-        <label>Apellidos:<br>
-          <input
-            type="text"
-            v-model="nuevoPaciente.apellidos"
-            required
-            pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
-            @input="validateApellidos"
-            @blur="validateRequired($event, 'Los apellidos solo pueden contener letras.')"
-            @invalid="setCustomMessage($event, 'Los apellidos solo pueden contener letras.')"
-          />
-        </label><br>
-
-        <label>Contraseña:<br>
-          <input
-            type="password"
-            v-model="nuevoPaciente.password"
-            required
-            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$"
-            @input="handlePasswordChange"
-            @blur="validateRequired($event, 'Debe tener al menos 6 caracteres, incluyendo 1 mayúscula, 1 minúscula y 1 número.')"
-            @invalid="setCustomMessage($event, 'Debe tener al menos 6 caracteres, incluyendo 1 mayúscula, 1 minúscula y 1 número.')"
-          />
-        </label><br>
-
-        <!-- Campos opcionales -->
-        <label>DNI:<br>
-          <input
-            type="text"
-            v-model="nuevoPaciente.dni"
-            pattern="^\d{8}[A-Za-z]$"
-            @input="validateDni"
-            @blur="validateDni"
-            @invalid="setCustomMessage($event, 'El DNI debe tener 8 números seguidos de una letra.')"
-          />
-        </label><br>
-        <label>Fecha de Nacimiento:<br>
-          <input type="date" v-model="nuevoPaciente.fechaNacimiento" />
-        </label><br>
-        <label>Género:<br>
-          <select v-model="nuevoPaciente.genero" required>
-            <option value="" disabled selected>Seleccione género</option>
-            <option value="Masculino">Masculino</option>
-            <option value="Femenino">Femenino</option>
-          </select>
-        </label><br>
-        <label>Dirección:<br>
-          <input type="text" v-model="nuevoPaciente.direccion" />
-        </label><br>
-        <label>Teléfono:<br>
-          <input
-            type="text"
-            v-model="nuevoPaciente.telefono"
-            pattern="^\d{9}$"
-            @input="validateTelefono"
-            @blur="validateRequired($event, 'El teléfono debe contener exactamente 9 dígitos.')"
-            @invalid="setCustomMessage($event, 'El teléfono debe contener exactamente 9 dígitos.')"
-          />
-        </label><br>
-        <label>Correo Electrónico:<br>
-          <input type="email" v-model="nuevoPaciente.email"/>
-        </label>
-        <br><br>
-
-        <button class="boton-crear" type="submit" v-if="!editarUsuarioId">
-          Crear paciente
-        </button>
-        <button class="boton-crear" type="button" v-if="editarUsuarioId" @click="actualizarPaciente">
-          Guardar Cambios
-        </button>
-        <button class="boton-crear" style="background-color: var(--color-rojo);" type="button" v-if="editarUsuarioId" @click="cancelarEdicion">
-          Cancelar
-        </button>
-      </form>
-      <br>
-      <br>
-      <br>
-      <br>
-      </div>
-  
-      <!-- Columna derecha: Listado de citas -->
-      <div class="columna-citas">
-        <div class="alinear-elementos">
-         
-         <div class="circle">
-            <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="var(--primary-color)">
+        <!-- Columna derecha: Listado de citas -->
+        <div class="columna-citas">
+          <div class="alinear-elementos">
+            <div class="circle">
+              <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="var(--primary-color)">
                 <path d="M440-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Zm0-80q33 0 56.5-23.5T520-640q0-33-23.5-56.5T440-720q-33 0-56.5 23.5T360-640q0 33 23.5 56.5T440-560ZM884-20 756-148q-21 12-45 20t-51 8q-75 0-127.5-52.5T480-300q0-75 52.5-127.5T660-480q75 0 127.5 52.5T840-300q0 27-8 51t-20 45L940-76l-56 56ZM660-200q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-540 40v-111q0-34 17-63t47-44q51-26 115-44t142-18q-12 18-20.5 38.5T407-359q-60 5-107 20.5T221-306q-10 5-15.5 14.5T200-271v31h207q5 22 13.5 42t20.5 38H120Zm320-480Zm-33 400Z"/>
-            </svg>
-         </div>
-         <h2 style="color: var(--primary-color);">Listado de pacientes</h2>
-       </div>
-       
-        <!-- Campo de búsqueda -->
-        <input type="text" v-model="searchQuery" id="searchQuery" placeholder="Buscar" class="buscador" style="::placeholder { color: var(--primary-color); }" />
-  
-  
-        <!-- Mensaje de error de comunicación -->
-        <v-alert v-if="errorServidor" type="error" class="alerta-error" prominent color="red lighten-3">
-          <span class="alert-text">Fallo de comunicación con el servidor</span>
-        </v-alert>
-  
-        <div v-if="cargando && !errorServidor" class="text-center">
-          <v-progress-circular :size="70" :width="7" color="#17195e" indeterminate></v-progress-circular>
+              </svg>
+            </div>
+            <h2 style="color: var(--primary-color);">Listado de pacientes</h2>
+          </div>
+          <!-- Campo de búsqueda -->
+          <input type="text" v-model="searchQuery" id="searchQuery" placeholder="Buscar" class="buscador" style="::placeholder { color: var(--primary-color); }" />
+          <!-- Mensaje de error de comunicación -->
+          <v-alert v-if="errorServidor" type="error" class="alerta-error" prominent color="red lighten-3">
+            <span class="alert-text">Fallo de comunicación con el servidor</span>
+          </v-alert>
+          <div v-if="cargando && !errorServidor" class="text-center">
+            <v-progress-circular :size="70" :width="7" color="#17195e" indeterminate></v-progress-circular>
+          </div>
+          <div v-if="!cargando && !errorServidor && pacientes.length === 0" class="texto-centrado">
+            <p>No existen pacientes</p>
+          </div>
+          <!-- Tabla de citas -->
+          <table v-if="!cargando && !errorServidor && pacientes.length > 0" class="citas-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Nombre</th>
+                <th>Username</th>
+                <th>DNI</th>
+                <th>Fecha de nacimiento</th>
+                <th>Género</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="paciente in filtrarPacientes" :key="paciente._id">
+                <td class="citas-actions">
+                  <!-- Modificar Paciente -->
+                  <button class="boton-crear" style="background-color: #e7c9b2; padding: 5px 25px;" @click="cargarPaciente(paciente)">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="var(--primary-color)">
+                      <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+                    </svg>
+                  </button>
+                  <!-- Eliminar Paciente -->
+                  <button class="boton-crear" style="background-color: var(--color-rojo); padding: 5px 25px;" @click="confirmarEliminacion(paciente._id, paciente.nombre)">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="var(--primary-color)">
+                      <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
+                    </svg>
+                  </button>
+                </td>
+                <td>{{ paciente.nombre }} {{ paciente.apellidos }}</td>
+                <td>{{ paciente.username }}</td>
+                <td>{{ paciente.dni }}</td>
+                <td>{{ formatearFecha(paciente.fechaNacimiento) }}</td>
+                <td>{{ paciente.genero }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-  
-        <div v-if="!cargando && !errorServidor && pacientes.length === 0" class="texto-centrado">
-          <p>No existen pacientes</p>
-        </div>
-  
-        <!-- Tabla de citas -->
-        <table v-if="!cargando && !errorServidor && pacientes.length > 0" class="citas-table">
-  
-          <thead>
-            <tr>
-              <th></th>
-              <th>Nombre</th>
-              <th>Username</th>
-              <th>DNI</th>
-              <th>Fecha de nacimiento</th>
-              <th>Género</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="paciente in filtrarPacientes" :key="paciente._id">
-              <td class="citas-actions">
-
-                <!-- Modificar Paciente -->
-                <button class="boton-crear" style="background-color: #e7c9b2; padding: 5px 25px;" @click="cargarPaciente(paciente)">
-                  <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="var(--primary-color)">
-                    <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
-                  </svg>
-
-
-                </button>
-
-                <!-- Eliminar Paciente -->
-                <button class="boton-crear" style="background-color: var(--color-rojo); padding: 5px 25px;" @click="confirmarEliminacion(paciente._id, paciente.nombre)">
-                  <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="var(--primary-color)">
-                    <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
-                  </svg>
-                  
-                </button>
-              </td>
-              <td>{{ paciente.nombre }} {{ paciente.apellidos }}</td>
-              <td>{{ paciente.username }}</td>
-              <td>{{ paciente.dni }}</td>
-              <td>{{ formatearFecha(paciente.fechaNacimiento) }}</td>
-              <td>{{ paciente.genero }}</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </div>
-    </div>
-</div>
-  </template>
+  </div>
+</template>
   
   <script>
   import apiClient from '@/apiClient';
@@ -229,6 +214,7 @@
         departamento: {}, // Datos del departamento del usuario
         searchQuery: '', // Campo de búsqueda
         paciente: {}, // Datos del paciente seleccionado
+        aseguradoras: [], // Lista de aseguradoras
         nuevoPaciente: {
             nombre: '',
             apellidos: '',
@@ -241,7 +227,8 @@
             direccion: '',
             telefono: '',
             email: '',
-            foto: ''
+            foto: '',
+            aseguradora: '',
         },
         cargando: false,
         errorServidor: false,
@@ -260,66 +247,69 @@
         const dni = paciente?.dni?.toLowerCase() || ''; // Asegurar que 'dni' sea string
         const username = paciente?.username?.toLowerCase() || ''; // Asegurar que 'dni' sea string
 
-        // Verifica si alguno de los campos incluye la búsqueda
-        return (
-          nombre.includes(busqueda) ||
-          apellidos.includes(busqueda) ||
-          dni.includes(busqueda) ||
-          username.includes(busqueda)
-        );
-      });
-    }
-
-
-
-      
+      // Verifica si alguno de los campos incluye la búsqueda
+      return (
+        nombre.includes(busqueda) ||
+        apellidos.includes(busqueda) ||
+        dni.includes(busqueda) ||
+        username.includes(busqueda)
+      );
+    });
+  }},
+  methods: {
+    async datosUsuario() {
+      const authStore = useAuthStore();
+      const usuario = authStore.getUser ? authStore.getUser : 'Usuario';
+      const departamento = usuario.departamento;
+      const departamentoResponse = await apiClient.get(`/api/departamentos/${departamento}`);
+      this.departamento = departamentoResponse.data;
     },
-    methods: {
-
-      async datosUsuario() {
-        const authStore = useAuthStore();
-        const usuario = authStore.getUser ? authStore.getUser : 'Usuario';
-        const departamento = usuario.departamento;
-        const departamentoResponse = await apiClient.get(`/api/departamentos/${departamento}`);
-        this.departamento = departamentoResponse.data;
-      },
-      obtenerFechaHoraCanarias() {
-        const opcionesFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        const opcionesHora = { hour: '2-digit', minute: '2-digit', hour12: false };
-    
-        // Obtener la hora de Canarias (GMT+0)
-        const ahora = new Date();
-        const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
+    obtenerFechaHoraCanarias() {
+      const opcionesFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const opcionesHora = { hour: '2-digit', minute: '2-digit', hour12: false };
   
-        // Formatear la fecha y la hora
-        const fechaFormateada = horaCanarias.toLocaleDateString('es-ES', opcionesFecha);
-        const horaFormateada = horaCanarias.toLocaleTimeString('es-ES', opcionesHora).replace(':', '.');
-  
-        return `${fechaFormateada}, ${horaFormateada} h`;
-      },
+      // Obtener la hora de Canarias (GMT+0)
+      const ahora = new Date();
+      const horaCanarias = new Date(ahora.toLocaleString("en-US", { timeZone: "Atlantic/Canary" }));
 
-      async obtenerPacientes() {
-        try {
-          const response = await apiClient.get('/api/usuarios/pacientes');
-          this.pacientes = response.data;
-          this.cargando = false;
-        } catch (error) {
-          console.error('Error al obtener pacientes:', error);
-          this.errorServidor = true;
-          this.cargando = false;
-        }
-      },
+      // Formatear la fecha y la hora
+      const fechaFormateada = horaCanarias.toLocaleDateString('es-ES', opcionesFecha);
+      const horaFormateada = horaCanarias.toLocaleTimeString('es-ES', opcionesHora).replace(':', '.');
 
-      async crearPaciente() {
-        try {
-          const response = await apiClient.post('/api/pacientes', this.nuevoPaciente);
-          this.pacientes.push(response.data);
-          this.obtenerPacientes();
-          this.resetFormulario();
-        } catch (error) {
-          console.error('Error al crear paciente:', error);
-        }
-      },
+      return `${fechaFormateada}, ${horaFormateada} h`;
+    },
+
+    async obtenerPacientes() {
+      try {
+        const response = await apiClient.get('/api/usuarios/pacientes');
+        this.pacientes = response.data;
+        this.cargando = false;
+      } catch (error) {
+        console.error('Error al obtener pacientes:', error);
+        this.errorServidor = true;
+        this.cargando = false;
+      }
+    },
+
+    async fetchAseguradoras() {
+      try {
+        const response = await apiClient.get('/api/aseguradoras');
+        this.aseguradoras = response.data;
+      } catch (error) {
+        console.error('Error al obtener las aseguradoras:', error);
+      }
+    },
+
+    async crearPaciente() {
+      try {
+        const response = await apiClient.post('/api/usuarios', this.nuevoPaciente);
+        this.pacientes.push(response.data);
+        this.obtenerPacientes();
+        this.resetFormulario();
+      } catch (error) {
+        console.error('Error al crear paciente:', error);
+      }
+    },
 
 
     resetFormulario() {
@@ -345,9 +335,6 @@
     cargarPaciente(paciente) {
       this.nuevoPaciente = { ...paciente };
       this.editarUsuarioId = paciente._id;
-    },
-    filtrarUsuarios() {
-      // Este método se llama cuando se cambia el filtro, pero el cálculo se realiza en `usuariosFiltrados`
     },
     triggerFileInput() {
       this.$refs.fileInput.click();
@@ -389,107 +376,104 @@
       const usuarioActualizado = { ...this.nuevoPaciente };
       console.log("Actualizando paciente:", usuarioActualizado);
 
-      // Solo incluir la contraseña si ha sido modificada
-      if (!this.passwordChanged || !usuarioActualizado.password.trim()) {
-        delete usuarioActualizado.password;
-      }
+    // Solo incluir la contraseña si ha sido modificada
+    if (!this.passwordChanged || !usuarioActualizado.password.trim()) {
+      delete usuarioActualizado.password;
+    }
 
-      try {
-        await apiClient.put(`/api/usuarios/${this.editarUsuarioId}`, usuarioActualizado, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        await this.obtenerPacientes(); // Recargar la lista de usuarios
-        this.resetFormulario(); // Resetear el formulario después de la edición
-      } catch (error) {
-        console.error('Error al actualizar paciente:', error);
-      }
-    },
-    cancelarEdicion() {
-      this.resetFormulario();
-    },
-    handlePasswordChange(event) {
-      this.passwordChanged = true;
-      this.nuevoPaciente.password = event.target.value;
-    },
-    setCustomMessage(event, message) {
-      if (!event.target.value) {
-        event.target.setCustomValidity('Este campo es obligatorio');
-      } else {
-        event.target.setCustomValidity(message);
-      }
-    },
-    validateRequired(event, message) {
-      event.target.setCustomValidity(''); // Resetea el mensaje personalizado
-      if (!event.target.value) {
-        event.target.setCustomValidity('Este campo es obligatorio');
-      } else if (!event.target.checkValidity()) {
-        event.target.setCustomValidity(message);
-      }
-    },
-    validateNombre(event) {
-      event.target.setCustomValidity('');
-      if (!event.target.value) {
-        event.target.setCustomValidity('Este campo es obligatorio');
-      } else if (!event.target.checkValidity()) {
-        event.target.setCustomValidity('El nombre solo puede contener letras.');
-      }
-    },
-    validateApellidos(event) {
-      event.target.setCustomValidity('');
-      if (!event.target.value) {
-        event.target.setCustomValidity('Este campo es obligatorio');
-      } else if (!event.target.checkValidity()) {
-        event.target.setCustomValidity('Los apellidos solo pueden contener letras.');
-      }
-    },
-    validatePassword(event) {
-      event.target.setCustomValidity('');
-      if (!event.target.value) {
-        event.target.setCustomValidity('Este campo es obligatorio');
-      } else if (!event.target.checkValidity()) {
-        event.target.setCustomValidity('Debe tener al menos 6 caracteres, incluyendo 1 mayúscula, 1 minúscula y 1 número.');
-      }
-    },
-    validateDni(event) {
-      event.target.setCustomValidity('');
-      if (!event.target.value) {
-        event.target.setCustomValidity('Este campo es obligatorio');
-      } else if (!event.target.checkValidity()) {
-        event.target.setCustomValidity('El DNI debe tener 8 números seguidos de una letra.');
-      }
-    },
-    validateTelefono(event) {
-      event.target.setCustomValidity('');
-      if (!event.target.checkValidity()) {
-        event.target.setCustomValidity('El teléfono debe contener exactamente 9 dígitos.');
-      }
-    },
-    },  
+    try {
+      await apiClient.put(`/api/usuarios/${this.editarUsuarioId}`, usuarioActualizado, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      await this.obtenerPacientes(); // Recargar la lista de usuarios
+      this.resetFormulario(); // Resetear el formulario después de la edición
+    } catch (error) {
+      console.error('Error al actualizar paciente:', error);
+    }
+  },
+  cancelarEdicion() {
+    this.resetFormulario();
+  },
+  handlePasswordChange(event) {
+    this.passwordChanged = true;
+    this.nuevoPaciente.password = event.target.value;
+  },
+  setCustomMessage(event, message) {
+    if (!event.target.value) {
+      event.target.setCustomValidity('Este campo es obligatorio');
+    } else {
+      event.target.setCustomValidity(message);
+    }
+  },
+  validateRequired(event, message) {
+    event.target.setCustomValidity(''); // Resetea el mensaje personalizado
+    if (!event.target.value) {
+      event.target.setCustomValidity('Este campo es obligatorio');
+    } else if (!event.target.checkValidity()) {
+      event.target.setCustomValidity(message);
+    }
+  },
+  validateNombre(event) {
+    event.target.setCustomValidity('');
+    if (!event.target.value) {
+      event.target.setCustomValidity('Este campo es obligatorio');
+    } else if (!event.target.checkValidity()) {
+      event.target.setCustomValidity('El nombre solo puede contener letras.');
+    }
+  },
+  validateApellidos(event) {
+    event.target.setCustomValidity('');
+    if (!event.target.value) {
+      event.target.setCustomValidity('Este campo es obligatorio');
+    } else if (!event.target.checkValidity()) {
+      event.target.setCustomValidity('Los apellidos solo pueden contener letras.');
+    }
+  },
+  validatePassword(event) {
+    event.target.setCustomValidity('');
+    if (!event.target.value) {
+      event.target.setCustomValidity('Este campo es obligatorio');
+    } else if (!event.target.checkValidity()) {
+      event.target.setCustomValidity('Debe tener al menos 6 caracteres, incluyendo 1 mayúscula, 1 minúscula y 1 número.');
+    }
+  },
+  validateDni(event) {
+    event.target.setCustomValidity('');
+    if (!event.target.value) {
+      event.target.setCustomValidity('Este campo es obligatorio');
+    } else if (!event.target.checkValidity()) {
+      event.target.setCustomValidity('El DNI debe tener 8 números seguidos de una letra.');
+    }
+  },
+  validateTelefono(event) {
+    event.target.setCustomValidity('');
+    if (!event.target.checkValidity()) {
+      event.target.setCustomValidity('El teléfono debe contener exactamente 9 dígitos.');
+    }
+  },
+  },  
 
-    async mounted() {
-      await this.datosUsuario(); 
-      await this.obtenerPacientes();
-      this.intervalId = setInterval(() => {
-        this.obtenerPacientes();
-      }, 60000);
-  
+  async mounted() {
+    await this.datosUsuario(); 
+    await this.obtenerPacientes();
+    await this.fetchAseguradoras(); 
+    this.intervalId = setInterval(() => {
+      this.obtenerPacientes();
+    }, 60000);
 
-  
+    this.fechaHora = this.obtenerFechaHoraCanarias();
+    setInterval(() => {
       this.fechaHora = this.obtenerFechaHoraCanarias();
-      setInterval(() => {
-        this.fechaHora = this.obtenerFechaHoraCanarias();
-  
-      }, 1000); // Actualiza la hora cada segundo  
-    },
-    beforeDestroy() {
-      clearInterval(this.intervalId);
-    },
-  };
 
-
-  </script>
+    }, 1000); // Actualiza la hora cada segundo  
+  },
+  beforeDestroy() {
+    clearInterval(this.intervalId);
+  },
+};
+</script>
   
   
 <style scoped>

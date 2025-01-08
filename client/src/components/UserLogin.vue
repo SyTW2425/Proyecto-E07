@@ -1,10 +1,6 @@
 <template>
   <div class="login-page">
-    <header class="header">
-      <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
-      <div class="vertical-line"></div>
-      <h1 class="left-align small-text">PORTAL<br>DEL PACIENTE</h1>
-    </header>
+
     
     <main class="content">
       <section class="welcome-section">
@@ -106,6 +102,7 @@ export default {
 .login-page {
   display: flex;
   flex-direction: column;
+  min-height: 80vh;
   align-items: center;
   margin: 0;
   padding: 0;
