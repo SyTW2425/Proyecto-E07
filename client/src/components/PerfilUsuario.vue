@@ -145,7 +145,7 @@ export default {
         email: 'Email',
       },
       passwordChanged: false,
-      aseguradoraNombre: ''
+      aseguradoraNombre: '',
       tipoUsuario: '',
     };
   },
@@ -181,6 +181,7 @@ export default {
       } catch (error) {
         console.error('Error al obtener el nombre de la aseguradora:', error);
       }
+    },
     async datosUsuario() {
       const authStore = useAuthStore();
       await authStore.checkAuth();
