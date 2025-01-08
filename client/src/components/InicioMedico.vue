@@ -71,7 +71,7 @@
         </button>
       </a>
   
-      <a href="/recetasmedico" style="text-decoration: none; color: inherit;">
+      <a href="/recetas" style="text-decoration: none; color: inherit;">
         <button class="caja-contenido" href="#">
           <div class="circle">
             <svg
@@ -90,7 +90,7 @@
         </button>
       </a>
 
-      <a href="/iniciomedico/informes" style="text-decoration: none; color: inherit;">
+      <a href="/informes" style="text-decoration: none; color: inherit;">
         <button class="caja-contenido" href="#">
           <div class="circle">
             <svg
