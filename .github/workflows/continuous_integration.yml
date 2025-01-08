@@ -5,10 +5,13 @@ on:
     branches:
       - main
       - develop
+      - dev_lihao
   pull_request:
     branches:
       - main
       - develop
+      - dev_lihao
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,7 +29,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '16'
+        node-version: '22'
 
     - name: Install dependencies for the App
       run: |
@@ -48,18 +51,22 @@ jobs:
         echo "JWT_SECRET=ce143dc65674fee62bfa39f36800bb5f9cdc14f29034ffac6339009236668ea8" >> $GITHUB_ENV
         echo "MONGODB_URI_TEST=mongodb+srv://admin:adminTester@cluster0.huenv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0" >> $GITHUB_ENV
 
+    - name: Print environment variables
+      run: env
 
-    - name: Run client
+    - name: Install Reporter dependencies
       run: |
-        cd client
-        npm run serve &
-      env:
-        NODE_ENV: test
-
-    - name: Run server
+        npm install --save-dev nyc mocha
+        npm install --save-dev mocha-lcov-reporter
+        
+    - name: Run tests with coverage
       run: |
         cd server
-        npm install -g nodemon
-        nodemon server.js &
-      env:
-        NODE_ENV: tests
+        npm run coverage
+
+    - name: Save coverage reports
+      uses: actions/upload-artifact@v3
+      with:
+          name: coverage-reports
+          path: server/coverage/ # Carpeta o archivo a guardar
+
