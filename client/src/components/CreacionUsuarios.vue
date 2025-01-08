@@ -116,7 +116,7 @@
       
       <!-- Filtro para el tipo de usuario -->
       <div class="filtro-tipo-usuario">
-        <label for="filtroTipo">Filtrar por tipo de usuario:</label>
+        <label for="filtroTipo">Filtrar por tipo de usuario:</label><br>
         <select v-model="filtroTipo" @change="filtrarUsuarios">
           <option value="">Todos</option>
           <option value="Administración">Administración</option>
@@ -641,16 +641,13 @@ select:focus {
   align-items: center;
 }
 
-.filtro-tipo-usuario label {
-  margin-right: 10px;
-  font-weight: bold;
+.filtro-tipo-usuario label,
+.filtro-tipo-usuario select {
+  display: block; /* Hace que el label y el select se comporten como elementos de bloque */
+  margin-bottom: 10px; /* Añade un margen inferior para separar los elementos */
 }
 
-.filtro-tipo-usuario select {
-  padding: 5px;
-  border-radius: 5px;
-  border: 1px solid var(--color-gris);
-}
+
 
 .alerta-error {
   background-color: #f44336 !important; /* Rojo claro personalizado */
