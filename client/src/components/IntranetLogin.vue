@@ -23,7 +23,6 @@
           <label for="password">Contraseña:</label>
           <input type="password" id="password" v-model="password" required />
           
-          <a href="#" class="forgot-password">¿Has olvidado tu contraseña?</a>
           
           <button type="submit" class="login-button">Entrar</button>
         </form>
@@ -189,7 +188,7 @@ export default {
 }
 
 .login-button {
-  margin-top: 1rem;
+  margin-top: 2rem;
   width: 100%;
   padding: 0.75rem;
   background-color: #17195e;

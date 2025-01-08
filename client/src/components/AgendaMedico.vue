@@ -596,10 +596,6 @@ export default {
     cursor: pointer;
   }
   
-  button:hover {
-    background-color: #45a049;
-  }
-
 
   .estilo-pagina {  
     margin-left: 2rem; 
@@ -670,6 +666,7 @@ export default {
     border: none;
     border-radius: 10px;
     cursor: pointer;
+    margin-top: 6px;
   }
   
 
@@ -759,7 +756,7 @@ export default {
 
   .boton-eliminar {
     background-color: var(--color-rojo); /* Fondo rojo para el botón */
-    color: white; /* Texto blanco */
+    color: var(--primary-color); /* Texto blanco */
     border: none;
     padding: 5px 10px;
     border-radius: 3px;

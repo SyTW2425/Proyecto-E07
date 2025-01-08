@@ -29,6 +29,10 @@ import RecetasWrapper from './components/RecetasWrapper.vue';
 
 const routes = [
   { path: '/', component: PaginaInicio },
+  { path: '/equipo-medico', component: PaginaEquipoMedico},
+  { path: '/especialidades', component: PaginaEspecialidades },
+  { path: '/contacto', component: ContactForm },
+  
   { path: '/usuarios', component: CreacionUsuarios, meta: { requiresAuth: true, allowedRoles: ['Gerencia'] }},
   { path: '/departamentos', component: GestionDepartamentos, meta: { requiresAuth: true, allowedRoles: ['Gerencia'] }},
   { path: '/aseguradoras', component: GestionAseguradoras, meta: { requiresAuth: true, allowedRoles: ['Gerencia'] }},
@@ -42,9 +46,7 @@ const routes = [
   { path: '/encuestas', component: GestionEncuestas},
   { path: '/pruebas', component: PruebasCodigo },
 
-  { path: '/equipo-medico', component: PaginaEquipoMedico},
-  { path: '/especialidades', component: PaginaEspecialidades },
-  { path: '/contacto', component: ContactForm },
+  
 
   { path: '/login', component: UserLogin },
   { path: '/intranet', component: IntranetLogin },

@@ -51,6 +51,8 @@
         </div>
       </div>
 
+      <div v-if="tipoUsuario === 'Paciente'">
+
       <!-- Seguro Médico -->
       <div class="seguro-medico">
         <div class="header-datos">
@@ -100,6 +102,7 @@
           </div>
         </div>
       </div>
+      
 
       <!-- Importante -->
       <div class="important-container">
@@ -110,7 +113,7 @@
             Algunos datos solo pueden ser modificados por médicos o administrativos. 
             Si desea modificar su información, por favor acuda el centro hospitalario.
           </ul>
-      </div>
+      </div></div>
     </div>
   </div>
 </template>
@@ -142,6 +145,7 @@ export default {
         email: 'Email',
       },
       passwordChanged: false,
+      tipoUsuario: '',
     };
   },
   computed: {
@@ -166,6 +170,11 @@ export default {
     }
   },
   methods: {
+    async datosUsuario() {
+      const authStore = useAuthStore();
+      await authStore.checkAuth();
+      this.tipoUsuario = authStore.getUser ? authStore.getUser.tipo : 'Usuario';
+    },
     goBack() {
       this.$router.go(-1);
     },
@@ -307,7 +316,10 @@ export default {
       }
       return edad;
     }
-  }
+  },
+  async mounted() {   
+    await this.datosUsuario();
+  },
 };
 </script>
 
@@ -419,11 +431,13 @@ export default {
   margin: 0;
   font-size: 2.5rem;
   font-weight: bold; 
+  margin-left: 20px;
 }
 
 .user-details p {
   margin: 0;
   font-size: 1.4rem;
+  margin-left: 20px;
 }
 
 .datos-personales, .seguro-medico, .antecedentes {

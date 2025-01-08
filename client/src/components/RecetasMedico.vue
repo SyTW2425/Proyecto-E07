@@ -1,6 +1,6 @@
 <template>
-  <div class="estilo-pagina">
-    <Header/>
+  <div>
+    <Header/>  <div class="estilo-pagina">
     <br>
     <div class="barra-fecha" >
       <span>{{ fechaHora }}</span>
@@ -31,13 +31,6 @@
        <!-- Formulario para crear o editar una receta -->
        <form @submit.prevent="editarRecetaId ? actualizarReceta() : crearReceta()">
 
-         <label> Médico:
-           <select required>
-             <option disabled value="">Seleccione un médico</option>
-             <option> {{ this.medico.nombre }} {{ this.medico.apellidos }}</option>
-           </select>
-         </label>
-
          <label> Paciente:
            <select v-model="nuevaReceta.pacienteId" required>
              <option disabled value="">Seleccione un paciente</option>
@@ -61,15 +54,18 @@
            <textarea v-model="nuevaReceta.observaciones" class="textarea-azul"></textarea>
          </label>
          <!-- Botones de acción para crear o actualizar la receta -->
-         <v-btn class="ma-2 boton-crear" type="submit" v-if="!editarRecetaId">
-           Crear Receta
-         </v-btn>
-         <v-btn class="ma-2 boton-guardar" type="button" v-if="editarRecetaId" @click="actualizarReceta">
+
+         <button class="boton-crear" type="submit" v-if="!editarRecetaId">
+            Crear Receta
+          </button>
+
+
+         <button class="boton-crear" type="button" v-if="editarRecetaId" @click="actualizarReceta">
            Guardar Cambios
-         </v-btn>
-         <v-btn class="ma-2 boton-cancelar" type="button" v-if="editarRecetaId" @click="cancelarEdicion">
+         </button>
+         <button class="boton-crear" type="button" v-if="editarRecetaId" @click="cancelarEdicion" style="background-color: var(--color-rojo);">
            Cancelar
-         </v-btn>
+         </button>
        </form>
      </div>
 
@@ -126,14 +122,20 @@
            <tr v-for="receta in recetas" :key="receta._id">
              <td class="department-actions">
                <div class="action-buttons">
-                 <v-btn class="boton-modificar" @click="cargarReceta(receta)">
-                   <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#17195e"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
-                   <i class="bi bi-pencil-square"></i>
-                 </v-btn>
-                 <v-btn class="boton-eliminar" @click="confirmarEliminacion(receta._id, receta.numero)">
-                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#17195e"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
-                   <i class="bi bi-trash"></i>
-                 </v-btn>
+
+                 <!-- Modificar Receta -->
+  <button class="boton-crear" style="background-color: #e7c9b2; padding: 5px 25px;" @click="cargarReceta(receta)">
+    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="var(--primary-color)">
+      <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+    </svg>
+  </button>
+
+<!-- Eliminar Receta -->
+  <button class="boton-crear" style="background-color: var(--color-rojo); padding: 5px 25px;" @click="confirmarEliminacion(receta._id, receta.numero)">
+    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="var(--primary-color)">
+      <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
+  </svg>
+  </button>
                </div>
              </td>
              <td>{{ receta.medicoId?.nombre }} {{ receta.medicoId?.apellidos }}</td>
@@ -147,7 +149,7 @@
        </table>
      </div>
    </div>
-  </div>
+  </div></div>
 </template>
 
 <script>
@@ -296,7 +298,7 @@ export default {
       }
     },
     resetFormulario() {
-      this.nuevaReceta = { medicoId: '', pacienteId: '', fecha: '', hora: '', medicamentos: '', observaciones: '' };
+      this.nuevaReceta = { pacienteId: '', fecha: '', hora: '', medicamentos: '', observaciones: '' };
       this.editarRecetaId = null;
     }
   },
@@ -340,14 +342,7 @@ export default {
     font-weight: bold; /* Resalta los labels */
   }
   
-  /* Botones estilizados */
-  .boton-crear {
-    background-color: var(--primary-color) !important; /* Azul corporativo */
-    color: white !important;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: bold;
-  }
+
   
   .boton-agregar {
     background-color: var(--success-color) !important; /* Verde */
@@ -530,25 +525,13 @@ select:focus {
 }
   
   .columna-formulario {
-    width: 40%;
+    width: 30%;
   }
   .columna-citas {
     width: 65%;
   }
   
-  button {
-    margin-right: 10px;
-    margin-bottom: 10px;
-    padding: 8px 16px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #45a049;
-  }
+
 
 
   .estilo-pagina {  
@@ -620,9 +603,8 @@ select:focus {
     border: none;
     border-radius: 10px;
     cursor: pointer;
-  }
-  .boton-crear:hover {
-    background-color: #00e682;
+    width: 100%;
+    margin-top: 6px;
   }
 
   /* Estilo del círculo */
@@ -721,7 +703,8 @@ select:focus {
     padding: 8px;
     border-radius: 5px;
     outline: none;
-    font-family: 'Outfit', sans-serif; /* Asegura que la fuente sea uniforme */
+    width: 100%;
+    font-weight: 400;
   }
 
   /* Cambia el color del borde y añade un efecto cuando el campo está enfocado */
