@@ -1,7 +1,6 @@
 <template>
   <div>
 
-  <Header/>
   <div class="contenedor-principal">
     <!-- Columna izquierda: Formulario de creación de aseguradoras -->
     <div class="columna-formulario">
@@ -170,13 +169,9 @@
   
   <script>
   import apiClient from '@/apiClient';
-  import Header from './Header.vue';
   
   export default {
     name: 'GestionAseguradoras',
-    components: {
-      Header,
-    },
     data() {
       return {
         especialidad:'',

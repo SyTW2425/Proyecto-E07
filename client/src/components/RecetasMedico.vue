@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header/>  <div class="estilo-pagina">
+    <div class="estilo-pagina">
     <br>
     <div class="barra-fecha" >
       <span>{{ fechaHora }}</span>
@@ -154,14 +154,10 @@
 
 <script>
 import apiClient from '@/apiClient';
-import Header from './Header.vue';
 import { useAuthStore } from '../../store/auth';
 
 export default {
   name: 'GestionRecetas',
-  components: {
-    Header
-  },
   data() {
     return {
       fechaHora: '',
