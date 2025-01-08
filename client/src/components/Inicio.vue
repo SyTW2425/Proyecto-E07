@@ -1,54 +1,6 @@
 <template>
   <div id="inicio">
-    <!-- Header (Navegación y Logo) -->
-    <header class="header" role="banner">
-      <nav class="navbar navbar-expand-lg" aria-label="Main Navigation">
-        <div class="container-fluid">
-          <!-- Logotipo -->
-          <a class="navbar-brand" href="#">
-            <img :src="require('@/assets/logo.png')" alt="Hospital Rambla Logo" class="logo">
-          </a>
-
-          <div class="vertical-line" aria-hidden="true"></div>
-          
-          <!-- Barra de búsqueda -->
-          <div class="search">
-            <div class="search-bar">
-              <button class="icon-container" aria-label="Buscar">
-                <img :src="require('@/assets/icons/Search-icon.png')" alt="Buscar" class="Search-icon">
-              </button>
-              <input type="text" v-model="search" placeholder="Buscar..." class="search-input" aria-label="Buscar"/>
-            </div>
-          </div>
-
-          <!-- Botón para colapsar menú en pantallas pequeñas -->
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          
-          <!-- Menú de navegación -->
-          <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="#">Inicio</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/client/src/components/PaginaEnDesarrollo.vue">Especialidades</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/client/src/components/PaginaEnDesarrollo.vue">Equipo Médico</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/client/src/components/PaginaEnDesarrollo.vue">Eventos</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/contacto">Contacto</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-    </header>
+    
   
     <!-- Hero Section (Sección principal) -->
     <section class="hero" role="region" aria-labelledby="hero-heading">
@@ -99,34 +51,14 @@
   
     <!-- Personal Health Section (Área personal de salud) -->
     <section class="personal-health" role="region" aria-labelledby="personal-health-heading">
-      <h2 id="personal-health-heading" tabindex="0">Área personal de salud</h2>
-      <p tabindex="0">Accede a cualquier hora del día para cuidar tu salud. En el Portal del Paciente tienes tu espacio personal privado y seguro en el que puedes solicitar y gestionar tus citas o consultar tus informes clínicos.</p>
-      <div class="d-grid gap-2 d-md-block">
-        <router-link to="/register" class="btn btn-primary" color="white" type="button"> Regístrate ahora</router-link>
-      </div>
+      <img :src="require('@/assets/general/banner-area-personal-salud.png')" alt="Banner Área Personal de Salud" class="personal-health-banner" tabindex="0">
     </section>
   
-    <!-- Footer (Pie de página) -->
-    <footer class="footer" role="contentinfo">
-      <div class="footer-left">
-        <router-link to="/login" class="footer-item">Portal del paciente</router-link>
-        <router-link to="/intranet" class="footer-item">Intranet</router-link>
-        <router-link to="/contacto" class="footer-item">Contacto</router-link>
-      </div>
-      <div class="footer-mid">
-        <router-link to="/" @click.native="scrollToTop" tabindex="0">
-          <img :src="require('@/assets/icons/logo-inv.png')" alt="Logo" class="logo">
-        </router-link>
-      </div>
-      <div class="footer-right">
-        <p tabindex="0">Somos un centro hospitalario comprometido en ofrecerte atención <br>sanitaria de primer nivel, con dedicación y calidad humana.</p>
-      </div>
-    </footer>
+    
   </div>
 </template>
   
 <script>
-import { useAuthStore } from '../../store/auth';
 
 export default {
   name: 'PaginaInicio',
@@ -137,16 +69,8 @@ export default {
   },
   methods: {
     redirectToLogin() {
-      const authStore = useAuthStore(); 
-      if (authStore.isAuthenticated) {
-        this.$router.push('/iniciopaciente'); 
-      } else {
-        this.$router.push('/login'); 
-      }
+      this.$router.push('/login'); 
     },
-    scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
   },
 };
 </script>
@@ -458,5 +382,12 @@ export default {
 
 :focus {
   outline: 2px solid #92bdf6; /* Color del contorno al enfocar con tabulación */
+}
+
+.personal-health-banner {
+  width: 84%;
+  height: auto;
+  margin-top: 1rem; /* Solo margen superior */
+  margin-bottom: 0; /* Sin margen inferior */
 }
 </style>

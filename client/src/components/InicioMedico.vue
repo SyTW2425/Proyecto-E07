@@ -30,16 +30,23 @@
     <br>
     <br>
 
-  <div class="citas-container">
-    <div class="header-ctitle" style="font-weight: 500;">Agenda</div>
-    <div class="contenido">
-    <img 
-      src="https://thumbs.dreamstime.com/b/concepto-de-calendario-iu-gui-para-aplicaciones-m%C3%B3viles-y-web-estilo-widget-blanco-moderno-ilustraci%C3%B3n-vectorial-211271368.jpg" 
-      alt="Calendario" 
-      style="max-width: 20%; max-height: 20%; object-fit: contain; align-self: center;"
-    />
+    <div class="citas-container">
+      <div class="header-citas">
+        <button class="header-ctitle">Próximas citas</button>
+      </div>
+      <div class="citas-content">
+        <div v-for="cita in proximasCitas" :key="cita._id" class="cita">
+          <div class="icono"></div>
+          <div class="detalles">
+            <span class="fecha">{{ formatearFecha(cita.fechaHora) }} a las {{ formatearHora(cita.fechaHora) }}</span>
+            <span class="especialidad">{{ cita.especialidadId.nombre }}</span>
+            <span class="especialidad">{{ cita.prestacionId.nombre }}</span>
+            <span class="doctor">{{ cita.pacienteId.nombre }} {{ cita.pacienteId.apellidos }}</span>
+          </div>
+        </div>
+      </div>
+      <br>
     </div>
-  </div>
   <br>
   <br>
 
@@ -64,7 +71,7 @@
         </button>
       </a>
   
-      <a href="/recetasmedico" style="text-decoration: none; color: inherit;">
+      <a href="/recetas" style="text-decoration: none; color: inherit;">
         <button class="caja-contenido" href="#">
           <div class="circle">
             <svg
@@ -83,7 +90,7 @@
         </button>
       </a>
 
-      <a href="/iniciomedico/informes" style="text-decoration: none; color: inherit;">
+      <a href="/informes" style="text-decoration: none; color: inherit;">
         <button class="caja-contenido" href="#">
           <div class="circle">
             <svg
@@ -149,6 +156,7 @@
         departamento: '',
         usuario: '',
         horaActual: '',
+        proximasCitas: []
       };
     },
     methods: {
@@ -156,6 +164,21 @@
         const authStore = useAuthStore();
         await authStore.checkAuth();
         this.usuario = authStore.getUser ? authStore.getUser : 'Usuario';
+      },
+      async obtenerProximasCitas() {
+        try {
+          const response = await apiClient.get('/api/citas', {
+            params: { medicoId: this.usuario._id }
+          });
+          const citas = response.data;
+          const ahora = new Date();
+          this.proximasCitas = citas
+            .filter(cita => new Date(cita.fechaHora) > ahora)
+            .sort((a, b) => new Date(a.fechaHora) - new Date(b.fechaHora))
+            .slice(0, 3);
+        } catch (error) {
+          console.error('Error al obtener las próximas citas:', error);
+        }
       },
       async obtenerDepartamento() {
         if (this.usuario && this.usuario.departamento) {
@@ -197,11 +220,25 @@
       async verificarAutenticacion() {
         const authStore = useAuthStore();
         await authStore.checkAuth();
+      },
+      formatearFecha(fechaHora) {
+        const fecha = new Date(fechaHora);
+        const dia = String(fecha.getDate()).padStart(2, '0');
+        const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+        const anio = fecha.getFullYear();
+        return `${dia}/${mes}/${anio}`;
+      },
+      formatearHora(fechaHora) {
+        const fecha = new Date(fechaHora);
+        const horas = String(fecha.getHours()).padStart(2, '0');
+        const minutos = String(fecha.getMinutes()).padStart(2, '0');
+        return `${horas}:${minutos} h`;
       }
     },
     async mounted() {
     await this.datosUsuario();
     await this.obtenerDepartamento();
+    await this.obtenerProximasCitas();
     this.actualizarSaludo();
     this.actualizarHora();
     setInterval(() => {
@@ -271,8 +308,59 @@
   border-radius: 3.5rem; /* Bordes redondeados */
   width: 100%; /* Ajusta el ancho según sea necesario */
   margin: 20px auto; /* Centra el contenedor */
+  justify-content: center;
+  padding: 2rem;
+
 }
 
+.cita {
+  flex: 1;
+  background-color: #f4f9ff;
+  border: 1px solid #d2e4fd;
+  padding: 15px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icono {
+  width: 40px;
+  height: 40px;
+  background-color: var(--color-azul2);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icono::before {
+  content: '+';
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.detalles {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.fecha {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.especialidad {
+  color: var(--primary-color);
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+.doctor {
+  color: #6b6b6b;
+  font-size: 0.9rem;
+}
 
 .header-citas {
   text-align: left;
@@ -435,7 +523,11 @@
   margin: 0 auto;
 }
 
-
+.citas-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
 
 .caja-contenido {
   background-color: var(--color-azul2);

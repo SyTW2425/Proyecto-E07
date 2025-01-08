@@ -1,54 +1,7 @@
 <template>
   <div id="contacto" class="page-container">
     <!-- Header (Navegación y Logo) -->
-    <header class="header" role="banner">
-      <nav class="navbar navbar-expand-lg" aria-label="Main Navigation">
-        <div class="container-fluid">
-          <!-- Logotipo -->
-          <a class="navbar-brand" href="#">
-            <img :src="require('@/assets/logo.png')" alt="Hospital Rambla Logo" class="logo">
-          </a>
-
-          <div class="vertical-line" aria-hidden="true"></div>
-          
-          <!-- Barra de búsqueda -->
-          <div class="search">
-            <div class="search-bar">
-              <button class="icon-container" aria-label="Buscar">
-                <img :src="require('@/assets/icons/Search-icon.png')" alt="Buscar" class="Search-icon">
-              </button>
-              <input type="text" v-model="search" placeholder="Buscar..." class="search-input" aria-label="Buscar"/>
-            </div>
-          </div>
-
-          <!-- Botón para colapsar menú en pantallas pequeñas -->
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          
-          <!-- Menú de navegación -->
-          <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" href="/">Inicio</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/client/src/components/PaginaEnDesarrollo.vue">Especialidades</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/client/src/components/PaginaEnDesarrollo.vue">Equipo Médico</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/client/src/components/PaginaEnDesarrollo.vue">Eventos</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="#">Contacto</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-    </header>
+    
 
     <!-- Contact Section -->
     <section class="contact-section">
@@ -86,22 +39,7 @@
       </div>
     </section>
 
-    <!-- Footer (Pie de página) -->
-    <footer class="footer" role="contentinfo">
-      <div class="footer-left">
-        <router-link to="/login" class="footer-item">Portal del paciente</router-link>
-        <router-link to="/intranet" class="footer-item">Intranet</router-link>
-        <router-link to="/contacto" class="footer-item">Contacto</router-link>
-      </div>
-      <div class="footer-mid">
-        <router-link to="/" @click.native="scrollToTop">
-          <img :src="require('@/assets/icons/logo-inv.png')" alt="Logo" class="logo">
-        </router-link>
-      </div>
-      <div class="footer-right">
-        <p tabindex="0">Somos un centro hospitalario comprometido en ofrecerte atención <br>sanitaria de primer nivel, con dedicación y calidad humana.</p>
-      </div>
-    </footer>
+   
   </div>
 </template>
 

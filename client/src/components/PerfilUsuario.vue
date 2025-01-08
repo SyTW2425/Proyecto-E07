@@ -1,118 +1,121 @@
 <template>
   <div>
-  <Header/>
-  <div class="estilo-pagina" @click.self="cancelEdit">
-  
-    <br>  
-    <br>
+    <Header/>
+    <div class="estilo-pagina" @click.self="cancelEdit">
+      <br>  
+      <br>
 
-    <!-- Información del Usuario -->
-    <div class="user-info">
-      <div class="foto-container" @click="triggerFileInput">
-        <img v-if="usuario.foto" :src="usuario.foto" alt="Foto de Perfil" class="foto-perfil" />
-        <svg v-else width="120" height="120" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: #92bdf6;">
-          <path d="M6 36C6 31.0347 17.9925 28 24 28C30.0075 28 42 31.0347 42 36V42H6V36Z" fill="currentColor"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M24 26C29.5228 26 34 21.5228 34 16C34 10.4772 29.5228 6 24 6C18.4772 6 14 10.4772 14 16C14 21.5228 18.4772 26 24 26Z" fill="currentColor"/>
-        </svg>
-        <div class="overlay">
-          <i class="fas fa-edit"></i>
+      <!-- Información del Usuario -->
+      <div class="user-info">
+        <div class="foto-container" @click="triggerFileInput">
+          <img v-if="usuario.foto" :src="usuario.foto" alt="Foto de Perfil" class="foto-perfil" />
+          <svg v-else width="120" height="120" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: #92bdf6;">
+            <path d="M6 36C6 31.0347 17.9925 28 24 28C30.0075 28 42 31.0347 42 36V42H6V36Z" fill="currentColor"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M24 26C29.5228 26 34 21.5228 34 16C34 10.4772 29.5228 6 24 6C18.4772 6 14 10.4772 14 16C14 21.5228 18.4772 26 24 26Z" fill="currentColor"/>
+          </svg>
+          <div class="overlay">
+            <i class="fas fa-edit"></i>
+          </div>
+        </div>
+        <input type="file" ref="fileInput" @change="onFileChange" style="display: none;" />
+        <div class="user-details">
+          <h2>{{ usuario.nombre }} {{ usuario.apellidos }}</h2>
+          <p>{{ calcularEdad(usuario.fechaNacimiento) }} años</p>
         </div>
       </div>
-      <input type="file" ref="fileInput" @change="onFileChange" style="display: none;" />
-      <div class="user-details">
-        <h2>{{ usuario.nombre }} {{ usuario.apellidos }}</h2>
-        <p>{{ calcularEdad(usuario.fechaNacimiento) }} años</p>
-      </div>
-    </div>
 
-    <!-- Datos Personales -->
-    <div class="datos-personales" @click.stop>
-      <div class="header-datos">
-        <button class="header-ctitle">Datos personales</button>
-        <button class="edit-button" @click="toggleEditMode">
-          {{ editMode ? 'Guardar' : 'Editar' }}
-        </button>
-      </div>
-      <div class="datos-content">
-        <div class="detalle" v-for="(value, key) in filteredUsuario" :key="key">
-          <span class="label">{{ formatLabel(key) }}:</span>
-          <span class="valor" v-if="!editMode">{{ formatValue(key, value) }}</span>
-          <div v-else>
-            <input v-if="key === 'fechaNacimiento'" type="date" v-model="editableUsuario[key]" :required="isRequiredField(key)" />
-            <select v-else-if="key === 'genero'" v-model="editableUsuario[key]" :required="isRequiredField(key)">
-              <option value="" disabled>Seleccione género</option>
-              <option value="Masculino">Masculino</option>
-              <option value="Femenino">Femenino</option>
-            </select>
-            <input v-else v-model="editableUsuario[key]" :required="isRequiredField(key)" />
-            <span v-if="errors[key]" class="error-message">{{ errors[key] }}</span>
+      <!-- Datos Personales -->
+      <div class="datos-personales" @click.stop>
+        <div class="header-datos">
+          <button class="header-ctitle">Datos personales</button>
+          <button class="edit-button" @click="toggleEditMode">
+            {{ editMode ? 'Guardar' : 'Editar' }}
+          </button>
+        </div>
+        <div class="datos-content">
+          <div class="detalle" v-for="(value, key) in filteredUsuario" :key="key">
+            <span class="label">{{ formatLabel(key) }}:</span>
+            <span class="valor" v-if="!editMode">{{ key === 'password' ? '********' : formatValue(key, value) }}</span>
+            <div v-else>
+              <input v-if="key === 'fechaNacimiento'" type="date" v-model="editableUsuario[key]" :required="isRequiredField(key)" />
+              <select v-else-if="key === 'genero'" v-model="editableUsuario[key]" :required="isRequiredField(key)">
+                <option value="" disabled>Seleccione género</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+              </select>
+              <input v-else-if="key === 'password'" type="password" v-model="editableUsuario[key]" @input="handlePasswordChange(key)" />
+              <input v-else v-model="editableUsuario[key]" :required="isRequiredField(key)" />
+              <span v-if="errors[key]" class="error-message">{{ errors[key] }}</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Seguro Médico -->
-    <div class="seguro-medico">
-      <div class="header-datos">
-        <button class="header-ctitle">Seguro Médico</button>
-      </div>
-      <div class="datos-content">
-        <div class="detalle">
-          <span class="label">Compañía de Seguro:</span>
-          <span class="valor">{{ usuario.companiaSeguro }}</span>
-        </div>
-        <div class="detalle">
-          <span class="label">Número de Póliza:</span>
-          <span class="valor">{{ usuario.numeroPoliza }}</span>
-        </div>
-      </div>
-    </div>
+      <div v-if="tipoUsuario === 'Paciente'">
 
-    <!-- Antecedentes -->
-    <div class="antecedentes">
-      <div class="header-datos">
-        <button class="header-ctitle">Antecedentes médicos</button>
-      </div>
-      <div class="datos-content">
-        <div class="detalle">
-          <span class="label">Enfermedades Crónicas:</span>
-          <span class="valor">{{ usuario.enfermedadesCronicas }}</span>
+      <!-- Seguro Médico -->
+      <div class="seguro-medico">
+        <div class="header-datos">
+          <button class="header-ctitle">Seguro Médico</button>
         </div>
-        <div class="detalle">
-          <span class="label">Enfermedades Pasadas:</span>
-          <span class="valor">{{ usuario.enfermedadesPasadas }}</span>
-        </div>
-        <div class="detalle">
-          <span class="label">Intervenciones Quirúrgicas:</span>
-          <span class="valor">{{ usuario.intervencionesQuirurgicas }}</span>
-        </div>
-        <div class="detalle">
-          <span class="label">Alergias a Medicamentos:</span>
-          <span class="valor">{{ usuario.alergiasMedicamentos }}</span>
-        </div>
-        <div class="detalle">
-          <span class="label">Alergias a Alimentos o Sustancias:</span>
-          <span class="valor">{{ usuario.alergiasAlimentos }}</span>
-        </div>
-        <div class="detalle">
-          <span class="label">Enfermedades Familiares:</span>
-          <span class="valor">{{ usuario.enfermedadesFamiliares }}</span>
+        <div class="datos-content">
+          <div class="detalle">
+            <span class="label">Compañía de Seguro:</span>
+            <span class="valor">{{ aseguradoraNombre }}</span>
+          </div>
+          <div class="detalle">
+            <span class="label">Número de Póliza:</span>
+            <span class="valor">{{ usuario.numeroPoliza }}</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Importante -->
-    <div class="important-container">
-      <strong style="font-size: 1.8rem;"> Importante</strong>
-      <br>
-      <br>
-        <ul style="font-size: 1.5rem;">
-          Algunos datos solo pueden ser modificados por médicos o administrativos. 
-          Si desea modificar su información, por favor acuda el centro hospitalario.
-        </ul>
+      <!-- Antecedentes -->
+      <div class="antecedentes">
+        <div class="header-datos">
+          <button class="header-ctitle">Antecedentes médicos</button>
+        </div>
+        <div class="datos-content">
+          <div class="detalle">
+            <span class="label">Enfermedades Crónicas:</span>
+            <span class="valor">{{ usuario.enfermedadesCronicas }}</span>
+          </div>
+          <div class="detalle">
+            <span class="label">Enfermedades Pasadas:</span>
+            <span class="valor">{{ usuario.enfermedadesPasadas }}</span>
+          </div>
+          <div class="detalle">
+            <span class="label">Intervenciones Quirúrgicas:</span>
+            <span class="valor">{{ usuario.intervencionesQuirurgicas }}</span>
+          </div>
+          <div class="detalle">
+            <span class="label">Alergias a Medicamentos:</span>
+            <span class="valor">{{ usuario.alergiasMedicamentos }}</span>
+          </div>
+          <div class="detalle">
+            <span class="label">Alergias a Alimentos o Sustancias:</span>
+            <span class="valor">{{ usuario.alergiasAlimentos }}</span>
+          </div>
+          <div class="detalle">
+            <span class="label">Enfermedades Familiares:</span>
+            <span class="valor">{{ usuario.enfermedadesFamiliares }}</span>
+          </div>
+        </div>
+      </div>
+      
+
+      <!-- Importante -->
+      <div class="important-container">
+        <strong style="font-size: 1.8rem;"> Importante</strong>
+        <br>
+        <br>
+          <ul style="font-size: 1.5rem;">
+            Algunos datos solo pueden ser modificados por médicos o administrativos. 
+            Si desea modificar su información, por favor acuda el centro hospitalario.
+          </ul>
+      </div></div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -133,13 +136,17 @@ export default {
       labels: {
         nombre: 'Nombre',
         apellidos: 'Apellidos',
+        password: 'Contraseña',
         fechaNacimiento: 'Fecha de nacimiento',
         dni: 'DNI',
         genero: 'Sexo',
         direccion: 'Dirección',
         telefono: 'Teléfono',
-        email: 'Email'
-      }
+        email: 'Email',
+      },
+      passwordChanged: false,
+      aseguradoraNombre: '',
+      tipoUsuario: '',
     };
   },
   computed: {
@@ -148,8 +155,8 @@ export default {
       return authStore.getUser || {};
     },
     filteredUsuario() {
-      const { nombre, apellidos, fechaNacimiento, dni, genero, direccion, telefono, email } = this.editableUsuario;
-      return { nombre, apellidos, fechaNacimiento, dni, genero, direccion, telefono, email };
+      const { nombre, apellidos, password, fechaNacimiento, dni, genero, direccion, telefono, email } = this.editableUsuario;
+      return { nombre, apellidos, password, fechaNacimiento, dni, genero, direccion, telefono, email };
     }
   },
   watch: {
@@ -160,10 +167,26 @@ export default {
         if (this.editableUsuario.fechaNacimiento) {
           this.editableUsuario.fechaNacimiento = this.formatDateForInput(this.editableUsuario.fechaNacimiento);
         }
+        if (this.editableUsuario.aseguradora) {
+          this.obtenerNombreAseguradora(this.editableUsuario.aseguradora);
+        }
       }
     }
   },
   methods: {
+    async obtenerNombreAseguradora(aseguradoraId) {
+      try {
+        const response = await apiClient.get(`/api/aseguradoras/${aseguradoraId}`);
+        this.aseguradoraNombre = response.data.nombre;
+      } catch (error) {
+        console.error('Error al obtener el nombre de la aseguradora:', error);
+      }
+    },
+    async datosUsuario() {
+      const authStore = useAuthStore();
+      await authStore.checkAuth();
+      this.tipoUsuario = authStore.getUser ? authStore.getUser.tipo : 'Usuario';
+    },
     goBack() {
       this.$router.go(-1);
     },
@@ -191,7 +214,6 @@ export default {
         nombre: this.editableUsuario.nombre,
         apellidos: this.editableUsuario.apellidos,
         username: this.editableUsuario.username,
-        password: this.editableUsuario.password,
         tipo: this.editableUsuario.tipo,
         dni: this.editableUsuario.dni,
         genero: this.editableUsuario.genero,
@@ -199,8 +221,12 @@ export default {
         telefono: this.editableUsuario.telefono,
         email: this.editableUsuario.email,
         fechaNacimiento: this.formatDateForPost(this.editableUsuario.fechaNacimiento),
-        foto: this.editableUsuario.foto
+        foto: this.editableUsuario.foto,
       };
+
+      if (this.passwordChanged && this.editableUsuario.password && this.editableUsuario.password.trim()) {
+        updatedUser.password = this.editableUsuario.password;
+      }
 
       try {
         const authStore = useAuthStore();
@@ -228,6 +254,11 @@ export default {
           await this.saveChanges(); 
         };
         reader.readAsDataURL(file);
+      }
+    },
+    handlePasswordChange(key) {
+      if (key === 'password') {
+        this.passwordChanged = true;
       }
     },
     validateForm() {
@@ -297,7 +328,10 @@ export default {
       }
       return edad;
     }
-  }
+  },
+  async mounted() {   
+    await this.datosUsuario();
+  },
 };
 </script>
 
@@ -409,11 +443,13 @@ export default {
   margin: 0;
   font-size: 2.5rem;
   font-weight: bold; 
+  margin-left: 20px;
 }
 
 .user-details p {
   margin: 0;
   font-size: 1.4rem;
+  margin-left: 20px;
 }
 
 .datos-personales, .seguro-medico, .antecedentes {
