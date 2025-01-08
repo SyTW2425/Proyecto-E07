@@ -86,24 +86,13 @@ router.post('/logout', (req, res) => {
 // Ruta para obtener todos los usuarios
 router.get('/usuarios', async (req, res) => {
   try {
-    /*
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ message: 'No autenticado' });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (decoded.role !== 'Administración') {
-      return res.status(403).json({ message: 'Acceso denegado' });
-    }
-    */
-
     const usuarios = await Usuario.find();
     res.status(200).json(usuarios);
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener usuarios', error });
   }
 });
+
 // Ruta para crear un usuario, incluyendo la carga de imagen
 router.post('/usuarios', validateRegister, async (req, res) => {
   try {
@@ -118,6 +107,11 @@ router.post('/usuarios', validateRegister, async (req, res) => {
     const existingUser = await Usuario.findOne({ username: req.body.username });
     if (existingUser) {
       return res.status(409).json({ message: 'El nombre de usuario ya está en uso' });
+    }
+
+    // Generar un número de póliza aleatorio si no se proporciona
+    if (!req.body.numeroPoliza || req.body.numeroPoliza.trim() === '') {
+      req.body.numeroPoliza = generarNumeroPoliza();
     }
 
     const usuarioData = { ...req.body };

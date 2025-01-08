@@ -137,6 +137,20 @@ const userSchema = new mongoose.Schema({
   estado: {
     type: String,
     default: 'activo'
+  },
+  aseguradora: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Aseguradora',
+    default: null
+  },
+  numeroPoliza: {
+    type: String,
+    required: true,
+    validate(value) {
+      if (!validator.isAlphanumeric(value)) {
+        throw new Error('El número de póliza debe contener solo caracteres alfanuméricos.');
+      }
+    }
   }
 });
 
