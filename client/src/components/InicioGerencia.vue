@@ -155,7 +155,8 @@
         <button class="caja-contenido" href="#">
           <div class="circle">
             <svg xmlns="http://www.w3.org/2000/svg" height="60" viewBox="0 -960 960 960" width="60" class="icon icono-blanco">
-              <path fill-rule="evenodd" clip-rule="evenodd" fill="currentColor" d="M480-340q33 0 56.5-23.5T560-420q0-33-23.5-56.5T480-500q-33 0-56.5 23.5T400-420q0 33 23.5 56.5T480-340ZM160-120q-33 0-56.5-23.5T80-200v-440q0-33 23.5-56.5T160-720h160v-80q0-33 23.5-56.5T400-880h160q33 0 56.5 23.5T640-800v80h160q33 0 56.5 23.5T880-640v440q0 33-23.5 56.5T800-120H160Zm0-80h640v-440H160v440Zm240-520h160v-80H400v80ZM160-200v-440 440Z"/></svg>
+              <path fill-rule="evenodd" clip-rule="evenodd" fill="currentColor" d="M480-340q33 0 56.5-23.5T560-420q0-33-23.5-56.5T480-500q-33 0-56.5 23.5T400-420q0 33 23.5 56.5T480-340ZM160-120q-33 0-56.5-23.5T80-200v-440q0-33 23.5-56.5T160-720h160v-80q0-33 23.5-56.5T400-880h160q33 0 56.5 23.5T640-800v80h160q33 0 56.5 23.5T880-640v440q0 33-23.5 56.5T800-120H160Zm0-80h640v-440H160v440Zm240-520h160v-80H400v80ZM160-200v-440 440Z"/>
+            </svg>
           </div>
           <br>
           <span class="button-text">Departamentos</span>
@@ -214,7 +215,6 @@
       <div class="icon-container" style="align-items: center; justify-content: center;">
 
         <div class="circle" style="background-color: var(--color-azul2);">
-
           <svg
               width="60"
               height="60"
@@ -233,8 +233,39 @@
         <span class="icon-text" style="color: white; font-size: 30px; font-weight: 300; line-height: 1.1;">Compañías <br> aseguradoras</span>
         <div class="vertical-line" style="width: 1px;"></div>
         <p style="align-items: top;">Total:</p>
-        <p style="align-items: top; font-size: 100px;">7</p>
+        <p style="align-items: top; font-size: 100px; margin-right: 3.6rem;">{{ numeroAseguradoras }}</p>
+
+
+        <div class="circle" style="background-color: var(--color-azul2);">
+          <svg xmlns="http://www.w3.org/2000/svg" height="60" viewBox="0 -960 960 960" width="60" class="icon icono-azul">
+              <path fill-rule="evenodd" clip-rule="evenodd" fill="currentColor" d="M480-340q33 0 56.5-23.5T560-420q0-33-23.5-56.5T480-500q-33 0-56.5 23.5T400-420q0 33 23.5 56.5T480-340ZM160-120q-33 0-56.5-23.5T80-200v-440q0-33 23.5-56.5T160-720h160v-80q0-33 23.5-56.5T400-880h160q33 0 56.5 23.5T640-800v80h160q33 0 56.5 23.5T880-640v440q0 33-23.5 56.5T800-120H160Zm0-80h640v-440H160v440Zm240-520h160v-80H400v80ZM160-200v-440 440Z"/>
+            </svg>
         </div>
+        <span class="icon-text" style="color: white; font-size: 30px; font-weight: 300; line-height: 1.1;">Departamentos</span>
+        <div class="vertical-line" style="width: 1px;"></div>
+        <p style="align-items: top;">Total:</p>
+        <p style="align-items: top; font-size: 100px; margin-right: 3.6rem;">{{ numeroDepartamentos }}</p>
+
+
+        
+        <div class="circle" style="background-color: var(--color-azul2);">
+          <svg
+              width="60"
+              height="60"
+              viewBox="0 -960 960 960"
+              xmlns="http://www.w3.org/2000/svg"
+              class="icon icono-azul"
+            >
+            <path fill-rule="evenodd" clip-rule="evenodd" fill="currentColor" d="M480-254 330-104q-23 23-56 23t-56-23L104-218q-23-23-23-56t23-56l150-150-150-150q-23-23-23-56t23-56l114-114q23-23 56-23t56 23l150 150 150-150q23-23 56-23t56 23l114 114q23 23 23 56t-23 56L706-480l150 150q23 23 23 56t-23 56L742-104q-23 23-56 23t-56-23L480-254Zm0-266q17 0 28.5-11.5T520-560q0-17-11.5-28.5T480-600q-17 0-28.5 11.5T440-560q0 17 11.5 28.5T480-520Zm-170-16 114-114-150-150-114 114 150 150Zm90 96q17 0 28.5-11.5T440-480q0-17-11.5-28.5T400-520q-17 0-28.5 11.5T360-480q0 17 11.5 28.5T400-440Zm80 80q17 0 28.5-11.5T520-400q0-17-11.5-28.5T480-440q-17 0-28.5 11.5T440-400q0 17 11.5 28.5T480-360Zm80-80q17 0 28.5-11.5T600-480q0-17-11.5-28.5T560-520q-17 0-28.5 11.5T520-480q0 17 11.5 28.5T560-440Zm-24 130 150 150 114-114-150-150-114 114ZM339-621Zm282 282Z"/>
+
+            </svg>
+        </div>
+        <span class="icon-text" style="color: white; font-size: 30px; font-weight: 300; line-height: 1.1;">Prestaciones</span>
+        <div class="vertical-line" style="width: 1px;"></div>
+        <p style="align-items: top;">Total:</p>
+        <p style="align-items: top; font-size: 100px; margin-right: 8rem;">{{ numeroPrestaciones }}</p>
+
+      </div>
 
 
     </div>
@@ -265,6 +296,9 @@ export default {
       numeroPacientes: '-',
       numeroMedicos: '-',
       numeroAdministrativos: '-',
+      numeroAseguradoras: '-',
+      numeroDepartamentos: '-',
+      numeroPrestaciones: '-'
     };
   },
   computed: {
@@ -303,10 +337,30 @@ export default {
       } catch (error) {
         console.error('Error al obtener los datos de usuarios:', error);
       }
+    },
+    async obtenerNumeros() {
+      try {
+
+        const response = await apiClient.get('/api/aseguradoras'); // Ajusta la URL según tu API
+        const aseguradoras = response.data;
+        this.numeroAseguradoras = aseguradoras.length;
+
+        const responseDepartamentos = await apiClient.get('/api/departamentos'); // Ajusta la URL según tu API
+        const departamentos = responseDepartamentos.data;
+        this.numeroDepartamentos = departamentos.length;
+
+        const responsePrestaciones = await apiClient.get('/api/prestaciones'); // Ajusta la URL según tu API
+        const prestaciones = responsePrestaciones.data;
+        this.numeroPrestaciones = prestaciones.length;
+
+      } catch (error) {
+        console.error('Error al obtener el número de aseguradoras:', error);
+      }
     }
 
   },
   mounted() {
+    this.obtenerNumeros();
     this.actualizarSaludo();
     this.obtenerDatosUsuarios();
     setInterval(() => {
