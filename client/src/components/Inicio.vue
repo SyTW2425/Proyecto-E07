@@ -139,7 +139,7 @@ export default {
     redirectToLogin() {
       const authStore = useAuthStore(); 
       if (authStore.isAuthenticated) {
-        this.$router.push('/iniciopaciente'); 
+        this.$router.push('/inicio'); 
       } else {
         this.$router.push('/login'); 
       }
