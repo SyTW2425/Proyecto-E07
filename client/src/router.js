@@ -64,7 +64,6 @@ const routes = [
   { path: '/inicio', component: InicioWrapper, meta: { requiresAuth: true } },
 
   { path: '/citas', component: CitasWrapper, meta: { requiresAuth: true, allowedRoles: ['Paciente', 'Administración'] } },
-  { path: '/:pathMatch(.*)*', component: PaginaError }, // Página de error 404
 
   
   { path: '/prestaciones', component: GestionPrestaciones },
@@ -78,7 +77,8 @@ const routes = [
   { path: '/pruebas', component: PruebasCodigo },
   { path: '/iniciopaciente/perfil', component: PerfilUsuario },
 
-  { path: '/:pathMatch(.*)*', component: PaginaError }, 
+  { path: '/error', component: PaginaError },
+  { path: '/:pathMatch(.*)*', redirect: '/error' }, 
 ];
 
 

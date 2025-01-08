@@ -1,10 +1,6 @@
 <template>
   <div class="login-page">
-    <header class="header">
-      <img src="@/assets/logo.png" alt="Hospital Rambla" class="logo" />
-      <div class="vertical-line"></div>
-      <h1 class="left-align small-text">INTRANET</h1>
-    </header>
+
     
     <main class="content">
       <section class="welcome-section">
@@ -81,6 +77,7 @@ export default {
   align-items: center;
   margin: 0;
   padding: 0;
+  min-height: 80vh;
   box-sizing: border-box;
   font-family: 'Outfit', sans-serif;
 }

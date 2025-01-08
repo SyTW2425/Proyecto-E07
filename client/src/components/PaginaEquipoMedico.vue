@@ -1,44 +1,9 @@
 
 <template>
-    <div class="equipo_medico">
-      <header class="header">
-        <nav class="navbar navbar-expand-lg">
-          <div class="container-fluid" >
-            <!-- Logotipo -->
-            <a class="navbar-brand" href="/">
-              <img :src="require('@/assets/logo.png')" alt="Logo" class="logo">
-            </a>
-            
-            <!-- Botón para colapsar menú en pantallas pequeñas -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <!-- Menú de navegación -->
-            <div class="collapse navbar-collapse" id="navbarNavDropdown" style="font-size: x-large;">
-              <ul class="navbar-nav">
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/" style="color: #17195e;">Inicio</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/especialidades" style="color: #17195e;">Especialidades</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/equipo-medico" style="color: #17195e;">Equipo Médico</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#" style="color: #17195e;">Eventos</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#" style="color: #17195e;">Contacto</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </nav>
-      </header>
+    <div class="estilo-pagina">
+      
   
-      <section class="banner-principal">
+      <section class="banner-principal" style="width: 100%;">
         <span class="letra-chica">Contamos con el mejor</span>
         <span class="letra-banner">Equipo médico</span>
       </section>
@@ -87,12 +52,6 @@
       </section>
   
 
-  
-      <!-- Footer (Pie de página) -->
-      <footer class="footer">
-          <p>Portal del paciente | Intranet | Contacto</p>
-          <p>Hospital Rambla - Comprometidos en ofrecer atención sanitaria de primer nivel, con dedicación y calidad humana.</p>
-      </footer>
   
   
     </div>
@@ -186,4 +145,9 @@
   </script>
     
     
-  
+<style>
+.estilo-pagina {  
+  margin-left: 2rem; 
+  margin-right: 2rem;
+}
+</style>  
