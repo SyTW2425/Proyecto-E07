@@ -22,8 +22,15 @@
 
         <div class="big-buttons" v-for="usuario in usuariosFiltro" :key="usuario._id">
           <button class="big-button-blue" v-if="usuario.index % 2 !== 0">
-            <img src="@/assets/estados/perfil_defecto.png" alt="consultas_externas" class="img-section">
+            
             <div v-if="usuario.genero === 'Masculino'">
+              
+              <div style="display: flex; justify-content: center;">
+                <div style="display: flex; justify-content: center; align-items: top; background-color: var(--color-azul2); border-radius: 60px; width: 320px; height: 300px;">
+                  <img v-if="usuario.foto" :src="usuario.foto" alt="Foto de perfil" class="foto-preview"/>
+                  <img v-else :src="fotoPreview" alt="Previsualización de Foto de Perfil" class="foto-preview"/>
+                </div>
+              </div>
               <span class="buttons-text-eq-med-dep"> {{ getDepartamentoName(usuario.departamento) }}</span>
               <br>
               <span class="buttons-text-eq-med" > Dr. {{ usuario.nombre }} {{ usuario.apellidos }}</span>
@@ -36,7 +43,12 @@
           </button>
 
           <button class="big-button-green" v-if="usuario.index % 2 === 0">
-            <img src="@/assets/estados/perfil_defecto.png" alt="consultas_externas" class="img-section">
+            <div style="display: flex; justify-content: center;">
+                <div style="display: flex; justify-content: center; align-items: top; background-color: var(--color-azul2); border-radius: 60px; width: 320px; height: 300px;">
+                  <img v-if="usuario.foto" :src="usuario.foto" alt="Foto de perfil" class="foto-preview"/>
+                  <img v-else :src="fotoPreview" alt="Previsualización de Foto de Perfil" class="foto-preview"/>
+                </div>
+              </div>
             <div v-if="usuario.genero === 'Masculino'">
               <span class="buttons-text-eq-med-dep"> {{ getDepartamentoName(usuario.departamento) }}</span>
               <br>
@@ -52,6 +64,12 @@
       </section>
   
 
+  
+      <!-- Footer (Pie de página) -->
+      <footer class="footer">
+          <p>Portal del paciente | Intranet | Contacto</p>
+          <p>Hospital Rambla - Comprometidos en ofrecer atención sanitaria de primer nivel, con dedicación y calidad humana.</p>
+      </footer>
   
   
     </div>
@@ -72,7 +90,8 @@
         index: [],
         cargando: false,
         errorServidor: false,
-        filtroTipo: "Médico"
+        filtroTipo: "Médico",
+        fotoPreview: require('@/assets/estados/perfil_defecto.png'),
       };
     },
     computed: {
@@ -150,4 +169,15 @@
   margin-left: 2rem; 
   margin-right: 2rem;
 }
-</style>  
+</style>  <style scoped>
+  .foto-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  .foto-preview {
+    width: 320px;
+    border-radius: 60px;
+  }
+</style>

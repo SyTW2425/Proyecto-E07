@@ -145,7 +145,6 @@ const userSchema = new mongoose.Schema({
   },
   numeroPoliza: {
     type: String,
-    required: true,
     validate(value) {
       if (!validator.isAlphanumeric(value)) {
         throw new Error('El número de póliza debe contener solo caracteres alfanuméricos.');

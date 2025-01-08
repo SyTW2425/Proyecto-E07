@@ -18,8 +18,16 @@
       
       <!-- Formulario para crear un usuario -->
       <form @submit.prevent="crearUsuario">
-        <img v-if="fotoPreview" :src="fotoPreview" alt="Previsualización de Foto de Perfil" class="foto-preview"/>
-
+        <div class="user-info">
+          <div class="foto-container" @click="triggerFileInput">
+            <img v-if="nuevoUsuario.foto" :src="nuevoUsuario.foto" alt="Foto de perfil" class="foto-preview">
+            <img v-else :src="fotoPreview" alt="Previsualización de Foto de Perfil" class="foto-preview"/>
+            <div class="overlay">
+              <i class="fas fa-edit"></i>
+            </div>
+          </div>
+          <input type="file" ref="fileInput" @change="onFileChange" style="display: none;" />
+        </div>
         <label>Nombre*:<br>
           <input
             type="text"
@@ -240,6 +248,7 @@ export default {
       usuarios: [],
       aseguradoras: [],
       nuevoUsuario: {
+        foto: '',
         nombre: '',
         apellidos: '',
         username: '',
@@ -313,6 +322,19 @@ export default {
     filtrarUsuarios() {
       // Este método se llama cuando se cambia el filtro, pero el cálculo se realiza en `usuariosFiltrados`
     },
+    triggerFileInput() {
+      this.$refs.fileInput.click();
+    },
+    async onFileChange(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          this.nuevoUsuario.foto = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    },
     async actualizarOpcionesDepartamento() {
       if (this.nuevoUsuario.tipo === 'Médico') {
         // Filtrar solo departamentos de "Especialidad médica" para el tipo "Médico"
@@ -340,6 +362,7 @@ export default {
     },
     async crearUsuario() {
       const formData = new FormData();
+      formData.append('foto', this.nuevoUsuario.foto);
       formData.append('nombre', this.nuevoUsuario.nombre);
       formData.append('apellidos', this.nuevoUsuario.apellidos);
       formData.append('username', this.nuevoUsuario.username);
@@ -526,7 +549,7 @@ export default {
 
 form {
   display: flex;
-  flex-direction: column;
+  flex-direction: column;;
   margin-bottom: 20px;
 }
 
@@ -612,7 +635,30 @@ label {
 
 .user-info {
   display: flex;
+  justify-content: center;
   width: 100%;
+}
+
+.foto-container {
+  position: relative;
+  cursor: pointer;
+}
+.overlay {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 120px;
+  height: 120px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.foto-container:hover .overlay {
+  opacity: 1;
 }
 
 .user-column {

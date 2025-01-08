@@ -14,9 +14,8 @@
       </span>
       
       <div class="icon-container">
-
       <div class="circle" style="background-color: var(--color-azul2);">
-
+        
       <svg
         width="50"
         height="50"
@@ -305,6 +304,10 @@ export default {
     nombreUsuario() {
       const authStore = useAuthStore();
       return authStore.getUser ? authStore.getUser.nombre : 'Usuario';
+    },
+    usuario() {
+      const authStore = useAuthStore();
+      return authStore.getUser;
     }
   },
   methods: {
