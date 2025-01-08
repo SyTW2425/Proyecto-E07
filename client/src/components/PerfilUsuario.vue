@@ -59,7 +59,7 @@
         <div class="datos-content">
           <div class="detalle">
             <span class="label">Compañía de Seguro:</span>
-            <span class="valor">{{ usuario.companiaSeguro }}</span>
+            <span class="valor">{{ aseguradoraNombre }}</span>
           </div>
           <div class="detalle">
             <span class="label">Número de Póliza:</span>
@@ -142,6 +142,7 @@ export default {
         email: 'Email',
       },
       passwordChanged: false,
+      aseguradoraNombre: ''
     };
   },
   computed: {
@@ -162,10 +163,21 @@ export default {
         if (this.editableUsuario.fechaNacimiento) {
           this.editableUsuario.fechaNacimiento = this.formatDateForInput(this.editableUsuario.fechaNacimiento);
         }
+        if (this.editableUsuario.aseguradora) {
+          this.obtenerNombreAseguradora(this.editableUsuario.aseguradora);
+        }
       }
     }
   },
   methods: {
+    async obtenerNombreAseguradora(aseguradoraId) {
+      try {
+        const response = await apiClient.get(`/api/aseguradoras/${aseguradoraId}`);
+        this.aseguradoraNombre = response.data.nombre;
+      } catch (error) {
+        console.error('Error al obtener el nombre de la aseguradora:', error);
+      }
+    },
     goBack() {
       this.$router.go(-1);
     },
@@ -200,7 +212,7 @@ export default {
         telefono: this.editableUsuario.telefono,
         email: this.editableUsuario.email,
         fechaNacimiento: this.formatDateForPost(this.editableUsuario.fechaNacimiento),
-        foto: this.editableUsuario.foto
+        foto: this.editableUsuario.foto,
       };
 
       if (this.passwordChanged && this.editableUsuario.password && this.editableUsuario.password.trim()) {

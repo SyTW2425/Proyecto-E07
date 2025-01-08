@@ -27,6 +27,20 @@ router.get('/aseguradoras', async (req, res) => {
   }
 });
 
+// Ruta para obtener una aseguradora por su ID
+router.get('/aseguradoras/:id', async (req, res) => {
+  try {
+    const aseguradora = await Aseguradora.findById(req.params.id);
+    if (!aseguradora) {
+      return res.status(404).json({ message: 'Aseguradora no encontrada' });
+    }
+    res.json(aseguradora);
+  } catch (error) {
+    console.error('Error al obtener la aseguradora:', error);
+    res.status(500).json({ message: 'Error al obtener la aseguradora' });
+  }
+});
+
 // Ruta para crear una nueva aseguradora
 router.post('/aseguradoras', async (req, res) => {
   try {
