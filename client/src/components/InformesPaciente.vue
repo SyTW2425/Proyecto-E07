@@ -1,6 +1,6 @@
 <template>
-  <div class="estilo-pagina">
-    <Header/>
+    <div>
+    <Header/> <div class="estilo-pagina">
     <br>
     <br>  
 
@@ -46,7 +46,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div></div>
   </template>
   
   <script>
