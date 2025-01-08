@@ -1,7 +1,6 @@
 <template>
   <div>
     <!-- Importa el header -->
-    <Header/>
     <div class="estilo-pagina">
     <br>
     <br>  
@@ -126,16 +125,12 @@
   </template>
   
   <script>
-  import Header from '@/components/Header.vue'; // Ajusta la ruta si es necesario
 
   import { useAuthStore } from '../../store/auth';
   import apiClient from '@/apiClient';
 
   export default {
     name: "InicioPaciente",
-    components: {
-      Header,
-    },
     data() {
       return {
         saludo: '',

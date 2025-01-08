@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Header/>
     <div class="estilo-pagina" @click.self="cancelEdit">
       <br>  
       <br>
@@ -121,13 +120,9 @@
 <script>
 import { useAuthStore } from '../../store/auth';
 import apiClient from '@/apiClient';
-import Header from './Header.vue';
 
 export default {
   name: "PerfilUsuario",
-  components: {
-    Header
-  },
   data() {
     return {
       editMode: false,

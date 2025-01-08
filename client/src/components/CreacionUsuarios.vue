@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Header/>
   
   <div class="contenedor-principal">
     <!-- Columna izquierda: Formulario de creación de usuarios -->
@@ -232,13 +231,9 @@
 
 <script>
 import apiClient from '@/apiClient';
-import Header from '@/components/Header.vue';
 
 export default {
   name: 'CreacionUsuarios',
-  components: {
-    Header,
-  },
   data() {
     return {
       filtroTipo: '',
