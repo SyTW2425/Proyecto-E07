@@ -7,7 +7,6 @@ import IntranetLogin from './components/IntranetLogin.vue';
 import ContactForm from './components/Contacto.vue';
 import GestionPrestaciones from './components/GestionPrestaciones.vue';
 import AgendaMedico from './components/AgendaMedico.vue';
-import GestionRecetas from './components/GestionRecetas.vue';
 import ListaFormContacto from './components/ListaFormContacto.vue';
 import ReservarCitas from './components/ReservarCitas.vue';
 import PaginaError from './components/PaginaError.vue';
@@ -20,15 +19,13 @@ import PruebasCodigo from './components/PruebasCodigo.vue';
 import GestionEncuestas from './components/GestionEncuestas.vue';
 import '@/assets/styles.css';
 import PerfilUsuario from './components/PerfilUsuario.vue';
-import RecetasPaciente from './components/Recetas.vue';
-import RecetasMedico from './components/RecetasMedico.vue';
 import GestionAseguradoras from './components/GestionAseguradoras.vue';
 import InicioWrapper from './components/InicioWrapper.vue';
 import JustificantesPaciente from './components/JustificantesPaciente.vue';
-import InformesMedico from './components/InformesMedico.vue';
 import GestionPacientesAdmin from './components/GestionPacientesAdmin.vue';
 import CitasWrapper from './components/CitasWrapper.vue';
-import InformesPaciente from './components/InformesPaciente.vue';
+import InformesWrapper from './components/InformesWrapper.vue';
+import RecetasWrapper from './components/RecetasWrapper.vue';
 
 const routes = [
   { path: '/', component: PaginaInicio },
@@ -37,13 +34,11 @@ const routes = [
   { path: '/departamentos', component: GestionDepartamentos},
   { path: '/prestaciones', component: GestionPrestaciones},
   
-  { path: '/recetas', component: GestionRecetas},
   
   { path: '/lista-contacto', component: ListaFormContacto},
   { path: '/reservarcitas', component: ReservarCitas},
   { path: '/encuestas', component: GestionEncuestas},
   { path: '/pruebas', component: PruebasCodigo },
-
 
   { path: '/equipo-medico', component: PaginaEquipoMedico},
   { path: '/especialidades', component: PaginaEspecialidades },
@@ -55,9 +50,8 @@ const routes = [
   { path: '/register', component: UserRegister },
 
   { path: '/agenda', component: AgendaMedico, meta: { requiresAuth: true, allowedRoles: ['Médico'] }},
+  { path: '/justificantes', component: JustificantesPaciente, meta: { requiresAuth: true, allowedRoles: ['Paciente'] }},
 
-  { path: '/recetasmedico', component: RecetasMedico, meta: { requiresAuth: true, allowedRoles: ['Médico'] } },
-  { path: '/recetaspaciente', component: RecetasPaciente, meta: { requiresAuth: true, allowedRoles: ['Paciente'] } },
   { path: '/pacientes', component: GestionPacientesAdmin, meta: { requiresAuth: true, allowedRoles: ['Administración'] } },
 
   { path: '/perfil', component: PerfilUsuario, meta: { requiresAuth: true } },
@@ -71,17 +65,15 @@ const routes = [
 
   
   { path: '/prestaciones', component: GestionPrestaciones },
-  { path: '/recetas', component: GestionRecetas },
   { path: '/lista_contacto', component: ListaFormContacto },
   
-  { path: '/iniciomedico/informes', component: InformesMedico },
-  { path: '/iniciopaciente/informes', component: InformesPaciente },
-    
+  { path: '/informes', component: InformesWrapper , meta: { requiresAuth: true, allowedRoles: ['Paciente', 'Médico'] } },
+  { path: '/recetas', component: RecetasWrapper, meta: { requiresAuth: true, allowedRoles: ['Paciente', 'Médico'] } },
+  
+
   { path: '/encuestas', component: GestionEncuestas },  
   { path: '/pruebas', component: PruebasCodigo },
   { path: '/iniciopaciente/perfil', component: PerfilUsuario },
-  { path: '/iniciopaciente/recetaspaciente', component: RecetasPaciente },
-  { path: '/justificantes', component: JustificantesPaciente },
 
   { path: '/:pathMatch(.*)*', component: PaginaError }, 
 ];
