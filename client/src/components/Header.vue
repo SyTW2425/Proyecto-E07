@@ -13,11 +13,11 @@
         <h1 class="left-align small-text">INTRANET</h1>
       </div>
 
-
       <div class="header-right">
         <div style="margin-right: 0.5rem; font-size: 1.4rem; color: var(--primary-color); font-weight: 500;">
           {{ this.usuario.nombre }} {{ this.usuario.apellidos }}
         </div>
+
       <div class="circle-usuario" @click="toggleMenu" :class="{ 'active': mostrarMenu }">
         <svg xmlns="http://www.w3.org/2000/svg" height="47px" viewBox="0 -960 960 960" width="47px" fill="white" :class="{ 'active': mostrarMenu }">
           <path d="M234-276q51-39 114-61.5T480-360q69 0 132 22.5T726-276q35-41 54.5-93T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 59 19.5 111t54.5 93Zm246-164q-59 0-99.5-40.5T340-580q0-59 40.5-99.5T480-720q59 0 99.5 40.5T620-580q0 59-40.5 99.5T480-440Zm0 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q53 0 100-15.5t86-44.5q-39-29-86-44.5T480-280q-53 0-100 15.5T294-220q39 29 86 44.5T480-160Zm0-360q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm0-60Zm0 360Z"/>
@@ -25,15 +25,30 @@
       </div>
         <div :class="{ 'dropdown-menu': true, active: mostrarMenu }">
           <ul>
-
-            <div v-if="tipoUsuario === 'Paciente' || tipoUsuario === 'Médico'">
-              <li @click="irAgendaCitas">
+              <li v-if="tipoUsuario === 'Paciente' || tipoUsuario === 'Administración' || tipoUsuario === 'Médico'" @click="irAgendaCitas">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
                   <path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm280 240q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-160 0q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm320 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-160 0q-17 0-28.5-11.5T280-280q0-17 11.5-28.5T320-320q17 0 28.5 11.5T360-280q0 17-11.5 28.5T320-240Zm320 0q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"/>
                 </svg>
-                <span v-if="tipoUsuario === 'Paciente'">Citas</span>
+                <span v-if="tipoUsuario === 'Paciente' || tipoUsuario === 'Administración'">Citas</span>
                 <span v-else-if="tipoUsuario === 'Médico'">Agenda</span>
               </li>
+            <div v-if="tipoUsuario === 'Administración'">
+              <li @click="irPacientes">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
+                  <path d="M40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm720 0v-120q0-44-24.5-84.5T666-434q51 6 96 20.5t84 35.5q36 20 55 44.5t19 53.5v120H760ZM360-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Zm400-160q0 66-47 113t-113 47q-11 0-28-2.5t-28-5.5q27-32 41.5-71t14.5-81q0-42-14.5-81T544-792q14-5 28-6.5t28-1.5q66 0 113 47t47 113ZM120-240h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0 320Zm0-400Z"/>
+                </svg>
+                Pacientes
+              </li>
+
+              <li @click="irRespuestasContacto">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
+                  <path d="M320-280q17 0 28.5-11.5T360-320q0-17-11.5-28.5T320-360q-17 0-28.5 11.5T280-320q0 17 11.5 28.5T320-280Zm0-160q17 0 28.5-11.5T360-480q0-17-11.5-28.5T320-520q-17 0-28.5 11.5T280-480q0 17 11.5 28.5T320-440Zm0-160q17 0 28.5-11.5T360-640q0-17-11.5-28.5T320-680q-17 0-28.5 11.5T280-640q0 17 11.5 28.5T320-600Zm120 320h240v-80H440v80Zm0-160h240v-80H440v80Zm0-160h240v-80H440v80ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z"/>
+                </svg>
+                Solicitudes contacto
+              </li>
+            </div>
+
+            <div v-if="tipoUsuario === 'Paciente' || tipoUsuario === 'Médico'">
               
               <li @click="irRecetas">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
@@ -62,11 +77,6 @@
               
             </div>
               
-
-           
-
-              
-
 
               <li @click="irConfiguracion">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)">
@@ -124,7 +134,7 @@ export default {
       }
     },
     irAgendaCitas() {
-      if (this.tipoUsuario === 'Paciente') {
+      if (this.tipoUsuario === 'Paciente' || this.tipoUsuario === 'Administración') {
         this.$router.push('/citas');
       } else if (this.tipoUsuario === 'Médico') {
         this.$router.push('/agenda');
@@ -132,6 +142,12 @@ export default {
     },
     irRecetas() {
       this.$router.push('/recetas');
+    },
+    irPacientes() {
+      this.$router.push('/pacientes');
+    },
+    irRespuestasContacto() {
+      this.$router.push('/lista-contacto');
     },
     irJustificantes() {
       this.$router.push('/justificantes');
