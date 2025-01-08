@@ -5,7 +5,7 @@ const Usuario = require('../models/Usuario');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
-const { generarUsername } = require('../utils');
+const { generarUsername, generarNumeroPoliza } = require('../utils');
 const { loginLimiter, validateLogin, validateRegister } = require('../middleware/loginMiddlewares');
 
 // Ruta para el login de usuarios

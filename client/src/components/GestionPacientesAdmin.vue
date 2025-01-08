@@ -115,10 +115,6 @@
                   {{ aseguradora.nombre }}
                 </option>
               </select>
-            </label><br>
-            <!-- Número de poliza -->
-            <label>Número de póliza:<br>
-              <input type="text" v-model="nuevoPaciente.numeroPoliza"/>
             </label><br><br>
             <button class="boton-crear" type="submit" v-if="!editarUsuarioId">
               Crear paciente
@@ -222,7 +218,7 @@ export default {
           apellidos: '',
           username: '',
           password: '',
-          tipo: '',
+          tipo: 'Paciente',
           dni: '',
           fechaNacimiento: '',
           genero: '',
@@ -302,7 +298,7 @@ export default {
 
     async crearPaciente() {
       try {
-        const response = await apiClient.post('/api/pacientes', this.nuevoPaciente);
+        const response = await apiClient.post('/api/usuarios', this.nuevoPaciente);
         this.pacientes.push(response.data);
         this.obtenerPacientes();
         this.resetFormulario();

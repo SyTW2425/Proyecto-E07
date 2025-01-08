@@ -109,6 +109,15 @@
         </label>
         <label>Correo Electrónico:
           <input type="email" v-model="nuevoUsuario.email"/>
+        </label>
+        <!-- Desplegable para asignar aseguradora -->
+        <label>Aseguradora:<br>
+          <select v-model="nuevoUsuario.aseguradora">
+            <option value="" disabled selected>Seleccione una aseguradora</option>
+            <option v-for="aseguradora in aseguradoras" :key="aseguradora._id" :value="aseguradora._id">
+              {{ aseguradora.nombre }}
+            </option>
+          </select>
         </label><br>
 
         <button class="boton-crear" type="submit" v-if="!editarUsuarioId">
@@ -234,6 +243,7 @@ export default {
     return {
       filtroTipo: '',
       usuarios: [],
+      aseguradoras: [],
       nuevoUsuario: {
         nombre: '',
         apellidos: '',
@@ -246,7 +256,8 @@ export default {
         genero: '',
         direccion: '',
         telefono: '',
-        email: ''
+        email: '',
+        aseguradora: ''
       },
       fotoPreview: require('@/assets/estados/perfil_defecto.png'),
       departamentosDisponibles: [],
@@ -296,6 +307,14 @@ export default {
       const departamento = this.todosDepartamentos.find(dep => dep._id === departamentoId);
       return departamento ? departamento.nombre : '';
     },
+    async fetchAseguradoras() {
+      try {
+        const response = await apiClient.get('/api/aseguradoras');
+        this.aseguradoras = response.data;
+      } catch (error) {
+        console.error('Error al obtener las aseguradoras:', error);
+      }
+    },
     filtrarUsuarios() {
       // Este método se llama cuando se cambia el filtro, pero el cálculo se realiza en `usuariosFiltrados`
     },
@@ -338,6 +357,7 @@ export default {
       formData.append('direccion', this.nuevoUsuario.direccion);
       formData.append('telefono', this.nuevoUsuario.telefono);
       formData.append('email', this.nuevoUsuario.email);
+      formData.append('aseguradora', this.nuevoUsuario.aseguradora);
 
       // Revisa los valores en formData
       for (let [key, value] of formData.entries()) {
@@ -472,8 +492,9 @@ export default {
       }
     },
   },
-  mounted() {
-    this.obtenerUsuarios();
+  async mounted() {
+    await this.obtenerUsuarios();
+    await this.fetchAseguradoras(); 
     this.intervalId = setInterval(() => {
       this.obtenerUsuarios();
     }, 60000);
