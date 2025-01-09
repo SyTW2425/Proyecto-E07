@@ -363,29 +363,15 @@ export default {
       }
     },
     async crearUsuario() {
-      const formData = new FormData();
-      formData.append('foto', this.nuevoUsuario.foto);
-      formData.append('nombre', this.nuevoUsuario.nombre);
-      formData.append('apellidos', this.nuevoUsuario.apellidos);
-      formData.append('username', this.nuevoUsuario.username);
-      formData.append('password', this.nuevoUsuario.password);
-      formData.append('tipo', this.nuevoUsuario.tipo);
-      formData.append('departamento', this.nuevoUsuario.departamento);
-      formData.append('dni', this.nuevoUsuario.dni);
-      formData.append('fechaNacimiento', this.nuevoUsuario.fechaNacimiento);
-      formData.append('genero', this.nuevoUsuario.genero);
-      formData.append('direccion', this.nuevoUsuario.direccion);
-      formData.append('telefono', this.nuevoUsuario.telefono);
-      formData.append('email', this.nuevoUsuario.email);
-      formData.append('aseguradora', this.nuevoUsuario.aseguradora);
-
-      // Revisa los valores en formData
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-      }
 
       try {
-        await apiClient.post('/api/usuarios', formData);
+
+        // Verificar que el campo aseguradora no esté vacío si el tipo es Paciente
+        if (this.nuevoUsuario.tipo === 'Paciente' && !this.nuevoUsuario.aseguradora) {
+          throw new Error('Debe seleccionar una aseguradora para el paciente.');
+        }
+        await apiClient.post('/api/usuarios', this.nuevoUsuario);
+
         this.obtenerUsuarios();
         this.resetFormulario();
       } catch (error) {
