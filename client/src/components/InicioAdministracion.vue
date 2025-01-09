@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Header/>
     <br>  
     <br>
     <div class="estilo-pagina">
@@ -140,13 +139,9 @@
 
 import apiClient from '@/apiClient';
 import { useAuthStore } from '../../store/auth';
-import Header from './Header.vue';
 
 export default {
   name: "InicioAdministracion",
-  components: {
-    Header
-  },
   data() {
     return {
       saludo: '',

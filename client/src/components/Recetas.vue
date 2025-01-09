@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Header/>
     <br/>
 
     <div class="contenedor-body">
@@ -50,16 +49,12 @@
 </template>
 
 <script>
-import Header from '@/components/Header.vue'; // Ajusta la ruta si es necesario
 import apiClient from '@/apiClient';
 import { useAuthStore } from '../../store/auth';
 import jsPDF from 'jspdf';
 
 export default {
   name: 'RecetasPaciente',
-  components: {
-    Header
-  },
   data() {
     return {
       recetas: [],

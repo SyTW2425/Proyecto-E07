@@ -1,5 +1,5 @@
 <template>
-  <div> <Header/>
+  <div> 
   <div class="contenedor-principal">
     <!-- Columna izquierda: Formulario de creación de departamentos -->
     <div class="columna-formulario">
@@ -162,13 +162,9 @@
 
 <script>
 import apiClient from '@/apiClient';
-import Header from '@/components/Header.vue';
 
 export default {
   name: 'GestionDepartamentos',
-  components: {
-    Header
-  },
 data() {
   return {
     departamentos: [],
