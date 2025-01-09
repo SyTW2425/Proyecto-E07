@@ -47,7 +47,6 @@ router.get('/citas', async (req, res) => {
 router.post('/citas', async (req, res) => {
   try {
     const { medicoId, especialidadId, prestacionId, fecha, hora, duracion, pacienteId } = req.body;
-    console.log('Recibida petición para crear cita');
     
     if (!hora) {
       console.log('Hora no proporcionada');

@@ -155,17 +155,23 @@
         proximasCitas: []
       };
     },
+    computed: {
+      usuarioId() {
+      const authStore = useAuthStore();
+      return authStore.getUser ? authStore.getUser._id : null;
+      }
+    },
     methods: {
       async datosUsuario() {
         const authStore = useAuthStore();
         await authStore.checkAuth();
         this.usuario = authStore.getUser ? authStore.getUser : 'Usuario';
-        console.log(this.usuario);
-      },
+        this.obtenerDepartamento();
+    },
       async obtenerProximasCitas() {
         try {
           const response = await apiClient.get('/api/citas', {
-            params: { medicoId: this.usuario._id }
+            params: { medicoId: this.usuarioId }
           });
           const citas = response.data;
           const ahora = new Date();
@@ -245,6 +251,7 @@
       }, 1000); // Actualiza la hora cada segundo
       },
     };
+  
   </script>
   
   <style scoped>
