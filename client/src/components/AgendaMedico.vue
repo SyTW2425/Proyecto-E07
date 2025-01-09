@@ -254,11 +254,15 @@ export default {
     async obtenerCitas() {
       this.cargando = true;
       try {
+
         const response = await apiClient.get('/api/citas', {
           params: {
             medicoId: this.medico._id
           }
         });
+
+        console.log('Médico ID:', this.medico._id);
+        console.log('Médico NOmbre: ', this.medico.nombre);
 
         const citas = response.data;
         const ahora = new Date();
@@ -266,6 +270,8 @@ export default {
         this.citas = citas
           .filter(cita => new Date(cita.fechaHora) > ahora)
           .sort((a, b) => new Date(a.fechaHora) - new Date(b.fechaHora))
+
+
       } catch (error) {
         console.error('Error al obtener citas:', error);
         this.errorServidor = true;
@@ -506,11 +512,8 @@ export default {
     }
     return true;
   },
-  created() {
-    this.obtenerCitas();
-  },
-  mounted() {
-
+  async mounted() {
+    this.datosUsuario();
     this.obtenerDatos();
     this.intervalId = setInterval(() => {
       this.obtenerCitas();
@@ -522,7 +525,7 @@ export default {
       this.fechaHora = this.obtenerFechaHoraCanarias();
 
     }, 1000); // Actualiza la hora cada segundo
-    this.datosUsuario();
+    
 
 
     

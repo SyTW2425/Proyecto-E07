@@ -5,6 +5,7 @@ const Cita = require('../models/Cita');
 // Ruta para obtener todas las citas, opcionalmente filtradas por médico o paciente
 router.get('/citas', async (req, res) => {
   try {
+    console.log('Recibida petición para obtener citas');
     const { especialidadId, medicoId, pacienteId, fecha } = req.query;
     const filtro = {};
 
@@ -15,6 +16,7 @@ router.get('/citas', async (req, res) => {
 
     if (medicoId) {
       filtro.medicoId = medicoId;
+      console.log('Filtrando por médico:', medicoId);
     }
 
     if (pacienteId) { // Aseguramos que no sea la cadena 'null'

@@ -232,22 +232,16 @@
       }
     },
     async mounted() {
-    await this.datosUsuario();
-    await this.obtenerDepartamento();
-    await this.obtenerProximasCitas();
-    this.actualizarSaludo();
-    this.actualizarHora();
-    setInterval(() => {
+      this.datosUsuario();
+      this.obtenerDepartamento();
+      this.obtenerProximasCitas();
+      this.actualizarSaludo();
       this.actualizarHora();
-    }, 1000); // Actualiza la hora cada segundo
-    },
-    computed: {
-      nombreUsuario() {
-        const authStore = useAuthStore();
-        return authStore.getUser ? `${authStore.getUser.nombre} ${authStore.getUser.apellidos}` : 'Usuario';
+      setInterval(() => {
+        this.actualizarHora();
+      }, 1000); // Actualiza la hora cada segundo
       },
-    },
-  };
+    };
   </script>
   
   <style scoped>
