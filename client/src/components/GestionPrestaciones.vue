@@ -1,7 +1,6 @@
 <template>
   <div>
 
-    <Header/>
     <div class="contenedor-principal">
       <!-- Columna izquierda: Formulario de creación de prestaciones -->
       <div class="columna-formulario">
@@ -132,13 +131,9 @@
   
   <script>
   import apiClient from '@/apiClient';
-  import Header from './Header.vue';
   
   export default {
     name: 'GestionPrestaciones',
-    components: {
-      Header
-    },
     data() {
       return {
         prestaciones: [],

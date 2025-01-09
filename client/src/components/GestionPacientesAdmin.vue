@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Header/>
     <div class="estilo-pagina">
       <br>
       <div class="barra-fecha">

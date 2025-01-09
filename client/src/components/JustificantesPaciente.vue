@@ -1,6 +1,6 @@
 <template>
     <div>
-    <Header/><div class="estilo-pagina">
+    <div class="estilo-pagina">
     <br>
     <br>  
 
@@ -52,14 +52,10 @@
   <script>
   import { useAuthStore } from '../../store/auth';
   import apiClient from '@/apiClient';
-  import Header from './Header.vue';
   import jsPDF from 'jspdf';
 
   export default {
     name: "JustificantesPaciente",
-      components: {
-      Header
-    },
     data() {
       return {
         saludo: '',

@@ -1,6 +1,5 @@
 <template>
     <div>
-      <Header/>
       <div class="estilo-pagina">
       <div class="barra-fecha" >
         <span>{{ fechaHora }}</span>
@@ -252,13 +251,9 @@
 <script>
 import apiClient from '@/apiClient';
 import { useAuthStore } from '../../store/auth';
-import Header from './Header.vue';
 
 export default {
     name: "CitasAdministracion",
-    components: {
-        Header
-    },
     data() {
         return {
             fechaHora: '',

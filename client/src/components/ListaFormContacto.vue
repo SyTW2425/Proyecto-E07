@@ -1,7 +1,5 @@
 <template>
     <div class="estilo-pagina">
-      <Header/>
-
       <div class="contenedor-body">
         <br>
         <h2 class="titulo">Listado de Formularios de contacto</h2>
@@ -57,12 +55,8 @@
   
   <script>
   import apiClient from '@/apiClient';
-  import Header from './Header.vue';
   export default {
     name: 'ListaFormContacto',
-    components: {
-      Header
-    },
     data() {
       return {
         form_contacto: [],
