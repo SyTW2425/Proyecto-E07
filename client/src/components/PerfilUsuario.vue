@@ -67,7 +67,15 @@
             <span class="label">Número de Póliza:</span>
             <span class="valor">{{ usuario.numeroPoliza }}</span>
           </div>
+          <div style="padding-left: 0.5rem;">
+            <img v-if="aseguradoraFoto" :src="aseguradoraFoto" alt="Foto de Perfil" class="foto-aseguradora" />
+            <svg v-else width="250" height="250" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: #92bdf6;">
+              <path d="M6 36C6 31.0347 17.9925 28 24 28C30.0075 28 42 31.0347 42 36V42H6V36Z" fill="currentColor"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M24 26C29.5228 26 34 21.5228 34 16C34 10.4772 29.5228 6 24 6C18.4772 6 14 10.4772 14 16C14 21.5228 18.4772 26 24 26Z" fill="currentColor"/>
+            </svg>
+          </div>
         </div>
+        
       </div>
 
       <!-- Antecedentes -->
@@ -146,6 +154,7 @@ export default {
       },
       passwordChanged: false,
       aseguradoraNombre: '',
+      aseguradoraFoto: '',
       tipoUsuario: '',
     };
   },
@@ -169,6 +178,7 @@ export default {
         }
         if (this.editableUsuario.aseguradora) {
           this.obtenerNombreAseguradora(this.editableUsuario.aseguradora);
+          this.obtenerFotoAseguradora(this.editableUsuario.aseguradora);
         }
       }
     }
@@ -180,6 +190,14 @@ export default {
         this.aseguradoraNombre = response.data.nombre;
       } catch (error) {
         console.error('Error al obtener el nombre de la aseguradora:', error);
+      }
+    },
+    async obtenerFotoAseguradora(aseguradoraId) {
+      try {
+        const response = await apiClient.get(`/api/aseguradoras/${aseguradoraId}`);
+        this.aseguradoraFoto = response.data.foto;
+      } catch (error) {
+        console.error('Error al obtener la foto de la aseguradora:', error);
       }
     },
     async datosUsuario() {
@@ -406,10 +424,14 @@ export default {
 .foto-perfil {
   width: 120px;
   height: 120px;
-  border-radius: 50%; /* Hacer la imagen circular */
+  border-radius: 50%;
   object-fit: cover; /* Asegurarse de que la imagen se ajuste bien dentro del contenedor */
 }
-
+.foto-aseguradora {
+  width: 200px;
+  height: 200px;
+  object-fit: cover; /* Asegurarse de que la imagen se ajuste bien dentro del contenedor */
+}
 .overlay {
   position: absolute;
   top: 0;
@@ -534,6 +556,7 @@ export default {
   align-items: center; /* Alinear verticalmente al centro */
   padding: 0.5em; /* Reducir el padding */
 }
+
 
 .label {
   font-weight: bold;
