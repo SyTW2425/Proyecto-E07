@@ -199,13 +199,10 @@
   <script>
   import apiClient from '@/apiClient';
   import { useAuthStore } from '../../store/auth';
-  import Header from './Header.vue';
   
   export default {
     name: "GestionPacientesAdmin",
-    components: {
-      Header,
-    },
+
     data() {
       return {
         fechaHora: '',
