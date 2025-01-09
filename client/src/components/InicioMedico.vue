@@ -40,7 +40,7 @@
             <span class="fecha">{{ formatearFecha(cita.fechaHora) }} a las {{ formatearHora(cita.fechaHora) }}</span>
             <span class="especialidad">{{ cita.especialidadId.nombre }}</span>
             <span class="especialidad">{{ cita.prestacionId.nombre }}</span>
-            <span class="doctor">{{ cita.pacienteId.nombre }} {{ cita.pacienteId.apellidos }}</span>
+            <span class="doctor">{{ cita.pacienteId?.nombre }} {{ cita.pacienteId?.apellidos }}</span>
           </div>
         </div>
       </div>
@@ -160,6 +160,7 @@
         const authStore = useAuthStore();
         await authStore.checkAuth();
         this.usuario = authStore.getUser ? authStore.getUser : 'Usuario';
+        console.log(this.usuario);
       },
       async obtenerProximasCitas() {
         try {
@@ -169,9 +170,11 @@
           const citas = response.data;
           const ahora = new Date();
           this.proximasCitas = citas
-            .filter(cita => new Date(cita.fechaHora) > ahora)
+            .filter(cita => new Date(cita.fechaHora) > ahora && cita.pacienteId !== null)
             .sort((a, b) => new Date(a.fechaHora) - new Date(b.fechaHora))
             .slice(0, 3);
+          console.log(this.proximasCitas);
+
         } catch (error) {
           console.error('Error al obtener las próximas citas:', error);
         }
