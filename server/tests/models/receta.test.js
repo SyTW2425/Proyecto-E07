@@ -20,7 +20,7 @@ describe('Receta Model', () => {
 
     // Crear un médico y un paciente de prueba
     const medico = new Usuario({
-      nombre: 'Medico',
+      nombre: 'Medicoo',
       apellidos: 'Prueba',
       username: 'medicoprueba',
       password: 'Test1234',
