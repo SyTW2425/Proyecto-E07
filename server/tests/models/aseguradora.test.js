@@ -98,7 +98,7 @@ describe('Aseguradora Model', () => {
     expect(savedAseguradora.cobertura).to.be.an('array').that.is.empty;
   });
 
-  it('should create an aseguradora with null foto in cobertura', async () => {
+  it('should create an aseguradora with null foto', async () => {
     const aseguradora = new Aseguradora({
       nombre: 'Aseguradora Salud',
       cobertura: [
@@ -106,9 +106,9 @@ describe('Aseguradora Model', () => {
           especialidad: new mongoose.Types.ObjectId(),
           prestacion: new mongoose.Types.ObjectId(),
           tarifa: '100',
-          foto: null,
         },
       ],
+      foto: null,
     });
 
     const savedAseguradora = await aseguradora.save();
