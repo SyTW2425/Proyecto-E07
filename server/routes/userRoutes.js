@@ -100,6 +100,10 @@ router.post('/usuarios', validateRegister, async (req, res) => {
       req.body.departamento = null;
     }
 
+    if (req.body.aseguradora === "") {
+      req.body.aseguradora = null;
+    }
+
     if (!req.body.username || req.body.username.trim() === '') {
       req.body.username = await generarUsername(req.body.nombre, req.body.apellidos);
     }

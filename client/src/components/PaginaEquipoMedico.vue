@@ -26,7 +26,7 @@
             <div v-if="usuario.genero === 'Masculino'">
               
               <div style="display: flex; justify-content: center;">
-                <div style="display: flex; justify-content: center; align-items: top; background-color: var(--color-azul2); border-radius: 60px; width: 320px; height: 300px;">
+                <div style="display: flex; justify-content: center; align-items: flex-start; background-color: var(--color-azul2); border-radius: 60px; width: 320px; height: 300px; padding: 0; margin: 0;">
                   <img v-if="usuario.foto" :src="usuario.foto" alt="Foto de perfil" class="foto-preview"/>
                   <img v-else :src="fotoPreview" alt="Previsualización de Foto de Perfil" class="foto-preview"/>
                 </div>
@@ -43,33 +43,24 @@
           </button>
 
           <button class="big-button-green" v-if="usuario.index % 2 === 0">
-            <div style="display: flex; justify-content: center;">
-                <div style="display: flex; justify-content: center; align-items: top; background-color: var(--color-azul2); border-radius: 60px; width: 320px; height: 300px;">
-                  <img v-if="usuario.foto" :src="usuario.foto" alt="Foto de perfil" class="foto-preview"/>
-                  <img v-else :src="fotoPreview" alt="Previsualización de Foto de Perfil" class="foto-preview"/>
-                </div>
-              </div>
+            <div class="foto-container">
+  <img v-if="usuario.foto" :src="usuario.foto" alt="Foto de perfil" class="foto-preview"/>
+  <img v-else :src="fotoPreview" alt="Previsualización de Foto de Perfil" class="foto-preview"/>
+</div>
             <div v-if="usuario.genero === 'Masculino'">
               <span class="buttons-text-eq-med-dep"> {{ getDepartamentoName(usuario.departamento) }}</span>
               <br>
-              <span class="buttons-text-eq-med" > Dr. {{ usuario.nombre }} {{ usuario.apellidos }}</span>
+              <span class="buttons-text-eq-med" style="margin: 1rem;" > Dr. {{ usuario.nombre }} {{ usuario.apellidos }}</span>
             </div>
             <div v-if="usuario.genero !== 'Masculino'">
-              <span class="buttons-text-eq-med-dep"> {{ getDepartamentoName(usuario.departamento) }}</span>
+              <span class="buttons-text-eq-med-dep" > {{ getDepartamentoName(usuario.departamento) }}</span>
               <br>
-              <span class="buttons-text-eq-med" > Dra. {{ usuario.nombre }} {{ usuario.apellidos }}</span>
+              <span class="buttons-text-eq-med" style="margin: 1rem;"> Dra. {{ usuario.nombre }} {{ usuario.apellidos }}</span>
             </div>
           </button>
         </div>
       </section>
   
-
-  
-      <!-- Footer (Pie de página) -->
-      <footer class="footer">
-          <p>Portal del paciente | Intranet | Contacto</p>
-          <p>Hospital Rambla - Comprometidos en ofrecer atención sanitaria de primer nivel, con dedicación y calidad humana.</p>
-      </footer>
   
   
     </div>
@@ -170,14 +161,26 @@
   margin-right: 2rem;
 }
 </style>  <style scoped>
-  .foto-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
-  .foto-preview {
-    width: 320px;
-    border-radius: 60px;
-  }
+   .foto-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Alinea el contenido en la parte superior */
+  overflow: hidden;
+  background-color: var(--color-azul2);
+  border-radius: 60px;
+  width: 100%;
+  height: 60%; /* Mantén la proporción necesaria para el contenedor */
+  margin: 0; /* Elimina márgenes */
+  padding: 0; /* Elimina relleno interno */
+  box-sizing: border-box; /* Asegura que el padding no afecte las dimensiones */
+}
+
+.foto-preview {
+  width: 100%;
+  height: 100%; /* Ajusta la altura al 100% del contenedor */
+  object-fit: cover; /* Asegura que la imagen cubra todo el espacio */
+  border-radius: 60px;
+  margin: 0; /* Elimina márgenes externos */
+}
+
 </style>

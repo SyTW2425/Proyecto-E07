@@ -118,6 +118,8 @@
           <input type="email" v-model="nuevoUsuario.email"/>
         </label>
         <!-- Desplegable para asignar aseguradora -->
+        <div v-if="nuevoUsuario.tipo === 'Paciente'">
+
         <label>Aseguradora:<br>
           <select v-model="nuevoUsuario.aseguradora">
             <option value="" disabled selected>Seleccione una aseguradora</option>
@@ -125,7 +127,7 @@
               {{ aseguradora.nombre }}
             </option>
           </select>
-        </label><br>
+        </label></div><br>
 
         <button class="boton-crear" type="submit" v-if="!editarUsuarioId">
           Crear Usuario
